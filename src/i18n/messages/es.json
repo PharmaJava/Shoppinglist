@@ -16,6 +16,56 @@
     "pricing": "Precios",
     "createList": "Crear lista gratis"
   },
+  "categories": {
+    "produce": "Fruta y verdura",
+    "bakery": "Panadería",
+    "dairy": "Lácteos y huevos",
+    "meat": "Carnicería",
+    "fish": "Pescadería",
+    "deli": "Embutidos y quesos",
+    "frozen": "Congelados",
+    "pantry": "Despensa",
+    "drinks": "Bebidas",
+    "snacks": "Snacks y dulces",
+    "breakfast": "Desayuno y cereales",
+    "cleaning": "Limpieza del hogar",
+    "personal": "Higiene personal",
+    "baby": "Bebé",
+    "pet": "Mascotas",
+    "other": "Otros"
+  },
+  "templatesPage": {
+    "hubTitle": "Plantillas de lista de la compra",
+    "hubSubtitle": "Listas completas y listas para usar. Ábrelas, quita lo que no necesites y compártelas con quien compre contigo.",
+    "hubMetaTitle": "Plantillas de lista de la compra gratis",
+    "hubMetaDescription": "Plantillas de lista de la compra listas para usar: semanal, familiar, despensa básica y saludable. Con cantidades reales y ordenadas por pasillos.",
+    "itemCount": "{count} productos",
+    "serves": "Para",
+    "budget": "Gasto orientativo",
+    "use": "Usar esta plantilla",
+    "using": "Creando tu lista…",
+    "useError": "No se pudo crear la lista. Inténtalo de nuevo.",
+    "useHelp": "Se crea una lista tuya con estos productos. Podrás editarla y compartirla.",
+    "listTitle": "La lista",
+    "faqTitle": "Preguntas frecuentes",
+    "related": "Otras plantillas",
+    "relatedGuides": "Para seguir leyendo",
+    "updated": "Actualizada el {date}"
+  },
+  "guidesPage": {
+    "hubTitle": "Guías para organizar la compra",
+    "hubSubtitle": "Cómo hacer la lista, cómo compartirla y cómo gastar menos sin complicarte la vida.",
+    "hubMetaTitle": "Guías para organizar la compra del supermercado",
+    "hubMetaDescription": "Guías prácticas para hacer la lista de la compra, compartirla con la familia y ahorrar en el supermercado. Sin trucos milagrosos.",
+    "faqTitle": "Preguntas frecuentes",
+    "related": "Otras guías",
+    "relatedTemplates": "Plantillas para empezar",
+    "updated": "Actualizada el {date}",
+    "readMore": "Leer la guía"
+  },
+  "breadcrumb": {
+    "home": "Inicio"
+  },
   "landing": {
     "eyebrow": "Sin registro · Tiempo real · Funciona sin conexión",
     "title": "La lista de la compra que comparte toda la familia",

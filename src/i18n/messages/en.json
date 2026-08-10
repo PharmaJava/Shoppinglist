@@ -16,6 +16,56 @@
     "pricing": "Pricing",
     "createList": "Create free list"
   },
+  "categories": {
+    "produce": "Produce",
+    "bakery": "Bakery",
+    "dairy": "Dairy & Eggs",
+    "meat": "Meat",
+    "fish": "Seafood",
+    "deli": "Deli",
+    "frozen": "Frozen",
+    "pantry": "Pantry",
+    "drinks": "Drinks",
+    "snacks": "Snacks & Sweets",
+    "breakfast": "Breakfast & Cereal",
+    "cleaning": "Household Cleaning",
+    "personal": "Personal Care",
+    "baby": "Baby",
+    "pet": "Pets",
+    "other": "Other"
+  },
+  "templatesPage": {
+    "hubTitle": "Grocery list templates",
+    "hubSubtitle": "Complete lists, ready to use. Open one, drop what you don't need, and share it with whoever shops with you.",
+    "hubMetaTitle": "Free Grocery List Templates",
+    "hubMetaDescription": "Ready-to-use grocery list templates: weekly, family of four, pantry staples and healthy. Real quantities, ordered by aisle.",
+    "itemCount": "{count} items",
+    "serves": "Serves",
+    "budget": "Estimated cost",
+    "use": "Use this template",
+    "using": "Creating your list…",
+    "useError": "Couldn't create the list. Please try again.",
+    "useHelp": "This creates your own list with these items. You can edit and share it.",
+    "listTitle": "The list",
+    "faqTitle": "Frequently asked questions",
+    "related": "More templates",
+    "relatedGuides": "Keep reading",
+    "updated": "Updated {date}"
+  },
+  "guidesPage": {
+    "hubTitle": "Guides to organizing your grocery shopping",
+    "hubSubtitle": "How to build the list, how to share it, and how to spend less without overthinking it.",
+    "hubMetaTitle": "Guides to Organizing Your Grocery Shopping",
+    "hubMetaDescription": "Practical guides to building a grocery list, sharing it with your family, and spending less at the store. No miracle tricks.",
+    "faqTitle": "Frequently asked questions",
+    "related": "More guides",
+    "relatedTemplates": "Templates to start from",
+    "updated": "Updated {date}",
+    "readMore": "Read the guide"
+  },
+  "breadcrumb": {
+    "home": "Home"
+  },
   "landing": {
     "eyebrow": "No sign-up · Real-time · Works offline",
     "title": "The shopping list your whole family can share",

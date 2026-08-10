@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { QuickCreateForm } from "@/components/marketing/quick-create-form";
+import { getTemplates } from "@/content";
+import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
 
@@ -53,6 +55,26 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
             <p className="text-sm text-on-surface-muted">{step.body}</p>
           </div>
         ))}
+      </section>
+
+      <section className="flex flex-col gap-5 px-4 py-12 sm:px-6">
+        <h2 className="text-2xl font-bold tracking-tight text-on-surface">{t("templatesTitle")}</h2>
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {getTemplates(locale).map((template) => (
+            <li key={template.slug}>
+              <Link
+                href={{ pathname: "/plantillas/[slug]", params: { slug: template.slug } }}
+                className="flex h-full flex-col gap-1 rounded-card bg-surface-muted p-4 transition-colors hover:bg-surface-raised"
+              >
+                <span className="font-semibold text-on-surface">{template.title}</span>
+                <span className="text-sm text-on-surface-muted">{template.serves}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link href="/plantillas" className="font-medium text-brand underline">
+          {t("templatesCta")}
+        </Link>
       </section>
     </>
   );

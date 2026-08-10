@@ -37,7 +37,7 @@ export async function addItem(
   name: string,
   locale: Locale,
   lastSortKey: string | null,
-  extra?: { qty?: number | null; unit?: string | null },
+  extra?: { qty?: number | null; unit?: string | null; categoryId?: string | null },
 ): Promise<ListItem> {
   const userId = await getCurrentUserId();
   const now = new Date().toISOString();
@@ -49,7 +49,9 @@ export async function addItem(
     qty: extra?.qty ?? null,
     unit: extra?.unit ?? null,
     note: null,
-    category_id: categorize(name, locale),
+    // Una categoría explícita (la que trae una plantilla) manda sobre la
+    // deducida del nombre: está revisada a mano y es más fiable.
+    category_id: extra?.categoryId ?? categorize(name, locale),
     price_cents: null,
     is_checked: false,
     checked_by: null,
@@ -109,6 +111,39 @@ export async function createListFromInput(
 
   const list = await createList(title);
   await addParsedItems(list.id, items, locale, null);
+  return list;
+}
+
+export interface TemplateListItem {
+  name: string;
+  qty?: number;
+  unit?: string;
+  categoryId: string;
+}
+
+/**
+ * Crea una lista propia a partir de una plantilla de contenido.
+ *
+ * Conserva el orden en que la plantilla presenta los productos —agrupados por
+ * pasillo— porque es el recorrido que el usuario acaba de leer en la página.
+ */
+export async function createListFromTemplate(
+  title: string,
+  items: TemplateListItem[],
+  locale: Locale,
+): Promise<List> {
+  const list = await createList(title);
+  let cursor: string | null = null;
+
+  for (const item of items) {
+    const row = await addItem(list.id, item.name, locale, cursor, {
+      qty: item.qty ?? null,
+      unit: item.unit ?? null,
+      categoryId: item.categoryId,
+    });
+    cursor = row.sort_key;
+  }
+
   return list;
 }
 
