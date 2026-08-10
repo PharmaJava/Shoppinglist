@@ -17,7 +17,8 @@
     "createList": "Create free list",
     "blog": "Blog",
     "login": "Sign in",
-    "account": "My account"
+    "account": "My account",
+    "myLists": "My lists"
   },
   "categories": {
     "produce": "Produce",
@@ -192,7 +193,8 @@
     "linkError": "That link didn't work.",
     "linkExpired": "It may have expired or already been used. Request a new one.",
     "confirmed": "You're all set — your account is active.",
-    "cta": "Create a list now"
+    "cta": "Create a list now",
+    "myLists": "See my lists"
   },
   "footer": {
     "product": "Product",
@@ -201,6 +203,27 @@
     "templates": "Templates",
     "guides": "Guides",
     "blog": "Blog",
-    "tagline": "The shared shopping list — free, no sign-up."
+    "tagline": "The shared shopping list — free, no sign-up.",
+    "myLists": "My lists"
+  },
+  "myLists": {
+    "metaTitle": "My lists",
+    "title": "My lists",
+    "subtitle": "Every list you've created or been added to.",
+    "loading": "Loading your lists…",
+    "error": "Couldn't load your lists.",
+    "retry": "Retry",
+    "empty": "You don't have any lists yet.",
+    "emptyCta": "Create your first one by typing an item.",
+    "progress": "{checked} of {total}",
+    "emptyList": "No items",
+    "updated": "Updated {date}",
+    "newList": "New list",
+    "newListPlaceholder": "e.g. Saturday shop",
+    "creating": "Creating…",
+    "create": "Create",
+    "createError": "Couldn't create the list. Please try again.",
+    "guestWarning": "These lists live only in this browser. Add your email to have them on any device.",
+    "guestWarningCta": "Save my lists"
   }
 }
