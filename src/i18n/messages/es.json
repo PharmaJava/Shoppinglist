@@ -2,7 +2,13 @@
   "metadata": {
     "siteName": "ListaSupermercado",
     "landingTitle": "Lista de la compra compartida, sin registro | ListaSupermercado",
-    "landingDescription": "Crea tu lista de la compra en un segundo, compártela por WhatsApp con tu familia y marcad juntos lo que vais comprando. Gratis, sin cuenta, funciona sin conexión."
+    "landingDescription": "Crea tu lista de la compra en un segundo, compártela por WhatsApp con tu familia y marcad juntos lo que vais comprando. Gratis, sin cuenta, funciona sin conexión.",
+    "ogTitle": "La lista de la compra que comparte toda la familia",
+    "ogDescription": "Créala en segundos, comparte el enlace y marcad juntos mientras compráis. Gratis y sin registro.",
+    "sharedListTitle": "Te han compartido una lista de la compra",
+    "sharedListDescription": "Ábrela para ver los productos y ve marcando lo que cojáis. Sin registro.",
+    "inviteTitle": "Te invitan a una lista de la compra",
+    "inviteDescription": "Únete para añadir productos y marcar lo que vayáis cogiendo. Sin registro."
   },
   "nav": {
     "templates": "Plantillas",

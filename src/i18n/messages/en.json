@@ -2,7 +2,13 @@
   "metadata": {
     "siteName": "ListaSupermercado",
     "landingTitle": "Shared shopping list, no sign-up | ListaSupermercado",
-    "landingDescription": "Create your shopping list in seconds, share it with your family, and check off items together while you shop. Free, no account, works offline."
+    "landingDescription": "Create your shopping list in seconds, share it with your family, and check off items together while you shop. Free, no account, works offline.",
+    "ogTitle": "The shopping list your whole family can share",
+    "ogDescription": "Create it in seconds, share the link, and check items off together while you shop. Free, no sign-up.",
+    "sharedListTitle": "A shopping list has been shared with you",
+    "sharedListDescription": "Open it to see the items and check them off as you shop. No sign-up.",
+    "inviteTitle": "You're invited to a shopping list",
+    "inviteDescription": "Join to add items and check off what you pick up. No sign-up."
   },
   "nav": {
     "templates": "Templates",
