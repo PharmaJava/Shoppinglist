@@ -214,10 +214,6 @@ export interface Database {
         Args: { p_token: string };
         Returns: string;
       };
-      debug_auth_context: {
-        Args: Record<string, never>;
-        Returns: Record<string, unknown>;
-      };
     };
   };
 }
