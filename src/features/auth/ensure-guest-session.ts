@@ -20,3 +20,26 @@ export async function ensureGuestSession(): Promise<string> {
 
   return data.user.id;
 }
+
+/**
+ * Fuerza una sesión anónima nueva, descartando la que hubiera en caché.
+ * Se usa como recuperación cuando el servidor rechaza una escritura por RLS
+ * a pesar de que el cliente creía tener sesión — normalmente una sesión
+ * cacheada (localStorage/cookies) que quedó obsoleta o inválida.
+ */
+export async function ensureFreshGuestSession(): Promise<string> {
+  const supabase = getSupabaseBrowserClient();
+  await supabase.auth.signOut();
+
+  const { data, error } = await supabase.auth.signInAnonymously();
+  if (error || !data.user) {
+    throw new Error(error?.message ?? "No se pudo iniciar sesión de invitado.");
+  }
+
+  return data.user.id;
+}
+
+/** ¿El mensaje de error corresponde a un rechazo de RLS (sesión inválida/obsoleta)? */
+export function isRowLevelSecurityError(message: string | undefined): boolean {
+  return Boolean(message?.toLowerCase().includes("row-level security policy"));
+}
