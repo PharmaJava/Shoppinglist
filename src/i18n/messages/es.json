@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "siteName": "ShoppingList",
+    "landingTitle": "Lista de la compra compartida, sin registro | ShoppingList",
+    "landingDescription": "Crea tu lista de la compra en un segundo, compártela por WhatsApp con tu familia y marcad juntos lo que vais comprando. Gratis, sin cuenta, funciona sin conexión."
+  },
+  "nav": {
+    "templates": "Plantillas",
+    "guides": "Guías",
+    "pricing": "Precios",
+    "createList": "Crear lista gratis"
+  },
+  "landing": {
+    "eyebrow": "Sin registro · Tiempo real · Funciona sin conexión",
+    "title": "La lista de la compra que comparte toda la familia",
+    "subtitle": "Escribe tu primer producto y crea la lista. Compártela por WhatsApp: todos podéis añadir y marcar mientras compráis, sin instalar nada.",
+    "quickAddPlaceholder": "Ej. leche, pan, tomates…",
+    "createButton": "Crear mi lista",
+    "creating": "Creando…",
+    "howItWorksTitle": "Cómo funciona",
+    "step1Title": "Crea tu lista",
+    "step1Body": "Sin registro. Escribe el primer producto y ya tienes una lista lista para compartir.",
+    "step2Title": "Compártela",
+    "step2Body": "Envía el enlace por WhatsApp a quien quieras. Pueden añadir y editar sin instalar nada.",
+    "step3Title": "Compra en equipo",
+    "step3Body": "Marcad los productos según los cogéis. Se sincroniza al instante en todos los móviles.",
+    "templatesTitle": "Empieza desde una plantilla",
+    "templatesCta": "Ver todas las plantillas",
+    "faqTitle": "Preguntas frecuentes"
+  },
+  "list": {
+    "untitled": "Mi lista",
+    "addPlaceholder": "Añadir producto…",
+    "add": "Añadir",
+    "empty": "Tu lista está vacía. Añade el primer producto arriba.",
+    "checkedSection": "Ya en el carro",
+    "progress": "{checked} de {total}",
+    "share": "Compartir",
+    "shareTitle": "Compartir lista",
+    "shareCopy": "Copiar enlace",
+    "shareCopied": "Enlace copiado",
+    "shareWhatsapp": "Compartir por WhatsApp",
+    "shareNative": "Compartir…",
+    "shareHelp": "Cualquiera con este enlace puede ver y editar la lista.",
+    "members": "Miembros",
+    "undo": "Deshacer",
+    "deleted": "Producto eliminado",
+    "offline": "Sin conexión — tus cambios se guardarán",
+    "pendingChanges": "{count} cambios pendientes",
+    "otherCategory": "Otros",
+    "renameList": "Renombrar lista",
+    "loading": "Cargando tu lista…"
+  },
+  "invite": {
+    "joining": "Uniéndote a la lista…",
+    "invalid": "Este enlace ya no es válido. Puede haber caducado o haber sido revocado.",
+    "backHome": "Volver al inicio"
+  },
+  "common": {
+    "loading": "Cargando…",
+    "error": "Algo ha ido mal. Inténtalo de nuevo.",
+    "retry": "Reintentar"
+  }
+}

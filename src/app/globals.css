@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — ver docs/03-UX.md.
+ * Paleta en OKLCH para contraste consistente en claro y oscuro.
+ */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-brand-50: oklch(0.97 0.03 150);
+  --color-brand-100: oklch(0.93 0.06 150);
+  --color-brand-200: oklch(0.87 0.09 150);
+  --color-brand-300: oklch(0.79 0.12 150);
+  --color-brand-400: oklch(0.71 0.15 150);
+  --color-brand-500: oklch(0.63 0.17 150);
+  --color-brand-600: oklch(0.54 0.16 150);
+  --color-brand-700: oklch(0.45 0.14 150);
+  --color-brand-800: oklch(0.37 0.11 150);
+  --color-brand-900: oklch(0.3 0.08 150);
+
+  --color-accent-400: oklch(0.78 0.15 55);
+  --color-accent-500: oklch(0.72 0.18 55);
+  --color-accent-600: oklch(0.63 0.17 55);
+
+  --radius-card: 0.875rem;
+  --spacing-tap: 3.5rem;
+}
+
+:root {
+  --surface: oklch(1 0 0);
+  --surface-raised: oklch(0.99 0 0);
+  --surface-muted: oklch(0.96 0 0);
+  --on-surface: oklch(0.2 0 0);
+  --on-surface-muted: oklch(0.45 0 0);
+  --border: oklch(0.9 0 0);
+  --brand: var(--color-brand-500);
+  --brand-contrast: oklch(1 0 0);
+  --accent: var(--color-accent-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: oklch(0.16 0 0);
+    --surface-raised: oklch(0.21 0 0);
+    --surface-muted: oklch(0.26 0 0);
+    --on-surface: oklch(0.95 0 0);
+    --on-surface-muted: oklch(0.72 0 0);
+    --border: oklch(0.32 0 0);
+    --brand: var(--color-brand-400);
+    --brand-contrast: oklch(0.16 0 0);
+    --accent: var(--color-accent-400);
+  }
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-muted: var(--surface-muted);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-muted: var(--on-surface-muted);
+  --color-border: var(--border);
+  --color-brand: var(--brand);
+  --color-brand-contrast: var(--brand-contrast);
+  --color-accent: var(--accent);
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

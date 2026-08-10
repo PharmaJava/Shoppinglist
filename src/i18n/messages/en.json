@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "siteName": "ShoppingList",
+    "landingTitle": "Shared shopping list, no sign-up | ShoppingList",
+    "landingDescription": "Create your shopping list in seconds, share it with your family, and check off items together while you shop. Free, no account, works offline."
+  },
+  "nav": {
+    "templates": "Templates",
+    "guides": "Guides",
+    "pricing": "Pricing",
+    "createList": "Create free list"
+  },
+  "landing": {
+    "eyebrow": "No sign-up · Real-time · Works offline",
+    "title": "The shopping list your whole family can share",
+    "subtitle": "Type your first item and create the list. Share the link: everyone can add and check items while you shop, with nothing to install.",
+    "quickAddPlaceholder": "e.g. milk, bread, tomatoes…",
+    "createButton": "Create my list",
+    "creating": "Creating…",
+    "howItWorksTitle": "How it works",
+    "step1Title": "Create your list",
+    "step1Body": "No sign-up. Type the first item and your list is ready to share.",
+    "step2Title": "Share it",
+    "step2Body": "Send the link to anyone. They can add and edit items without installing anything.",
+    "step3Title": "Shop as a team",
+    "step3Body": "Check items off as you grab them. Everyone's phone syncs instantly.",
+    "templatesTitle": "Start from a template",
+    "templatesCta": "See all templates",
+    "faqTitle": "Frequently asked questions"
+  },
+  "list": {
+    "untitled": "My list",
+    "addPlaceholder": "Add item…",
+    "add": "Add",
+    "empty": "Your list is empty. Add the first item above.",
+    "checkedSection": "In the cart",
+    "progress": "{checked} of {total}",
+    "share": "Share",
+    "shareTitle": "Share list",
+    "shareCopy": "Copy link",
+    "shareCopied": "Link copied",
+    "shareWhatsapp": "Share on WhatsApp",
+    "shareNative": "Share…",
+    "shareHelp": "Anyone with this link can view and edit the list.",
+    "members": "Members",
+    "undo": "Undo",
+    "deleted": "Item deleted",
+    "offline": "Offline — your changes will be saved",
+    "pendingChanges": "{count} pending changes",
+    "otherCategory": "Other",
+    "renameList": "Rename list",
+    "loading": "Loading your list…"
+  },
+  "invite": {
+    "joining": "Joining the list…",
+    "invalid": "This link is no longer valid. It may have expired or been revoked.",
+    "backHome": "Back home"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "retry": "Retry"
+  }
+}
