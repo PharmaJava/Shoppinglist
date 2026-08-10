@@ -4,8 +4,10 @@ import {
   getGuides,
   getPostByKey,
   getPosts,
+  getPrivacy,
   getTemplateByKey,
   getTemplates,
+  getTerms,
 } from "@/content";
 import { type AppLocale, routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
@@ -62,7 +64,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   );
 
-  return [...landings, ...hubs, ...templates, ...guides, ...posts];
+  // Páginas estáticas sin contenido versionado propio: su fecha es la del
+  // documento (legal) o la del despliegue (precios), no la de ninguna pieza.
+  const legal: MetadataRoute.Sitemap = routing.locales.flatMap((locale) => [
+    {
+      url: sectionUrl("privacy", locale),
+      lastModified: new Date(getPrivacy(locale).updatedAt),
+      alternates: {
+        languages: Object.fromEntries(routing.locales.map((l) => [l, sectionUrl("privacy", l)])),
+      },
+    },
+    {
+      url: sectionUrl("terms", locale),
+      lastModified: new Date(getTerms(locale).updatedAt),
+      alternates: {
+        languages: Object.fromEntries(routing.locales.map((l) => [l, sectionUrl("terms", l)])),
+      },
+    },
+    {
+      url: sectionUrl("pricing", locale),
+      lastModified: mostRecent([
+        ...getTemplates(locale),
+        ...getGuides(locale),
+        ...getPosts(locale),
+      ]),
+      alternates: {
+        languages: Object.fromEntries(routing.locales.map((l) => [l, sectionUrl("pricing", l)])),
+      },
+    },
+  ]);
+
+  return [...landings, ...hubs, ...templates, ...guides, ...posts, ...legal];
 }
 
 /** Piezas que lista cada hub, para derivar su lastmod. */

@@ -16,6 +16,9 @@ const SECTION_SEGMENT = {
   // «blog» funciona igual en ambos idiomas; se mantiene aquí para que todo el
   // contenido pase por el mismo constructor de URLs.
   blog: { es: "blog", en: "blog" },
+  privacy: { es: "privacidad", en: "privacy" },
+  terms: { es: "terminos", en: "terms" },
+  pricing: { es: "precios", en: "pricing" },
 } as const;
 
 export type ContentSection = keyof typeof SECTION_SEGMENT;

@@ -2,8 +2,10 @@
 
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  deleteAccount,
+  fetchDisplayName,
   linkEmailToGuestSession,
   linkPasswordToGuestSession,
   sendMagicLink,
@@ -11,6 +13,7 @@ import {
   signInWithPassword,
   signOut,
   signUpWithPassword,
+  updateDisplayName,
   updatePassword,
 } from "@/features/auth/api";
 import { useSession } from "@/features/auth/use-session";
@@ -108,7 +111,149 @@ function RegisteredPanel({ email }: { email: string }) {
       >
         {pending ? t("signingOut") : t("signOut")}
       </button>
+
+      <DisplayNameForm />
+      <DangerZone />
     </div>
+  );
+}
+
+function DisplayNameForm() {
+  const t = useTranslations("account");
+  const [name, setName] = useState("");
+  const [pending, setPending] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    fetchDisplayName()
+      .then((value) => {
+        if (active) setName(value);
+      })
+      .catch(() => {
+        // Un fallo al leerlo no debe bloquear el resto de la página: el campo
+        // queda vacío y se puede escribir igualmente.
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (pending) return;
+
+    setPending(true);
+    setErrorMessage(null);
+    setSaved(false);
+    try {
+      await updateDisplayName(name);
+      setSaved(true);
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : String(err));
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="flex w-full max-w-sm flex-col gap-2 border-border border-t pt-6 text-left"
+    >
+      <label htmlFor="display-name" className="font-semibold text-on-surface">
+        {t("nameTitle")}
+      </label>
+      <p className="text-sm text-on-surface-muted">{t("nameHint")}</p>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <input
+          id="display-name"
+          value={name}
+          onChange={(event) => {
+            setName(event.target.value);
+            setSaved(false);
+          }}
+          placeholder={t("namePlaceholder")}
+          autoComplete="nickname"
+          maxLength={40}
+          className="h-tap flex-1 rounded-full border border-border bg-surface px-5 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
+        />
+        <button
+          type="submit"
+          disabled={pending}
+          className="h-tap shrink-0 rounded-full border border-brand px-5 font-semibold text-brand disabled:opacity-50"
+        >
+          {pending ? t("nameSaving") : t("nameSave")}
+        </button>
+      </div>
+      {saved && <p className="text-sm text-brand">{t("nameSaved")}</p>}
+      {errorMessage && <ErrorLine message={errorMessage} />}
+    </form>
+  );
+}
+
+function DangerZone() {
+  const t = useTranslations("account");
+  const [confirming, setConfirming] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  async function handleDelete() {
+    if (pending) return;
+
+    setPending(true);
+    setErrorMessage(null);
+    try {
+      await deleteAccount();
+      // Tras borrar no queda sesión: recargar deja la página en su estado
+      // inicial sin arrastrar nada del usuario que acaba de desaparecer.
+      window.location.reload();
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : String(err));
+      setPending(false);
+    }
+  }
+
+  return (
+    <section className="flex w-full max-w-sm flex-col gap-2 border-border border-t pt-6 text-left">
+      <h2 className="font-semibold text-on-surface">{t("dangerTitle")}</h2>
+      <p className="text-sm text-on-surface-muted">{t("dangerBody")}</p>
+
+      {confirming ? (
+        <>
+          <p className="rounded-card bg-red-50 p-3 text-sm text-red-700">{t("dangerShared")}</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={pending}
+              className="h-tap rounded-full bg-red-600 px-5 font-semibold text-white disabled:opacity-50"
+            >
+              {pending ? t("dangerDeleting") : t("dangerConfirm")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              disabled={pending}
+              className="h-tap rounded-full border border-border px-5 font-semibold text-on-surface disabled:opacity-50"
+            >
+              {t("dangerCancel")}
+            </button>
+          </div>
+        </>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setConfirming(true)}
+          className="self-start text-sm text-red-600 underline"
+        >
+          {t("dangerStart")}
+        </button>
+      )}
+
+      {errorMessage && <ErrorLine message={errorMessage} />}
+    </section>
   );
 }
 

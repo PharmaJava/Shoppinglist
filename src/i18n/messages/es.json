@@ -133,7 +133,20 @@
     "passwordTooShort": "La contraseña necesita al menos 8 caracteres.",
     "genericError": "Algo ha fallado.",
     "signedOutBodyPassword": "Entra con tu correo y tu contraseña, o crea una cuenta nueva.",
-    "passwordPlaceholderExisting": "Tu contraseña"
+    "passwordPlaceholderExisting": "Tu contraseña",
+    "nameTitle": "Tu nombre",
+    "nameHint": "Lo verán quienes compartan lista contigo, para saber quién ha añadido o marcado cada cosa. Puedes dejarlo vacío.",
+    "namePlaceholder": "Ej. María",
+    "nameSave": "Guardar",
+    "nameSaving": "Guardando…",
+    "nameSaved": "Nombre guardado.",
+    "dangerTitle": "Borrar la cuenta",
+    "dangerBody": "Se borran tu cuenta, tu perfil y las listas de las que eres propietario. Es inmediato y no se puede deshacer.",
+    "dangerShared": "Ojo: las listas que has creado desaparecerán también para quienes las comparten contigo. Si alguna debe sobrevivir, pide a otra persona que la copie antes.",
+    "dangerStart": "Quiero borrar mi cuenta",
+    "dangerConfirm": "Sí, borrar definitivamente",
+    "dangerCancel": "Cancelar",
+    "dangerDeleting": "Borrando…"
   },
   "footer": {
     "product": "Producto",
@@ -143,7 +156,11 @@
     "guides": "Guías",
     "blog": "Blog",
     "tagline": "La lista de la compra compartida, gratis y sin registro.",
-    "myLists": "Mis listas"
+    "myLists": "Mis listas",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "pricing": "Precios",
+    "legal": "Legal"
   },
   "landing": {
     "eyebrow": "Sin registro · Tiempo real · Funciona sin conexión",
@@ -214,7 +231,10 @@
     "voiceAdd": "Añadir por voz",
     "voiceListening": "Escuchando…",
     "supermarketMode": "Modo supermercado",
-    "exitSupermarketMode": "Salir del modo supermercado"
+    "exitSupermarketMode": "Salir del modo supermercado",
+    "memberYou": "Tú",
+    "memberUnnamed": "Alguien más",
+    "memberOwner": "· propietario"
   },
   "invite": {
     "joining": "Uniéndote a la lista…",
@@ -251,5 +271,43 @@
     "createError": "No se pudo crear la lista. Inténtalo de nuevo.",
     "guestWarning": "Estas listas viven sólo en este navegador. Añade tu correo para tenerlas en cualquier dispositivo.",
     "guestWarningCta": "Guardar mis listas"
+  },
+  "legal": {
+    "updated": "Última revisión: {date}",
+    "privacy": "Privacidad",
+    "terms": "Términos"
+  },
+  "pricing": {
+    "metaTitle": "Precios: gratis, y lo que vendrá después",
+    "metaDescription": "Crear, compartir y usar listas es gratis y va a seguir siéndolo. Aquí está lo que incluye y qué funciones de pago están previstas.",
+    "title": "Gratis, y con intención de seguir siéndolo",
+    "subtitle": "La lista compartida es el producto, no el cebo. No hay límite de listas, ni de productos, ni de personas con quien compartirlas.",
+    "freeTitle": "Gratis",
+    "freePrice": "0 €",
+    "freeNote": "Para siempre, sin tarjeta y sin registro obligatorio.",
+    "premiumTitle": "Premium",
+    "premiumPrice": "Sin precio todavía",
+    "premiumNote": "En preparación. Cuando exista, se anunciará antes de cobrar nada.",
+    "includedTitle": "Qué incluye lo gratuito",
+    "plannedTitle": "Qué estamos preparando para premium",
+    "whyTitle": "Por qué gratis",
+    "whyBody1": "Una lista de la compra sólo sirve si la tiene toda la casa, y cobrar por compartir rompe justo eso: basta con que una persona no pague para que la lista deje de funcionar para todos.",
+    "whyBody2": "Por eso lo compartido es gratuito y lo será. Lo de pago, si llega, será lo que ayuda a quien ya usa la aplicación a diario y sale de su bolsillo, no lo que hace falta para que funcione.",
+    "cta": "Crear una lista ahora",
+    "included1": "Listas y productos sin límite",
+    "included2": "Compartir con quien quieras, sin que se registren",
+    "included3": "Tiempo real entre todos los móviles",
+    "included4": "Funciona sin conexión y sincroniza al salir",
+    "included5": "Añadir por voz, modo supermercado y plantillas",
+    "planned1": "Historial de precios y cuánto te gastas al mes",
+    "planned2": "Menú semanal que genera la lista solo",
+    "planned3": "Listas por tienda y comparación entre supermercados"
+  },
+  "notFound": {
+    "metaTitle": "Página no encontrada",
+    "title": "Aquí no hay nada",
+    "body": "El enlace que has seguido no existe o ha cambiado. Si era una lista compartida, pide que te la vuelvan a enviar: los enlaces de lista no caducan, pero se escriben mal con facilidad.",
+    "home": "Ir al inicio",
+    "templates": "Ver plantillas"
   }
 }

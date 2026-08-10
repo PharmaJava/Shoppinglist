@@ -252,6 +252,23 @@ as $$
   );
 $$;
 
+-- ¿Comparte alguna lista conmigo? Habilita ver su nombre en una lista
+-- compartida. SECURITY DEFINER por lo mismo que las anteriores.
+create or replace function public.shares_list_with(p_user uuid)
+returns boolean
+language sql
+security definer
+stable
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.list_members mine
+    join public.list_members theirs on theirs.list_id = mine.list_id
+    where mine.user_id = auth.uid() and theirs.user_id = p_user
+  );
+$$;
+
 -- categories: catálogo de sistema, lectura pública (incluso sin sesión)
 create policy categories_select_all on public.categories for select using (true);
 
@@ -259,7 +276,8 @@ create policy categories_select_all on public.categories for select using (true)
 create policy products_select_all on public.products for select using (true);
 
 -- profiles
-create policy profiles_select_own on public.profiles for select using (id = auth.uid());
+create policy profiles_select_visible on public.profiles for select
+  using (id = auth.uid() or public.shares_list_with(id));
 create policy profiles_update_own on public.profiles for update using (id = auth.uid());
 
 -- lists

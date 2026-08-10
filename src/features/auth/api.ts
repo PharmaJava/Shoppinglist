@@ -127,3 +127,53 @@ export async function signOut(): Promise<void> {
   const { error } = await supabase.auth.signOut();
   if (error) throw new Error(error.message);
 }
+
+/**
+ * Nombre con el que te ven quienes comparten lista contigo. Vive en
+ * `profiles`, no en los metadatos de `auth.users`, porque tiene que poder
+ * leerlo otra persona — y para eso hay una política de RLS que lo permite
+ * entre miembros de una misma lista.
+ */
+export async function updateDisplayName(displayName: string): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) throw new Error("auth_required");
+
+  const trimmed = displayName.trim();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ display_name: trimmed.length > 0 ? trimmed : null })
+    .eq("id", data.user.id);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function fetchDisplayName(): Promise<string> {
+  const supabase = getSupabaseBrowserClient();
+
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) return "";
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name")
+    .eq("id", data.user.id)
+    .maybeSingle();
+
+  return profile?.display_name ?? "";
+}
+
+/**
+ * Borrado de cuenta (RGPD). La función de base de datos no acepta parámetros y
+ * actúa sobre `auth.uid()`, así que nadie puede borrar a otro. Tras borrar se
+ * cierra sesión para no dejar en el navegador un token que ya no vale.
+ */
+export async function deleteAccount(): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+
+  const { error } = await supabase.rpc("delete_own_account");
+  if (error) throw new Error(error.message);
+
+  await supabase.auth.signOut();
+}
