@@ -113,6 +113,9 @@ export default async function LocaleLayout({ children, params }: Props) {
                 <Link href="/" className="text-on-surface-muted hover:text-on-surface">
                   {tFooter("createList")}
                 </Link>
+                <Link href="/mis-listas" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("myLists")}
+                </Link>
                 <Link href="/cuenta" className="text-on-surface-muted hover:text-on-surface">
                   {tNav("login")}
                 </Link>

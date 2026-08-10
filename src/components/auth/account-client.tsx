@@ -80,10 +80,10 @@ function RegisteredPanel({ email }: { email: string }) {
       <p className="rounded-card bg-surface-muted px-4 py-3 font-medium text-on-surface">{email}</p>
 
       <Link
-        href="/"
+        href="/mis-listas"
         className="h-tap flex items-center rounded-full bg-brand px-6 font-semibold text-brand-contrast"
       >
-        {t("cta")}
+        {t("myLists")}
       </Link>
 
       <button

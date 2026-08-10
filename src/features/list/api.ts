@@ -198,6 +198,66 @@ export async function fetchListWithItems(
   return { list, items: items ?? [] };
 }
 
+export interface ListSummary {
+  list: List;
+  totalItems: number;
+  checkedItems: number;
+}
+
+/**
+ * Todas las listas a las que el usuario tiene acceso, con su progreso.
+ *
+ * Son dos consultas y no un `count` embebido a propósito: PostgREST sabe
+ * contar filas relacionadas, pero no dos veces con filtros distintos, y aquí
+ * hacen falta el total y los ya marcados. Traer `list_id` e `is_checked` de
+ * los productos vivos es una carga mínima —bytes por producto— y da el dato
+ * exacto sin añadir una vista a la base de datos.
+ */
+export async function fetchMyLists(): Promise<ListSummary[]> {
+  // A diferencia del resto de operaciones, aquí NO se crea sesión de invitado:
+  // sin sesión no hay listas que enseñar, y darle de alta una identidad a quien
+  // sólo ha entrado a mirar engordaría `auth.users` sin ninguna contrapartida
+  // (docs/00-PLAN.md §10, riesgo de crecimiento por invitados).
+  const userId = await getCurrentUserId();
+  if (!userId) return [];
+
+  const supabase = getSupabaseBrowserClient();
+
+  const { data: lists, error } = await supabase
+    .from("lists")
+    .select()
+    .is("archived_at", null)
+    .order("updated_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+  if (!lists || lists.length === 0) return [];
+
+  const { data: items, error: itemsError } = await supabase
+    .from("list_items")
+    .select("list_id, is_checked")
+    .in(
+      "list_id",
+      lists.map((list) => list.id),
+    )
+    .is("deleted_at", null);
+
+  if (itemsError) throw new Error(itemsError.message);
+
+  const progress = new Map<string, { total: number; checked: number }>();
+  for (const item of items ?? []) {
+    const entry = progress.get(item.list_id) ?? { total: 0, checked: 0 };
+    entry.total += 1;
+    if (item.is_checked) entry.checked += 1;
+    progress.set(item.list_id, entry);
+  }
+
+  return lists.map((list) => ({
+    list,
+    totalItems: progress.get(list.id)?.total ?? 0,
+    checkedItems: progress.get(list.id)?.checked ?? 0,
+  }));
+}
+
 export async function fetchCategories(): Promise<Category[]> {
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase.from("categories").select().order("sort_order");

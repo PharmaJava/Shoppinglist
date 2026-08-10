@@ -17,7 +17,8 @@
     "pricing": "Precios",
     "createList": "Crear lista gratis",
     "login": "Iniciar sesión",
-    "account": "Mi cuenta"
+    "account": "Mi cuenta",
+    "myLists": "Mis listas"
   },
   "categories": {
     "produce": "Fruta y verdura",
@@ -105,7 +106,8 @@
     "linkError": "El enlace no ha funcionado.",
     "linkExpired": "Puede haber caducado o haberse usado ya. Pide uno nuevo.",
     "confirmed": "Listo, tu cuenta está activa.",
-    "cta": "Crear una lista ahora"
+    "cta": "Crear una lista ahora",
+    "myLists": "Ver mis listas"
   },
   "footer": {
     "product": "Producto",
@@ -114,7 +116,8 @@
     "templates": "Plantillas",
     "guides": "Guías",
     "blog": "Blog",
-    "tagline": "La lista de la compra compartida, gratis y sin registro."
+    "tagline": "La lista de la compra compartida, gratis y sin registro.",
+    "myLists": "Mis listas"
   },
   "landing": {
     "eyebrow": "Sin registro · Tiempo real · Funciona sin conexión",
@@ -202,5 +205,25 @@
     "installBody": "Ábrela como una app, sin navegador, incluso sin conexión.",
     "installCta": "Instalar",
     "installDismiss": "Ahora no"
+  },
+  "myLists": {
+    "metaTitle": "Mis listas",
+    "title": "Mis listas",
+    "subtitle": "Todas las listas que has creado o en las que te han incluido.",
+    "loading": "Cargando tus listas…",
+    "error": "No se han podido cargar tus listas.",
+    "retry": "Reintentar",
+    "empty": "Todavía no tienes ninguna lista.",
+    "emptyCta": "Crea la primera escribiendo un producto.",
+    "progress": "{checked} de {total}",
+    "emptyList": "Sin productos",
+    "updated": "Actualizada {date}",
+    "newList": "Nueva lista",
+    "newListPlaceholder": "Ej. compra del sábado",
+    "creating": "Creando…",
+    "create": "Crear",
+    "createError": "No se pudo crear la lista. Inténtalo de nuevo.",
+    "guestWarning": "Estas listas viven sólo en este navegador. Añade tu correo para tenerlas en cualquier dispositivo.",
+    "guestWarningCta": "Guardar mis listas"
   }
 }
