@@ -263,8 +263,11 @@ create policy profiles_select_own on public.profiles for select using (id = auth
 create policy profiles_update_own on public.profiles for update using (id = auth.uid());
 
 -- lists
+-- El `owner_id = auth.uid()` no es redundante con `is_list_member`: en un
+-- INSERT ... RETURNING, Postgres evalúa las políticas de SELECT sobre la fila
+-- nueva antes de que el trigger `on_list_created` haya creado la membresía.
 create policy lists_select on public.lists for select
-  using (public.is_list_member(id));
+  using (owner_id = auth.uid() or public.is_list_member(id));
 create policy lists_insert on public.lists for insert
   with check (owner_id = auth.uid());
 create policy lists_update on public.lists for update

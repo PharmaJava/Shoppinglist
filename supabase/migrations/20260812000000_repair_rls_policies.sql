@@ -78,7 +78,7 @@ create policy profiles_update_own on public.profiles for update using (id = auth
 
 drop policy if exists lists_select on public.lists;
 create policy lists_select on public.lists for select
-  using (public.is_list_member(id));
+  using (owner_id = auth.uid() or public.is_list_member(id));
 
 drop policy if exists lists_insert on public.lists;
 create policy lists_insert on public.lists for insert

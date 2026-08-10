@@ -1,12 +1,6 @@
 import { nanoid } from "nanoid";
-import {
-  describeSessionForError,
-  ensureFreshGuestSession,
-  ensureGuestSession,
-  isRowLevelSecurityError,
-} from "@/features/auth/ensure-guest-session";
+import { ensureGuestSession } from "@/features/auth/ensure-guest-session";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { supabaseAnonKey, supabaseUrl } from "@/lib/supabase/env";
 import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { queueRowMutation } from "@/lib/sync/flush";
@@ -24,79 +18,14 @@ export async function createList(title: string): Promise<List> {
   const ownerId = await ensureGuestSession();
   const supabase = getSupabaseBrowserClient();
 
-  const insertList = (owner: string) =>
-    supabase
-      .from("lists")
-      .insert({ id: crypto.randomUUID(), title, owner_id: owner })
-      .select()
-      .single();
-
-  let { data, error } = await insertList(ownerId);
-
-  // La sesión en caché (localStorage/cookies) puede haber quedado obsoleta
-  // o inválida sin que el cliente lo detecte de antemano: getSession() no
-  // valida contra el servidor. Un rechazo de RLS aquí es la señal de que
-  // eso ha pasado — se fuerza una sesión nueva y se reintenta una vez.
-  if (error && isRowLevelSecurityError(error.message)) {
-    const freshOwnerId = await ensureFreshGuestSession();
-    ({ data, error } = await insertList(freshOwnerId));
-
-    if (error && isRowLevelSecurityError(error.message)) {
-      // Último recurso y prueba diagnóstica: repetir el insert por HTTP con la
-      // cabecera Authorization puesta a mano. Si esto sí funciona, el problema
-      // es que supabase-js no estaba adjuntando el token de sesión; si vuelve
-      // a fallar por RLS, el rechazo viene de verdad del servidor.
-      const viaRawFetch = await insertListWithExplicitAuth(title, freshOwnerId);
-      if (viaRawFetch.list) return viaRawFetch.list;
-
-      const debug = await describeSessionForError();
-      throw new Error(
-        `${error.message} [ownerId=${freshOwnerId}; ${debug}; fetch directo: ${viaRawFetch.diagnosis}]`,
-      );
-    }
-  }
+  const { data, error } = await supabase
+    .from("lists")
+    .insert({ id: crypto.randomUUID(), title, owner_id: ownerId })
+    .select()
+    .single();
 
   if (error || !data) throw new Error(error?.message ?? "No se pudo crear la lista.");
   return data;
-}
-
-/**
- * Inserta en `lists` por HTTP, adjuntando el token de sesión explícitamente en
- * vez de confiar en que supabase-js lo haga. Diagnóstico temporal para el fallo
- * persistente de RLS al crear listas — eliminar cuando esté resuelto.
- */
-async function insertListWithExplicitAuth(
-  title: string,
-  ownerId: string,
-): Promise<{ list: List | null; diagnosis: string }> {
-  const supabase = getSupabaseBrowserClient();
-  const { data } = await supabase.auth.getSession();
-  const token = data.session?.access_token;
-
-  if (!token) return { list: null, diagnosis: "sin token en sesión" };
-
-  try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/lists`, {
-      method: "POST",
-      headers: {
-        apikey: supabaseAnonKey,
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        Prefer: "return=representation",
-      },
-      body: JSON.stringify({ id: crypto.randomUUID(), title, owner_id: ownerId }),
-    });
-
-    const body = await response.text();
-    if (response.ok) {
-      const [row] = JSON.parse(body) as List[];
-      if (row) return { list: row, diagnosis: `OK ${response.status}` };
-    }
-
-    return { list: null, diagnosis: `HTTP ${response.status} ${body.slice(0, 200)}` };
-  } catch (err) {
-    return { list: null, diagnosis: `excepción: ${err instanceof Error ? err.message : err}` };
-  }
 }
 
 /**
@@ -264,26 +193,13 @@ export async function createInvite(listId: string, options: InviteOptions = {}):
     ? new Date(Date.now() + options.expiresInDays * 86_400_000).toISOString()
     : null;
 
-  const insertInvite = (createdBy: string) =>
-    supabase.from("list_invites").insert({
-      token,
-      list_id: listId,
-      created_by: createdBy,
-      role: options.role ?? "editor",
-      expires_at: expiresAt,
-    });
-
-  let { error } = await insertInvite(userId);
-
-  if (error && isRowLevelSecurityError(error.message)) {
-    const freshUserId = await ensureFreshGuestSession();
-    ({ error } = await insertInvite(freshUserId));
-
-    if (error && isRowLevelSecurityError(error.message)) {
-      const debug = await describeSessionForError();
-      throw new Error(`${error.message} [userId=${freshUserId}; ${debug}]`);
-    }
-  }
+  const { error } = await supabase.from("list_invites").insert({
+    token,
+    list_id: listId,
+    created_by: userId,
+    role: options.role ?? "editor",
+    expires_at: expiresAt,
+  });
 
   if (error) throw new Error(error.message);
   return token;
