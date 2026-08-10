@@ -167,9 +167,25 @@ const KEYWORDS: Record<Locale, Record<string, string>> = {
 
 const OTHER_CATEGORY = "other";
 
+/**
+ * Entradas cargadas desde la tabla `products` (ver ./catalog.ts), fusionadas
+ * en caliente sobre el diccionario estático. Éste último sigue siendo la
+ * fuente offline-first: si la carga de red no ha terminado (o falla), la
+ * categorización sigue funcionando igual, sólo que con menos cobertura.
+ */
+const mergedDictionaryCache: Partial<Record<Locale, Record<string, string>>> = {};
+
+export function mergeCatalogEntries(locale: Locale, entries: Record<string, string>): void {
+  mergedDictionaryCache[locale] = { ...KEYWORDS[locale], ...entries };
+}
+
+function getDictionary(locale: Locale): Record<string, string> {
+  return mergedDictionaryCache[locale] ?? KEYWORDS[locale];
+}
+
 export function categorize(name: string, locale: Locale): string {
   const normalized = normalizeProductName(name);
-  const dictionary = KEYWORDS[locale];
+  const dictionary = getDictionary(locale);
 
   const exact = dictionary[normalized];
   if (exact) {
