@@ -31,11 +31,11 @@ viaja dentro del `next` del callback porque con PKCE el enlace llega como un
 `code` indistinguible del de cualquier otro correo: sin la marca, la página no
 sabría que toca pedir una contraseña nueva en vez de dar la bienvenida.
 
-## 2. Configuración en el panel de Supabase
+## 3. Configuración en el panel de Supabase
 
 Sin esto los enlaces del correo no funcionan.
 
-### 2.1 Authentication → URL Configuration
+### 3.1 Authentication → URL Configuration
 
 **Site URL**
 
@@ -55,7 +55,7 @@ La última cubre las *preview* de Vercel. El cliente construye la URL de retorno
 con `window.location.origin`, así que cada despliegue vuelve a sí mismo sin
 tocar configuración.
 
-### 2.2 Authentication → Sign In / Providers
+### 3.2 Authentication → Sign In / Providers
 
 - **Anonymous sign-ins**: sigue **activado**. Es la identidad de invitado, no
   una alternativa al login.
@@ -65,7 +65,7 @@ tocar configuración.
   evitable; subirlo también aquí a 8 cierra el hueco por si algún día se llama
   a la API desde fuera de la interfaz.
 
-### 2.3 Authentication → Email Templates (opcional, recomendado)
+### 3.3 Authentication → Email Templates (opcional, recomendado)
 
 Por defecto el enlace usa el flujo **PKCE**, que exige abrir el correo **en el
 mismo navegador** que lo pidió — el *code verifier* vive en una cookie de ese
@@ -93,7 +93,7 @@ Para que funcione en cualquier dispositivo, cambia el enlace de las plantillas
 añadirle el token conserva el idioma y el destino. El route handler acepta las
 dos formas, así que este cambio no rompe nada si se aplica a medias.
 
-## 3. El callback
+## 4. El callback
 
 `src/app/auth/callback/route.ts`, fuera de `[locale]` porque su URL está
 registrada en Supabase y debe resolver exacta, sin negociación de idioma
@@ -104,11 +104,27 @@ de Supabase a un parámetro `authError` que la página de cuenta muestra, y
 **valida `next`**: sólo rutas internas. Sin esa comprobación sería un *open
 redirect* con el que llevar a un usuario recién autenticado a un dominio ajeno.
 
-## 4. Qué falta
+## 5. Borrado de cuenta (RGPD)
+
+`public.delete_own_account()`, SECURITY DEFINER, sin parámetros: actúa siempre
+sobre `auth.uid()`, así que nadie puede borrar a otro. No hace falta Edge
+Function ni `service_role`.
+
+El borrado cascadea por las claves foráneas a perfil, listas propias,
+membresías, invitaciones, historial y suscripción. **Consecuencia a tener
+presente**: las listas de las que la persona es propietaria desaparecen también
+para quienes las compartían. La interfaz lo advierte antes de confirmar.
+
+## 6. Nombre visible
+
+Vive en `profiles.display_name`, no en los metadatos de `auth.users`, porque
+tiene que poder leerlo otra persona. La política `profiles_select_visible` lo
+permite entre quienes comparten alguna lista — exactamente la gente que ya ve
+tus productos.
+
+## 7. Qué falta
 
 - Google y Apple con `linkIdentity()`, que convierte al invitado igual que el
   email.
-- Dashboard multi-lista, ahora que una cuenta puede tener varias en varios
-  dispositivos.
-- Borrado de cuenta (RGPD): `auth.users` cascadea a todo lo demás, así que es
-  una Edge Function con `service_role`.
+- Transferir la propiedad de una lista antes de borrar la cuenta, para que una
+  lista familiar sobreviva a que su creador se dé de baja.
