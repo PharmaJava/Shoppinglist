@@ -4,7 +4,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import type { Locale } from "@/lib/supabase/types";
 import { addItem, deleteItem, toggleItem } from "./api";
-import type { ListWithItems } from "./types";
+import type { ListItem, ListWithItems } from "./types";
+
+function findItem(current: ListWithItems | undefined, itemId: string): ListItem | undefined {
+  return current?.items.find((item) => item.id === itemId);
+}
 
 export function useAddItem(listId: string) {
   const queryClient = useQueryClient();
@@ -32,8 +36,12 @@ export function useToggleItem(listId: string) {
   const queryKey = ["list", listId] as const;
 
   return useMutation({
-    mutationFn: ({ itemId, isChecked }: { itemId: string; isChecked: boolean }) =>
-      toggleItem(itemId, isChecked),
+    mutationFn: ({ itemId, isChecked }: { itemId: string; isChecked: boolean }) => {
+      const current = queryClient.getQueryData<ListWithItems>(queryKey);
+      const item = findItem(current, itemId);
+      if (!item) throw new Error(`Producto ${itemId} no encontrado en caché.`);
+      return toggleItem(item, isChecked);
+    },
     onMutate: async ({ itemId, isChecked }) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData<ListWithItems>(queryKey);
@@ -61,7 +69,12 @@ export function useDeleteItem(listId: string) {
   const queryKey = ["list", listId] as const;
 
   return useMutation({
-    mutationFn: (itemId: string) => deleteItem(itemId),
+    mutationFn: (itemId: string) => {
+      const current = queryClient.getQueryData<ListWithItems>(queryKey);
+      const item = findItem(current, itemId);
+      if (!item) throw new Error(`Producto ${itemId} no encontrado en caché.`);
+      return deleteItem(item);
+    },
     onMutate: async (itemId: string) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData<ListWithItems>(queryKey);

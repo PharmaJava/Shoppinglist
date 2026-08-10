@@ -1,15 +1,11 @@
+import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
 import { QuickCreateForm } from "@/components/marketing/quick-create-form";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
 
-export default async function LandingPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
 
