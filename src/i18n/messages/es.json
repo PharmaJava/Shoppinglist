@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "siteName": "ShoppingList",
-    "landingTitle": "Lista de la compra compartida, sin registro | ShoppingList",
+    "siteName": "ListaSupermercado",
+    "landingTitle": "Lista de la compra compartida, sin registro | ListaSupermercado",
     "landingDescription": "Crea tu lista de la compra en un segundo, compártela por WhatsApp con tu familia y marcad juntos lo que vais comprando. Gratis, sin cuenta, funciona sin conexión."
   },
   "nav": {
@@ -67,7 +67,7 @@
     "retry": "Reintentar"
   },
   "pwa": {
-    "installTitle": "Instala ShoppingList",
+    "installTitle": "Instala ListaSupermercado",
     "installBody": "Ábrela como una app, sin navegador, incluso sin conexión.",
     "installCta": "Instalar",
     "installDismiss": "Ahora no"

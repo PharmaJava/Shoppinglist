@@ -5,7 +5,7 @@ import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { queueRowMutation } from "@/lib/sync/flush";
 import { categorize } from "./categorize";
-import type { ParsedVoiceItem } from "./parse-voice";
+import { type ParsedVoiceItem, parseVoiceTranscript } from "./parse-voice";
 import { keyAtEnd } from "./sort-key";
 import type { Category, List, ListItem } from "./types";
 
@@ -91,13 +91,24 @@ export async function addParsedItems(
   return created;
 }
 
-/** Crea la lista y su primer producto en una sola operación (alta directa de la landing). */
-export async function createListWithFirstItem(
-  firstItemName: string,
+/**
+ * Crea la lista y sus productos a partir de lo escrito en la landing.
+ *
+ * Se reutiliza el parser de voz: "leche, pan, tomates" debe separarse igual
+ * escrito que dictado, y de paso se reconocen cantidades ("2 litros de leche").
+ * El título llega ya traducido desde el componente, que es quien tiene i18n.
+ */
+export async function createListFromInput(
+  input: string,
   locale: Locale,
+  title: string,
 ): Promise<List> {
-  const list = await createList(firstItemName.trim().slice(0, 60) || "Mi lista");
-  await addItem(list.id, firstItemName, locale, null);
+  const parsed = parseVoiceTranscript(input, locale);
+  const items: ParsedVoiceItem[] =
+    parsed.length > 0 ? parsed : [{ name: input.trim(), qty: null, unit: null }];
+
+  const list = await createList(title);
+  await addParsedItems(list.id, items, locale, null);
   return list;
 }
 

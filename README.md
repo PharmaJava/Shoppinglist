@@ -1,10 +1,8 @@
-# ShoppingList
+# ListaSupermercado
 
-Lista de la compra colaborativa, en tiempo real, **sin registro obligatorio**.
-Crea una lista, comparte el enlace, y toda la familia va marcando productos mientras compra.
-
-> Estado: **fase de diseño**. Este repositorio contiene por ahora el plan de producto y
-> técnico. La implementación arranca en la Fase 1 (ver roadmap).
+[listasupermercado.com](https://listasupermercado.com) — lista de la compra colaborativa, en
+tiempo real, **sin registro obligatorio**. Crea una lista, comparte el enlace, y toda la familia
+va marcando productos mientras compra.
 
 ## Documentación
 

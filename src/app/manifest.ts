@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "ShoppingList — lista de la compra compartida",
-    short_name: "ShoppingList",
+    name: "ListaSupermercado — lista de la compra compartida",
+    short_name: "ListaSupermercado",
     description: "Crea una lista de la compra, compártela y marcad juntos mientras compráis.",
     start_url: "/",
     scope: "/",

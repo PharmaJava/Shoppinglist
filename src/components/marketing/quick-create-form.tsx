@@ -3,11 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import { createListWithFirstItem } from "@/features/list/api";
+import { createListFromInput } from "@/features/list/api";
 import type { Locale } from "@/lib/supabase/types";
 
 export function QuickCreateForm() {
   const t = useTranslations("landing");
+  const tList = useTranslations("list");
   const locale = useLocale() as Locale;
   const router = useRouter();
   const [value, setValue] = useState("");
@@ -22,7 +23,7 @@ export function QuickCreateForm() {
     setPending(true);
     setErrorMessage(null);
     try {
-      const list = await createListWithFirstItem(name, locale);
+      const list = await createListFromInput(name, locale, tList("untitled"));
       router.push(`/l/${list.id}`);
     } catch (err) {
       console.error("No se pudo crear la lista:", err);
