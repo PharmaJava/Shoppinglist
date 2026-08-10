@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
+import { AccountClient } from "@/components/auth/account-client";
 import { Logo } from "@/components/brand/logo";
-import { Link } from "@/i18n/navigation";
+import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -12,11 +14,8 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-/**
- * Destino del botón «Iniciar sesión» mientras no existe el registro (Fase 2,
- * Supabase Auth). Página honesta de «próximamente», noindex: no aporta nada a
- * la búsqueda y no debe posicionar por «iniciar sesión».
- */
+/** `noindex`: no aporta nada a la búsqueda y no debe posicionar por «iniciar
+ *  sesión», que además atrae tráfico de phishing. */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
@@ -36,17 +35,14 @@ export default async function AccountPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: "account" });
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-6 px-4 py-20 text-center sm:px-6">
+    <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-8 px-4 py-16 sm:px-6">
       <Logo size={56} />
-      <h1 className="text-3xl font-bold tracking-tight text-on-surface">{t("title")}</h1>
-      <p className="text-lg text-on-surface-muted">{t("body")}</p>
-      <p className="rounded-card bg-brand/10 p-4 text-sm text-on-surface">{t("guestNote")}</p>
-      <Link
-        href="/"
-        className="h-tap flex items-center rounded-full bg-brand px-6 font-semibold text-brand-contrast"
-      >
-        {t("cta")}
-      </Link>
+      {/* `useSearchParams` obliga a envolver en Suspense para no volver
+          dinámica toda la página. */}
+      <Suspense fallback={<p className="text-on-surface-muted">{t("loadingTitle")}</p>}>
+        {/* Ruta pública, no la interna: en inglés es /en/account. */}
+        <AccountClient callbackNext={getPathname({ locale, href: "/cuenta" })} />
+      </Suspense>
     </div>
   );
 }

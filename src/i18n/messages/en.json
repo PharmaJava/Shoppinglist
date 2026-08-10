@@ -16,7 +16,8 @@
     "pricing": "Pricing",
     "createList": "Create free list",
     "blog": "Blog",
-    "login": "Sign in"
+    "login": "Sign in",
+    "account": "My account"
   },
   "categories": {
     "produce": "Produce",
@@ -169,10 +170,28 @@
     "readMore": "Read the article"
   },
   "account": {
-    "title": "Accounts are coming soon",
     "metaTitle": "Sign in",
-    "body": "We're building accounts: you'll be able to keep your lists across devices, name household members, and see price history.",
-    "guestNote": "Meanwhile you lose nothing: your guest lists are saved in this browser, and when accounts arrive they will become yours automatically the moment you sign up.",
+    "loadingTitle": "Loading your account…",
+    "signedOutTitle": "Sign in or create your account",
+    "signedOutBody": "We'll email you a link. No passwords — tap it and you're in.",
+    "guestTitle": "Save your lists",
+    "guestBody": "Right now your lists live only in this browser. Add your email and you'll have them on any device.",
+    "guestKeepsEverything": "Nothing is lost and nothing to copy over: same lists, same link for whoever already shares them with you.",
+    "registeredTitle": "Your account",
+    "registeredBody": "Your lists are saved to your account. Sign in with this email from any device.",
+    "signOut": "Sign out",
+    "signingOut": "Signing out…",
+    "emailLabel": "Your email",
+    "emailPlaceholder": "you@email.com",
+    "submit": "Send link",
+    "submitting": "Sending…",
+    "sentTitle": "Check your email",
+    "sentBody": "We sent a link to {email}. Open it on this device if you can, and you're done.",
+    "sentSpam": "If it doesn't show up within a couple of minutes, check your spam folder.",
+    "error": "Couldn't send the link.",
+    "linkError": "That link didn't work.",
+    "linkExpired": "It may have expired or already been used. Request a new one.",
+    "confirmed": "You're all set — your account is active.",
     "cta": "Create a list now"
   },
   "footer": {

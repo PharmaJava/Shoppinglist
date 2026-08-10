@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+import { AccountNavLink } from "@/components/auth/account-nav-link";
 import { Logo } from "@/components/brand/logo";
 import { LanguageSwitcher } from "@/components/marketing/language-switcher";
 import { Link } from "@/i18n/navigation";
@@ -89,12 +90,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             </Link>
           </nav>
           <LanguageSwitcher />
-          <Link
-            href="/cuenta"
-            className="shrink-0 whitespace-nowrap rounded-full border border-brand px-4 py-1.5 text-sm font-semibold text-brand transition-colors hover:bg-brand hover:text-brand-contrast"
-          >
-            {tNav("login")}
-          </Link>
+          <AccountNavLink />
         </div>
       </header>
 

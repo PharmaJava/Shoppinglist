@@ -6,8 +6,10 @@ import { refreshSupabaseSession } from "@/lib/supabase/middleware";
 const intlMiddleware = createIntlMiddleware(routing);
 
 // Rutas de la app (no de marketing): no llevan prefijo de idioma y no deben
-// pasar por la negociación/redirección de next-intl.
-const APP_ROUTE = /^\/(l|i|share-target)(\/|$)/;
+// pasar por la negociación/redirección de next-intl. `/auth` incluida: la URL
+// de redirección está registrada en Supabase y debe resolver tal cual, sin que
+// un redirect a `/es/auth/...` invalide el enlace del correo.
+const APP_ROUTE = /^\/(l|i|share-target|auth)(\/|$)/;
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
