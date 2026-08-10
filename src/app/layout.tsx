@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -18,6 +19,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             {children}
           </QueryProvider>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
