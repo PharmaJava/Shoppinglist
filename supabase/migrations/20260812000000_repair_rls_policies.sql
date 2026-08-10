@@ -180,7 +180,7 @@ create policy subscriptions_select_own on public.subscriptions for select using 
 
 -- ── Verificación: debe listar 4 filas (select/insert/update/delete) ─
 
-select polname, cmd
-from pg_policy
-where polrelid = 'public.lists'::regclass
-order by polname;
+select policyname, cmd
+from pg_policies
+where schemaname = 'public' and tablename = 'lists'
+order by policyname;
