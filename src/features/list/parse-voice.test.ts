@@ -29,6 +29,12 @@ describe("parseVoiceTranscript — español", () => {
     const result = parseVoiceTranscript("leche, pan, huevos", "es");
     expect(result.map((item) => item.name)).toEqual(["Leche", "Pan", "Huevos"]);
   });
+
+  // `createListFromInput` depende de este contrato para decidir cuándo caer
+  // al texto original en vez de crear una lista sin productos.
+  it("devuelve una lista vacía si no queda nada tras separar", () => {
+    expect(parseVoiceTranscript(" , , ", "es")).toEqual([]);
+  });
 });
 
 describe("parseVoiceTranscript — inglés", () => {

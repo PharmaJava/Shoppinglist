@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "siteName": "ShoppingList",
-    "landingTitle": "Shared shopping list, no sign-up | ShoppingList",
+    "siteName": "ListaSupermercado",
+    "landingTitle": "Shared shopping list, no sign-up | ListaSupermercado",
     "landingDescription": "Create your shopping list in seconds, share it with your family, and check off items together while you shop. Free, no account, works offline."
   },
   "nav": {
@@ -67,7 +67,7 @@
     "retry": "Retry"
   },
   "pwa": {
-    "installTitle": "Install ShoppingList",
+    "installTitle": "Install ListaSupermercado",
     "installBody": "Open it like an app, no browser, even offline.",
     "installCta": "Install",
     "installDismiss": "Not now"

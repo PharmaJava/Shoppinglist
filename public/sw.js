@@ -10,8 +10,8 @@
  * Subir VERSION invalida todas las cachés antiguas en el próximo `activate`.
  */
 const VERSION = "v1";
-const SHELL_CACHE = `shoppinglist-shell-${VERSION}`;
-const RUNTIME_CACHE = `shoppinglist-runtime-${VERSION}`;
+const SHELL_CACHE = `listasupermercado-shell-${VERSION}`;
+const RUNTIME_CACHE = `listasupermercado-runtime-${VERSION}`;
 const OFFLINE_URL = "/offline.html";
 
 const PRECACHE_URLS = [

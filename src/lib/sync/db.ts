@@ -1,3 +1,6 @@
+// Conserva el nombre anterior a la marca ListaSupermercado a propósito: es un
+// identificador interno de IndexedDB, y renombrarlo dejaría inaccesibles los
+// cambios pendientes de sincronizar de quien ya tuviera la app instalada.
 const DB_NAME = "shoppinglist-outbox";
 const DB_VERSION = 1;
 export const OPERATIONS_STORE = "operations";

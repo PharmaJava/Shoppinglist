@@ -1,4 +1,4 @@
-# Plan maestro — ShoppingList
+# Plan maestro — ListaSupermercado
 
 ## 1. Visión y posicionamiento
 
@@ -350,7 +350,7 @@ Android, Capacitor en iOS), integraciones (Alexa, Siri Shortcuts, Google Home).
 
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
-| **`shoppinglist.com` no está disponible** (comprobado: registrado, no comprable) | Alto — condiciona marca, SEO y correo | Decidir la marca **antes de la Fase 0**: negociar la compra al titular, o elegir alternativa con intención de búsqueda (`getshoppinglist.com` sí está libre, ~11 $/año). Toda referencia al dominio en el código debe salir de una variable de entorno, nunca escrita a mano. |
+| ~~`shoppinglist.com` no está disponible~~ **Resuelto**: la marca es **ListaSupermercado**, sobre `listasupermercado.com` | — | El dominio exacto de la keyword en español es un activo de SEO mejor que el genérico en inglés. Toda referencia al dominio en el código sale de `NEXT_PUBLIC_SITE_URL`, nunca escrita a mano. |
 | Nombre genérico → marca difícil de posicionar | Medio | La keyword exacta ayuda al SEO pero no defiende la marca. Compensar con producto reconocible y contenido de marca. |
 | Abuso del alta anónima | Medio | Turnstile en el alta, rate limiting en el borde, cron de purga de anónimos huérfanos. |
 | Crecimiento de `auth.users` por invitados | Medio | Purga a 30 días sin listas; monitorizar tamaño semanalmente. |
