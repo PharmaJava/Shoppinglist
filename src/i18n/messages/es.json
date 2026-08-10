@@ -16,7 +16,8 @@
     "blog": "Blog",
     "pricing": "Precios",
     "createList": "Crear lista gratis",
-    "login": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "account": "Mi cuenta"
   },
   "categories": {
     "produce": "Fruta y verdura",
@@ -82,10 +83,28 @@
     "readMore": "Leer el artículo"
   },
   "account": {
-    "title": "Tu cuenta, muy pronto",
     "metaTitle": "Iniciar sesión",
-    "body": "Estamos preparando las cuentas: podrás guardar tus listas en varios dispositivos, ponerles nombre a los miembros y ver el historial de precios.",
-    "guestNote": "Mientras tanto no pierdes nada: tus listas de invitado se guardan en este navegador y, cuando existan las cuentas, se convertirán en tuyas automáticamente al registrarte.",
+    "loadingTitle": "Cargando tu cuenta…",
+    "signedOutTitle": "Entra o crea tu cuenta",
+    "signedOutBody": "Te mandamos un enlace por correo. Sin contraseñas: pulsas y estás dentro.",
+    "guestTitle": "Guarda tus listas",
+    "guestBody": "Ahora mismo tus listas viven sólo en este navegador. Añade tu correo y las tendrás en cualquier dispositivo.",
+    "guestKeepsEverything": "No pierdes nada ni tienes que copiar nada: son las mismas listas, con el mismo enlace para quien ya las comparte contigo.",
+    "registeredTitle": "Tu cuenta",
+    "registeredBody": "Tus listas están guardadas en tu cuenta. Entra con este correo desde cualquier dispositivo.",
+    "signOut": "Cerrar sesión",
+    "signingOut": "Cerrando sesión…",
+    "emailLabel": "Tu correo electrónico",
+    "emailPlaceholder": "tu@correo.com",
+    "submit": "Enviar enlace",
+    "submitting": "Enviando…",
+    "sentTitle": "Revisa tu correo",
+    "sentBody": "Hemos enviado un enlace a {email}. Ábrelo desde este mismo dispositivo si puedes, y listo.",
+    "sentSpam": "Si no aparece en un par de minutos, mira en spam.",
+    "error": "No se ha podido enviar el enlace.",
+    "linkError": "El enlace no ha funcionado.",
+    "linkExpired": "Puede haber caducado o haberse usado ya. Pide uno nuevo.",
+    "confirmed": "Listo, tu cuenta está activa.",
     "cta": "Crear una lista ahora"
   },
   "footer": {
