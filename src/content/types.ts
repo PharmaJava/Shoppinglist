@@ -96,6 +96,19 @@ export interface Guide extends ContentBase {
   relatedGuides: ContentKey[];
 }
 
+/**
+ * Artículo de blog. Misma estructura editorial que una guía, pero distinta
+ * intención: la guía es evergreen y atada al producto; el post ataca consultas
+ * de actualidad o de opinión y puede caducar. Mantenerlos separados permite
+ * que el hub del blog no diluya el cluster de guías (docs/02-SEO.md §4.1).
+ */
+export interface Post extends ContentBase {
+  publishedAt: string;
+  relatedTemplates: ContentKey[];
+  relatedGuides: ContentKey[];
+  relatedPosts: ContentKey[];
+}
+
 /** Total de productos de una plantilla, para el hub y los datos estructurados. */
 export function countTemplateItems(template: Template): number {
   return template.sections.reduce((total, section) => total + section.items.length, 0);
