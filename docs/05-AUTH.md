@@ -1,18 +1,35 @@
 # Autenticación — Fase 2
 
-Login por email sin contraseña, con conversión de invitado a usuario permanente
-**conservando el mismo `auth.uid()`** (ver `docs/00-PLAN.md` §2.2).
+Login por email, con o sin contraseña, y conversión de invitado a usuario
+permanente **conservando el mismo `auth.uid()`** (ver `docs/00-PLAN.md` §2.2).
 
-## 1. Los tres estados
+## 1. Los dos métodos
 
-| Estado | Qué ve | Qué ocurre al enviar el correo |
+Se ofrecen ambos y la persona elige; ninguno excluye al otro sobre la misma
+cuenta.
+
+| Método | Cuándo conviene |
+|---|---|
+| **Enlace por correo** | Alta más rápida, nada que recordar. Es el que está seleccionado por defecto. |
+| **Contraseña** | Entrar sin depender del correo cada vez, y sin esperar a que llegue nada. |
+
+## 2. Los tres estados
+
+| Estado | Qué ve | Qué ocurre |
 |---|---|---|
-| Sin sesión | «Entra o crea tu cuenta» | `signInWithOtp` con `shouldCreateUser: true`. No hay pantalla de registro separada: entrar y darse de alta son lo mismo. |
-| Invitado (`is_anonymous`) | «Guarda tus listas» | `updateUser({ email })`. Añade un email al usuario anónimo existente: **mismo UUID, mismas listas, cero migración de datos**. |
+| Sin sesión | «Entra o crea tu cuenta» | Con enlace: `signInWithOtp` con `shouldCreateUser: true` — entrar y darse de alta son lo mismo. Con contraseña: `signInWithPassword`, o `signUp` si elige crear cuenta. |
+| Invitado (`is_anonymous`) | «Guarda tus listas» | `updateUser({ email })` o `updateUser({ email, password })`. Añade credenciales al usuario anónimo existente: **mismo UUID, mismas listas, cero migración de datos**. |
 | Registrado | Su correo y cerrar sesión | — |
 
 El invitado sigue siendo anónimo hasta que confirma el correo. Si abandona a
 medias no pierde nada: conserva su sesión de invitado y sus listas.
+
+### Recuperación de contraseña
+
+`resetPasswordForEmail` con destino `…/cuenta?recovery=1`. Ese `?recovery=1`
+viaja dentro del `next` del callback porque con PKCE el enlace llega como un
+`code` indistinguible del de cualquier otro correo: sin la marca, la página no
+sabría que toca pedir una contraseña nueva en vez de dar la bienvenida.
 
 ## 2. Configuración en el panel de Supabase
 
@@ -43,6 +60,10 @@ tocar configuración.
 - **Anonymous sign-ins**: sigue **activado**. Es la identidad de invitado, no
   una alternativa al login.
 - **Email**: activado, con *Confirm email* activado.
+- **Minimum password length**: 6 por defecto en Supabase. La interfaz exige 8 y
+  lo comprueba antes de llamar, para no gastar un viaje de red en un error
+  evitable; subirlo también aquí a 8 cierra el hueco por si algún día se llama
+  a la API desde fuera de la interfaz.
 
 ### 2.3 Authentication → Email Templates (opcional, recomendado)
 
@@ -60,6 +81,12 @@ Para que funcione en cualquier dispositivo, cambia el enlace de las plantillas
 
 <!-- Change Email Address (conversión de invitado a cuenta) -->
 <a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=email_change">Confirmar</a>
+
+<!-- Confirm signup (alta con contraseña) -->
+<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=signup">Confirmar</a>
+
+<!-- Reset Password -->
+<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=recovery">Cambiar contraseña</a>
 ```
 
 `{{ .RedirectTo }}` ya es nuestra propia URL de callback con su `next`, así que

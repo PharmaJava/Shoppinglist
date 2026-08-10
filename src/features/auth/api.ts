@@ -53,6 +53,75 @@ export async function linkEmailToGuestSession(email: string, next: string): Prom
   if (error) throw new Error(error.message);
 }
 
+/**
+ * Alta con contraseña elegida por la persona. También requiere confirmar el
+ * correo, así que hasta entonces no hay sesión: el mensaje de la interfaz es
+ * el mismo que con enlace mágico.
+ */
+export async function signUpWithPassword(
+  email: string,
+  password: string,
+  next: string,
+): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: callbackUrl(next) },
+  });
+
+  if (error) throw new Error(error.message);
+}
+
+export async function signInWithPassword(email: string, password: string): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw new Error(error.message);
+}
+
+/**
+ * Convierte al invitado en usuario permanente con correo **y** contraseña en
+ * una sola operación, conservando su UUID igual que la variante sin contraseña.
+ */
+export async function linkPasswordToGuestSession(
+  email: string,
+  password: string,
+  next: string,
+): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+
+  const { error } = await supabase.auth.updateUser(
+    { email, password },
+    { emailRedirectTo: callbackUrl(next) },
+  );
+
+  if (error) throw new Error(error.message);
+}
+
+/**
+ * Recuperación de contraseña. El destino lleva ya `?recovery=1` para que la
+ * página de cuenta sepa que debe pedir una contraseña nueva: con el flujo PKCE
+ * el callback recibe un `code` indistinguible del de cualquier otro enlace.
+ */
+export async function sendPasswordReset(email: string, next: string): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: callbackUrl(next),
+  });
+
+  if (error) throw new Error(error.message);
+}
+
+/** Fija la contraseña nueva. Requiere sesión, que es lo que deja el enlace de
+ *  recuperación al canjearse. */
+export async function updatePassword(password: string): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) throw new Error(error.message);
+}
+
 export async function signOut(): Promise<void> {
   const supabase = getSupabaseBrowserClient();
   const { error } = await supabase.auth.signOut();
