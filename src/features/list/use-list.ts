@@ -2,7 +2,6 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { track } from "@/lib/analytics/posthog";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ListItemRow, ListRow } from "@/lib/supabase/types";
 import { fetchListWithItems } from "./api";
@@ -29,11 +28,6 @@ export function useList(listId: string) {
     queryFn: () => fetchListWithItems(listId),
     enabled: Boolean(listId),
   });
-
-  // Señal de retención (docs/00-PLAN.md §1): abrir una lista ya existente.
-  useEffect(() => {
-    if (query.isSuccess) track("list_opened", { list_id: listId });
-  }, [listId, query.isSuccess]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: queryKey se deriva de listId; incluir queryClient/queryKey causaría una resuscripción innecesaria en cada render.
   useEffect(() => {

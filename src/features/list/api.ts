@@ -1,6 +1,5 @@
 import { nanoid } from "nanoid";
 import { ensureGuestSession } from "@/features/auth/ensure-guest-session";
-import { track } from "@/lib/analytics/posthog";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { ListRole, Locale } from "@/lib/supabase/types";
@@ -26,7 +25,6 @@ export async function createList(title: string): Promise<List> {
     .single();
 
   if (error || !data) throw new Error(error?.message ?? "No se pudo crear la lista.");
-  track("list_created", { list_id: data.id });
   return data;
 }
 
@@ -204,7 +202,6 @@ export async function createInvite(listId: string, options: InviteOptions = {}):
   });
 
   if (error) throw new Error(error.message);
-  track("invite_created", { list_id: listId });
   return token;
 }
 
@@ -213,6 +210,5 @@ export async function joinListByToken(token: string): Promise<string> {
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase.rpc("join_list_by_token", { p_token: token });
   if (error || !data) throw new Error(error?.message ?? "invite_invalid");
-  track("invite_joined", { list_id: data });
   return data;
 }
