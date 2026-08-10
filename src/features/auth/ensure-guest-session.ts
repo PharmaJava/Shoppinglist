@@ -61,7 +61,7 @@ export async function describeSessionForError(): Promise<string> {
   try {
     const payload = token.split(".")[1] ?? "";
     const json = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
-    clientSide = `token sub=${json.sub} role=${json.role} is_anonymous=${json.is_anonymous ?? "?"} exp=${json.exp}`;
+    clientSide = `token sub=${json.sub} role=${json.role} is_anonymous=${json.is_anonymous ?? "?"} exp=${json.exp} iss=${json.iss}`;
   } catch {
     clientSide = "token presente pero no se pudo decodificar";
   }
