@@ -57,11 +57,21 @@ export async function describeSessionForError(): Promise<string> {
   if (error) return `sin sesión (error: ${error.message})`;
   if (!token) return "sin sesión (sin token de acceso)";
 
+  let clientSide: string;
   try {
     const payload = token.split(".")[1] ?? "";
     const json = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
-    return `token sub=${json.sub} role=${json.role} is_anonymous=${json.is_anonymous ?? "?"} exp=${json.exp}`;
+    clientSide = `token sub=${json.sub} role=${json.role} is_anonymous=${json.is_anonymous ?? "?"} exp=${json.exp}`;
   } catch {
-    return "token presente pero no se pudo decodificar";
+    clientSide = "token presente pero no se pudo decodificar";
   }
+
+  // Contraste con lo que el servidor ve realmente vía PostgREST (no siempre
+  // coincide con el JWT decodificado en cliente: ver debug_auth_context()).
+  const { data: serverCtx, error: rpcError } = await supabase.rpc("debug_auth_context");
+  const serverSide = rpcError
+    ? `debug_auth_context() falló: ${rpcError.message}`
+    : `servidor ve: ${JSON.stringify(serverCtx)}`;
+
+  return `${clientSide} | ${serverSide}`;
 }
