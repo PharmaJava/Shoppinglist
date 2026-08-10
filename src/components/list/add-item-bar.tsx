@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { useAddItem } from "@/features/list/use-list-mutations";
+import { VoiceAddButton } from "./voice-add-button";
 
 export function AddItemBar({ listId }: { listId: string }) {
   const t = useTranslations("list");
@@ -34,6 +35,7 @@ export function AddItemBar({ listId }: { listId: string }) {
         autoComplete="off"
         className="h-tap flex-1 rounded-full border border-border bg-surface px-4 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
       />
+      <VoiceAddButton listId={listId} />
       <button
         type="submit"
         disabled={!value.trim()}

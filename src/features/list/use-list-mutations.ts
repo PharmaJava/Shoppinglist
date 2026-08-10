@@ -3,7 +3,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import type { Locale } from "@/lib/supabase/types";
-import { addItem, deleteItem, toggleItem } from "./api";
+import { addItem, addParsedItems, deleteItem, toggleItem } from "./api";
+import type { ParsedVoiceItem } from "./parse-voice";
 import type { ListItem, ListWithItems } from "./types";
 
 function findItem(current: ListWithItems | undefined, itemId: string): ListItem | undefined {
@@ -26,6 +27,28 @@ export function useAddItem(listId: string) {
         if (!current) return current;
         if (current.items.some((item) => item.id === created.id)) return current;
         return { ...current, items: [...current.items, created] };
+      });
+    },
+  });
+}
+
+export function useAddParsedItems(listId: string) {
+  const queryClient = useQueryClient();
+  const locale = useLocale() as Locale;
+  const queryKey = ["list", listId] as const;
+
+  return useMutation({
+    mutationFn: (items: ParsedVoiceItem[]) => {
+      const current = queryClient.getQueryData<ListWithItems>(queryKey);
+      const lastItem = current?.items.at(-1);
+      return addParsedItems(listId, items, locale, lastItem?.sort_key ?? null);
+    },
+    onSuccess: (created) => {
+      queryClient.setQueryData<ListWithItems>(queryKey, (current) => {
+        if (!current) return current;
+        const existingIds = new Set(current.items.map((item) => item.id));
+        const toAdd = created.filter((item) => !existingIds.has(item.id));
+        return { ...current, items: [...current.items, ...toAdd] };
       });
     },
   });

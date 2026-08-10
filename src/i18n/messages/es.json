@@ -50,7 +50,11 @@
     "pendingChanges": "{count} cambios pendientes",
     "otherCategory": "Otros",
     "renameList": "Renombrar lista",
-    "loading": "Cargando tu lista…"
+    "loading": "Cargando tu lista…",
+    "voiceAdd": "Añadir por voz",
+    "voiceListening": "Escuchando…",
+    "supermarketMode": "Modo supermercado",
+    "exitSupermarketMode": "Salir del modo supermercado"
   },
   "invite": {
     "joining": "Uniéndote a la lista…",

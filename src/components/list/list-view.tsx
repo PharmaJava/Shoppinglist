@@ -1,10 +1,11 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { ListItem } from "@/features/list/types";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
+import { useWakeLock } from "@/features/list/use-wake-lock";
 import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
 import { ItemRow } from "./item-row";
@@ -23,6 +24,9 @@ export function ListView({ listId }: { listId: string }) {
   const locale = useLocale() as Locale;
   const { data, isLoading, isError } = useList(listId);
   const { data: categories } = useCategories();
+  const [supermarketMode, setSupermarketMode] = useState(false);
+
+  useWakeLock(supermarketMode);
 
   const { pending, checked } = useMemo(() => {
     const items = data?.items ?? [];
@@ -74,7 +78,14 @@ export function ListView({ listId }: { listId: string }) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <ListHeader listId={listId} list={data.list} checked={checked.length} total={total} />
+      <ListHeader
+        listId={listId}
+        list={data.list}
+        checked={checked.length}
+        total={total}
+        supermarketMode={supermarketMode}
+        onToggleSupermarketMode={() => setSupermarketMode((current) => !current)}
+      />
       <SyncStatusBanner />
 
       <div className="flex-1 overflow-y-auto pb-4">
@@ -88,13 +99,13 @@ export function ListView({ listId }: { listId: string }) {
             </h2>
             <ul>
               {group.items.map((item) => (
-                <ItemRow key={item.id} listId={listId} item={item} />
+                <ItemRow key={item.id} listId={listId} item={item} large={supermarketMode} />
               ))}
             </ul>
           </section>
         ))}
 
-        {checked.length > 0 && (
+        {!supermarketMode && checked.length > 0 && (
           <section>
             <h2 className="sticky top-0 bg-surface-muted px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-on-surface-muted">
               {t("checkedSection")}

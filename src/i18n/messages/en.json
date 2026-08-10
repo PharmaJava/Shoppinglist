@@ -50,7 +50,11 @@
     "pendingChanges": "{count} pending changes",
     "otherCategory": "Other",
     "renameList": "Rename list",
-    "loading": "Loading your list…"
+    "loading": "Loading your list…",
+    "voiceAdd": "Add by voice",
+    "voiceListening": "Listening…",
+    "supermarketMode": "Store mode",
+    "exitSupermarketMode": "Exit store mode"
   },
   "invite": {
     "joining": "Joining the list…",
