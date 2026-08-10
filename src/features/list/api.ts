@@ -6,6 +6,7 @@ import {
   isRowLevelSecurityError,
 } from "@/features/auth/ensure-guest-session";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { supabaseAnonKey, supabaseUrl } from "@/lib/supabase/env";
 import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { queueRowMutation } from "@/lib/sync/flush";
@@ -41,13 +42,61 @@ export async function createList(title: string): Promise<List> {
     ({ data, error } = await insertList(freshOwnerId));
 
     if (error && isRowLevelSecurityError(error.message)) {
+      // Último recurso y prueba diagnóstica: repetir el insert por HTTP con la
+      // cabecera Authorization puesta a mano. Si esto sí funciona, el problema
+      // es que supabase-js no estaba adjuntando el token de sesión; si vuelve
+      // a fallar por RLS, el rechazo viene de verdad del servidor.
+      const viaRawFetch = await insertListWithExplicitAuth(title, freshOwnerId);
+      if (viaRawFetch.list) return viaRawFetch.list;
+
       const debug = await describeSessionForError();
-      throw new Error(`${error.message} [ownerId=${freshOwnerId}; ${debug}]`);
+      throw new Error(
+        `${error.message} [ownerId=${freshOwnerId}; ${debug}; fetch directo: ${viaRawFetch.diagnosis}]`,
+      );
     }
   }
 
   if (error || !data) throw new Error(error?.message ?? "No se pudo crear la lista.");
   return data;
+}
+
+/**
+ * Inserta en `lists` por HTTP, adjuntando el token de sesión explícitamente en
+ * vez de confiar en que supabase-js lo haga. Diagnóstico temporal para el fallo
+ * persistente de RLS al crear listas — eliminar cuando esté resuelto.
+ */
+async function insertListWithExplicitAuth(
+  title: string,
+  ownerId: string,
+): Promise<{ list: List | null; diagnosis: string }> {
+  const supabase = getSupabaseBrowserClient();
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+
+  if (!token) return { list: null, diagnosis: "sin token en sesión" };
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/lists`, {
+      method: "POST",
+      headers: {
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({ id: crypto.randomUUID(), title, owner_id: ownerId }),
+    });
+
+    const body = await response.text();
+    if (response.ok) {
+      const [row] = JSON.parse(body) as List[];
+      if (row) return { list: row, diagnosis: `OK ${response.status}` };
+    }
+
+    return { list: null, diagnosis: `HTTP ${response.status} ${body.slice(0, 200)}` };
+  } catch (err) {
+    return { list: null, diagnosis: `excepción: ${err instanceof Error ? err.message : err}` };
+  }
 }
 
 /**
