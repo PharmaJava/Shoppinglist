@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { getOrCreateActiveInvite } from "@/features/list/api";
+import { track } from "@/lib/analytics/posthog";
 import { SITE_URL } from "@/lib/seo/site";
 
 export function ShareSheet({ listId, onClose }: { listId: string; onClose: () => void }) {
@@ -23,6 +24,7 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
   async function handleCopy() {
     if (!url) return;
     await navigator.clipboard.writeText(url);
+    track("list_shared", { list_id: listId, method: "copy" });
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -31,9 +33,14 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
     if (!url) return;
     if (navigator.share) {
       await navigator.share({ url, title: t("shareTitle") });
+      track("list_shared", { list_id: listId, method: "native" });
     } else {
       handleCopy();
     }
+  }
+
+  function handleWhatsappClick() {
+    track("list_shared", { list_id: listId, method: "whatsapp" });
   }
 
   return (
@@ -63,6 +70,7 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
               href={`https://wa.me/?text=${encodeURIComponent(url)}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleWhatsappClick}
               className="flex h-tap items-center justify-center rounded-xl bg-[#25D366] px-4 font-medium text-white"
             >
               {t("shareWhatsapp")}

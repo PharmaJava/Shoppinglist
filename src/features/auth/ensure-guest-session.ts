@@ -1,3 +1,4 @@
+import { identifyUser } from "@/lib/analytics/posthog";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
@@ -18,5 +19,6 @@ export async function ensureGuestSession(): Promise<string> {
     throw new Error(error?.message ?? "No se pudo iniciar sesión de invitado.");
   }
 
+  identifyUser(data.user.id);
   return data.user.id;
 }
