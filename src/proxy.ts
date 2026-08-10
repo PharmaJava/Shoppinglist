@@ -7,7 +7,7 @@ const intlMiddleware = createIntlMiddleware(routing);
 
 // Rutas de la app (no de marketing): no llevan prefijo de idioma y no deben
 // pasar por la negociación/redirección de next-intl.
-const APP_ROUTE = /^\/(l|i)(\/|$)/;
+const APP_ROUTE = /^\/(l|i|share-target)(\/|$)/;
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -41,7 +41,11 @@ function appRouteResponse(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Todo excepto assets estáticos, imágenes, API y rutas internas de Next.js.
-    "/((?!_next/static|_next/image|api|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|webp|avif|ico)$).*)",
+    // Todo excepto assets estáticos, imágenes, API, rutas internas de Next.js
+    // y los archivos de metadatos de raíz (robots.txt, sitemap.xml, manifest,
+    // service worker…), que deben servirse en su ruta exacta sin pasar por
+    // la negociación de idioma — un redirect ahí rompe robots, crawlers y el
+    // registro del service worker.
+    "/((?!_next/static|_next/image|api|favicon\\.ico|robots\\.txt|sitemap\\.xml|manifest\\.webmanifest|sw\\.js|offline\\.html|icons/|.*\\.(?:svg|png|jpg|jpeg|webp|avif|ico)$).*)",
   ],
 };

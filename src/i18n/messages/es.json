@@ -60,5 +60,11 @@
     "loading": "Cargando…",
     "error": "Algo ha ido mal. Inténtalo de nuevo.",
     "retry": "Reintentar"
+  },
+  "pwa": {
+    "installTitle": "Instala ShoppingList",
+    "installBody": "Ábrela como una app, sin navegador, incluso sin conexión.",
+    "installCta": "Instalar",
+    "installDismiss": "Ahora no"
   }
 }
