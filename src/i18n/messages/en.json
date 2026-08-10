@@ -60,5 +60,11 @@
     "loading": "Loading…",
     "error": "Something went wrong. Please try again.",
     "retry": "Retry"
+  },
+  "pwa": {
+    "installTitle": "Install ShoppingList",
+    "installBody": "Open it like an app, no browser, even offline.",
+    "installCta": "Install",
+    "installDismiss": "Not now"
   }
 }
