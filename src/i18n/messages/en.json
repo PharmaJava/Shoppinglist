@@ -17,6 +17,7 @@
     "quickAddPlaceholder": "e.g. milk, bread, tomatoes…",
     "createButton": "Create my list",
     "creating": "Creating…",
+    "createError": "Couldn't create the list. Please try again.",
     "howItWorksTitle": "How it works",
     "step1Title": "Create your list",
     "step1Body": "No sign-up. Type the first item and your list is ready to share.",
