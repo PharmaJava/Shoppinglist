@@ -1,7 +1,7 @@
-import { hasLocale } from "next-intl";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/marketing/language-switcher";
 import { routing } from "@/i18n/routing";

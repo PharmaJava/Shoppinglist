@@ -1,24 +1,25 @@
 import { nanoid } from "nanoid";
 import { ensureGuestSession } from "@/features/auth/ensure-guest-session";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { ListRole, Locale } from "@/lib/supabase/types";
+import { queueRowMutation } from "@/lib/sync/flush";
 import { categorize } from "./categorize";
 import { keyAtEnd } from "./sort-key";
 import type { Category, List, ListItem } from "./types";
 
-/** Crea una lista vacía (el propietario se añade solo, vía trigger). */
+/**
+ * Crea una lista vacía (el propietario se añade solo, vía trigger). Requiere
+ * red: es el único punto de entrada que garantiza que la lista existe en el
+ * servidor antes de navegar a `/l/[listId]`, que lee por red la primera vez.
+ */
 export async function createList(title: string): Promise<List> {
-  await ensureGuestSession();
+  const ownerId = await ensureGuestSession();
   const supabase = getSupabaseBrowserClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("No hay sesión activa.");
 
   const { data, error } = await supabase
     .from("lists")
-    .insert({ title, owner_id: user.id })
+    .insert({ id: crypto.randomUUID(), title, owner_id: ownerId })
     .select()
     .single();
 
@@ -26,32 +27,41 @@ export async function createList(title: string): Promise<List> {
   return data;
 }
 
+/**
+ * Añade un producto. Se encola en el outbox (IndexedDB): funciona sin red y
+ * se sincroniza sola al recuperar conexión (ver src/lib/sync).
+ */
 export async function addItem(
   listId: string,
   name: string,
   locale: Locale,
   lastSortKey: string | null,
 ): Promise<ListItem> {
-  const supabase = getSupabaseBrowserClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const userId = await getCurrentUserId();
+  const now = new Date().toISOString();
 
-  const { data, error } = await supabase
-    .from("list_items")
-    .insert({
-      id: crypto.randomUUID(),
-      list_id: listId,
-      name: name.trim(),
-      category_id: categorize(name, locale),
-      sort_key: keyAtEnd(lastSortKey),
-      created_by: user?.id ?? null,
-    })
-    .select()
-    .single();
+  const row: ListItem = {
+    id: crypto.randomUUID(),
+    list_id: listId,
+    name: name.trim(),
+    qty: null,
+    unit: null,
+    note: null,
+    category_id: categorize(name, locale),
+    price_cents: null,
+    is_checked: false,
+    checked_by: null,
+    checked_at: null,
+    assigned_to: null,
+    sort_key: keyAtEnd(lastSortKey),
+    created_by: userId,
+    created_at: now,
+    updated_at: now,
+    deleted_at: null,
+  };
 
-  if (error || !data) throw new Error(error?.message ?? "No se pudo añadir el producto.");
-  return data;
+  await queueRowMutation("list_items", row);
+  return row;
 }
 
 /** Crea la lista y su primer producto en una sola operación (alta directa de la landing). */
@@ -64,38 +74,34 @@ export async function createListWithFirstItem(
   return list;
 }
 
-export async function toggleItem(itemId: string, isChecked: boolean): Promise<void> {
-  const supabase = getSupabaseBrowserClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export async function toggleItem(item: ListItem, isChecked: boolean): Promise<ListItem> {
+  const userId = await getCurrentUserId();
+  const row: ListItem = {
+    ...item,
+    is_checked: isChecked,
+    checked_by: isChecked ? userId : null,
+    checked_at: isChecked ? new Date().toISOString() : null,
+    updated_at: new Date().toISOString(),
+  };
 
-  const { error } = await supabase
-    .from("list_items")
-    .update({
-      is_checked: isChecked,
-      checked_by: isChecked ? (user?.id ?? null) : null,
-      checked_at: isChecked ? new Date().toISOString() : null,
-    })
-    .eq("id", itemId);
-
-  if (error) throw new Error(error.message);
+  await queueRowMutation("list_items", row);
+  return row;
 }
 
-export async function deleteItem(itemId: string): Promise<void> {
-  const supabase = getSupabaseBrowserClient();
-  const { error } = await supabase
-    .from("list_items")
-    .update({ deleted_at: new Date().toISOString() })
-    .eq("id", itemId);
+export async function deleteItem(item: ListItem): Promise<void> {
+  const row: ListItem = {
+    ...item,
+    deleted_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
 
-  if (error) throw new Error(error.message);
+  await queueRowMutation("list_items", row);
 }
 
-export async function renameList(listId: string, title: string): Promise<void> {
-  const supabase = getSupabaseBrowserClient();
-  const { error } = await supabase.from("lists").update({ title }).eq("id", listId);
-  if (error) throw new Error(error.message);
+export async function renameList(list: List, title: string): Promise<List> {
+  const row: List = { ...list, title, updated_at: new Date().toISOString() };
+  await queueRowMutation("lists", row);
+  return row;
 }
 
 export async function fetchListWithItems(
@@ -152,12 +158,8 @@ export async function getOrCreateActiveInvite(listId: string): Promise<string> {
 }
 
 export async function createInvite(listId: string, options: InviteOptions = {}): Promise<string> {
-  await ensureGuestSession();
+  const userId = await ensureGuestSession();
   const supabase = getSupabaseBrowserClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("No hay sesión activa.");
 
   const token = nanoid(22);
   const expiresAt = options.expiresInDays
@@ -167,7 +169,7 @@ export async function createInvite(listId: string, options: InviteOptions = {}):
   const { error } = await supabase.from("list_invites").insert({
     token,
     list_id: listId,
-    created_by: user.id,
+    created_by: userId,
     role: options.role ?? "editor",
     expires_at: expiresAt,
   });

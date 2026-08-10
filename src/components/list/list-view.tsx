@@ -9,6 +9,7 @@ import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
 import { ItemRow } from "./item-row";
 import { ListHeader } from "./list-header";
+import { SyncStatusBanner } from "./sync-status-banner";
 
 interface Group {
   categoryId: string;
@@ -74,6 +75,7 @@ export function ListView({ listId }: { listId: string }) {
   return (
     <div className="flex flex-1 flex-col">
       <ListHeader listId={listId} list={data.list} checked={checked.length} total={total} />
+      <SyncStatusBanner />
 
       <div className="flex-1 overflow-y-auto pb-4">
         {total === 0 && <p className="p-6 text-center text-on-surface-muted">{t("empty")}</p>}

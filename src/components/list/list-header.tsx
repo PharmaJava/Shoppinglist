@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { renameList } from "@/features/list/api";
-import type { List } from "@/features/list/types";
+import type { List, ListWithItems } from "@/features/list/types";
 import { ShareSheet } from "./share-sheet";
 
 export function ListHeader({
@@ -26,11 +26,14 @@ export function ListHeader({
   function handleTitleBlur() {
     const trimmed = title.trim() || t("untitled");
     setTitle(trimmed);
-    if (trimmed !== list.title) {
-      renameList(listId, trimmed).then(() =>
-        queryClient.invalidateQueries({ queryKey: ["list", listId] }),
+    if (trimmed === list.title) return;
+
+    // Optimista y offline-first: no se espera a la red para reflejar el cambio.
+    renameList(list, trimmed).then((updated) => {
+      queryClient.setQueryData<ListWithItems>(["list", listId], (current) =>
+        current ? { ...current, list: updated } : current,
       );
-    }
+    });
   }
 
   return (
