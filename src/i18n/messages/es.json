@@ -13,8 +13,10 @@
   "nav": {
     "templates": "Plantillas",
     "guides": "Guías",
+    "blog": "Blog",
     "pricing": "Precios",
-    "createList": "Crear lista gratis"
+    "createList": "Crear lista gratis",
+    "login": "Iniciar sesión"
   },
   "categories": {
     "produce": "Fruta y verdura",
@@ -64,7 +66,36 @@
     "readMore": "Leer la guía"
   },
   "breadcrumb": {
-    "home": "Inicio"
+    "home": "Inicio",
+    "blog": "Blog"
+  },
+  "blogPage": {
+    "hubTitle": "Blog",
+    "hubSubtitle": "Ideas prácticas para comprar mejor: gastar menos, olvidar menos y pelearte menos con la lista.",
+    "hubMetaTitle": "Blog sobre la compra y el supermercado",
+    "hubMetaDescription": "Artículos prácticos sobre cómo comprar mejor: errores que te hacen gastar de más, por qué se te olvidan cosas y cómo organizarte sin esfuerzo.",
+    "faqTitle": "Preguntas frecuentes",
+    "related": "Más artículos",
+    "relatedTemplates": "Plantillas para empezar",
+    "relatedGuides": "Guías relacionadas",
+    "published": "Publicado el {date}",
+    "readMore": "Leer el artículo"
+  },
+  "account": {
+    "title": "Tu cuenta, muy pronto",
+    "metaTitle": "Iniciar sesión",
+    "body": "Estamos preparando las cuentas: podrás guardar tus listas en varios dispositivos, ponerles nombre a los miembros y ver el historial de precios.",
+    "guestNote": "Mientras tanto no pierdes nada: tus listas de invitado se guardan en este navegador y, cuando existan las cuentas, se convertirán en tuyas automáticamente al registrarte.",
+    "cta": "Crear una lista ahora"
+  },
+  "footer": {
+    "product": "Producto",
+    "content": "Contenido",
+    "createList": "Crear una lista",
+    "templates": "Plantillas",
+    "guides": "Guías",
+    "blog": "Blog",
+    "tagline": "La lista de la compra compartida, gratis y sin registro."
   },
   "landing": {
     "eyebrow": "Sin registro · Tiempo real · Funciona sin conexión",
@@ -83,7 +114,32 @@
     "step3Body": "Marcad los productos según los cogéis. Se sincroniza al instante en todos los móviles.",
     "templatesTitle": "Empieza desde una plantilla",
     "templatesCta": "Ver todas las plantillas",
-    "faqTitle": "Preguntas frecuentes"
+    "faqTitle": "Preguntas frecuentes",
+    "demoListTitle": "Compra del sábado",
+    "demoBadge": "Sincronizada · 2 móviles",
+    "featuresTitle": "Pensada para cómo se compra de verdad",
+    "feature1Title": "Sin registro",
+    "feature1Body": "Crea y comparte sin cuenta. El enlace es la invitación.",
+    "feature2Title": "Tiempo real",
+    "feature2Body": "Lo que uno marca, el otro lo ve al instante. Nada se compra dos veces.",
+    "feature3Title": "Funciona sin cobertura",
+    "feature3Body": "Dentro del súper no siempre hay red. La lista sigue funcionando y sincroniza al salir.",
+    "feature4Title": "Ordenada por pasillos",
+    "feature4Body": "Cada producto se clasifica solo en su sección: fruta, lácteos, congelados…",
+    "feature5Title": "Añade por voz",
+    "feature5Body": "Di «dos litros de leche y pan» y aparecen como productos separados, con cantidad.",
+    "feature6Title": "Modo supermercado",
+    "feature6Body": "Pantalla siempre encendida y elementos grandes, para marcar con una mano en el carro.",
+    "faq1Q": "¿De verdad no hace falta registrarse?",
+    "faq1A": "De verdad. Escribes tu primer producto, se crea la lista y ya puedes compartirla. Sin correo, sin contraseña y sin instalar nada: se abre en el navegador.",
+    "faq2Q": "¿Cómo comparto la lista con mi familia?",
+    "faq2A": "Con un enlace. Pulsa compartir, mándalo por WhatsApp o como quieras, y quien lo abra puede ver, añadir y marcar productos al momento desde su móvil.",
+    "faq3Q": "¿Qué pasa si en el supermercado no tengo cobertura?",
+    "faq3A": "Nada: la lista funciona sin conexión. Lo que marques o añadas se guarda en tu móvil y se sincroniza solo en cuanto recuperas la red.",
+    "faq4Q": "¿Es gratis?",
+    "faq4A": "Sí, crear, compartir y usar listas es gratis. Más adelante habrá funciones premium opcionales, pero la lista compartida seguirá siendo gratuita.",
+    "faq5Q": "¿Perderé mis listas si algún día me registro?",
+    "faq5A": "No. Tu identidad de invitado es una cuenta real por dentro: al registrarte conservarás las mismas listas, sin copiar nada a mano."
   },
   "list": {
     "untitled": "Mi lista",

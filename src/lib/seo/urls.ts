@@ -13,6 +13,9 @@ import { SITE_URL } from "./site";
 const SECTION_SEGMENT = {
   templates: { es: "plantillas", en: "templates" },
   guides: { es: "guias", en: "guides" },
+  // «blog» funciona igual en ambos idiomas; se mantiene aquí para que todo el
+  // contenido pase por el mismo constructor de URLs.
+  blog: { es: "blog", en: "blog" },
 } as const;
 
 export type ContentSection = keyof typeof SECTION_SEGMENT;

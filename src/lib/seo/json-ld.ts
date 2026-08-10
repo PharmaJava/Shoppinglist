@@ -1,4 +1,4 @@
-import { flattenTemplateItems, type Guide, type Template } from "@/content/types";
+import { flattenTemplateItems, type Guide, type Post, type Template } from "@/content/types";
 import type { AppLocale } from "@/i18n/routing";
 import { SITE_URL } from "./site";
 import { contentUrl, sectionUrl } from "./urls";
@@ -67,6 +67,35 @@ export function templateJsonLd(
       { name: labels.home, url: `${SITE_URL}/${locale}` },
       { name: labels.templates, url: sectionUrl("templates", locale) },
       { name: template.title, url },
+    ]),
+  ];
+}
+
+export function postJsonLd(
+  post: Post,
+  locale: AppLocale,
+  labels: { home: string; blog: string; siteName: string },
+): object[] {
+  const url = contentUrl("blog", locale, post.slug);
+
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.metaDescription,
+      url,
+      datePublished: post.publishedAt,
+      dateModified: post.updatedAt,
+      inLanguage: locale,
+      author: { "@type": "Organization", name: labels.siteName, url: SITE_URL },
+      publisher: { "@type": "Organization", name: labels.siteName, url: SITE_URL },
+    },
+    faqPage(post.faq),
+    breadcrumbList([
+      { name: labels.home, url: `${SITE_URL}/${locale}` },
+      { name: labels.blog, url: sectionUrl("blog", locale) },
+      { name: post.title, url },
     ]),
   ];
 }

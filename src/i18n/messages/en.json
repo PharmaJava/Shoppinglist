@@ -14,7 +14,9 @@
     "templates": "Templates",
     "guides": "Guides",
     "pricing": "Pricing",
-    "createList": "Create free list"
+    "createList": "Create free list",
+    "blog": "Blog",
+    "login": "Sign in"
   },
   "categories": {
     "produce": "Produce",
@@ -64,7 +66,8 @@
     "readMore": "Read the guide"
   },
   "breadcrumb": {
-    "home": "Home"
+    "home": "Home",
+    "blog": "Blog"
   },
   "landing": {
     "eyebrow": "No sign-up · Real-time · Works offline",
@@ -83,7 +86,32 @@
     "step3Body": "Check items off as you grab them. Everyone's phone syncs instantly.",
     "templatesTitle": "Start from a template",
     "templatesCta": "See all templates",
-    "faqTitle": "Frequently asked questions"
+    "faqTitle": "Frequently asked questions",
+    "demoListTitle": "Saturday shop",
+    "demoBadge": "Synced · 2 phones",
+    "featuresTitle": "Built for how people actually shop",
+    "feature1Title": "No sign-up",
+    "feature1Body": "Create and share without an account. The link is the invitation.",
+    "feature2Title": "Real-time",
+    "feature2Body": "What one person checks off, the other sees instantly. Nothing gets bought twice.",
+    "feature3Title": "Works offline",
+    "feature3Body": "Stores have dead zones. The list keeps working and syncs when you're back online.",
+    "feature4Title": "Sorted by aisle",
+    "feature4Body": "Every item files itself into its section: produce, dairy, frozen…",
+    "feature5Title": "Add by voice",
+    "feature5Body": "Say “two liters of milk and bread” and they appear as separate items, with quantities.",
+    "feature6Title": "Store mode",
+    "feature6Body": "Screen stays on, targets get big — check things off one-handed at the cart.",
+    "faq1Q": "Do I really not need an account?",
+    "faq1A": "Really. Type your first item, the list is created, and you can share it right away. No email, no password, nothing to install — it opens in the browser.",
+    "faq2Q": "How do I share the list with my family?",
+    "faq2A": "With a link. Tap share, send it however you like, and whoever opens it can view, add and check off items from their phone immediately.",
+    "faq3Q": "What if I lose signal inside the store?",
+    "faq3A": "Nothing breaks: the list works offline. Whatever you add or check off is saved on your phone and syncs automatically once you're back online.",
+    "faq4Q": "Is it free?",
+    "faq4A": "Yes — creating, sharing and using lists is free. Optional premium features will come later, but the shared list stays free.",
+    "faq5Q": "Will I lose my lists if I sign up someday?",
+    "faq5A": "No. Your guest identity is a real account under the hood: when you sign up you keep the same lists, with nothing to copy over."
   },
   "list": {
     "untitled": "My list",
@@ -127,5 +155,33 @@
     "installBody": "Open it like an app, no browser, even offline.",
     "installCta": "Install",
     "installDismiss": "Not now"
+  },
+  "blogPage": {
+    "hubTitle": "Blog",
+    "hubSubtitle": "Practical ideas for shopping smarter: spend less, forget less, and stop fighting your list.",
+    "hubMetaTitle": "The Grocery Shopping Blog",
+    "hubMetaDescription": "Practical articles on shopping smarter: the mistakes that quietly cost you money, why you forget items, and how to stay organized without effort.",
+    "faqTitle": "Frequently asked questions",
+    "related": "More articles",
+    "relatedTemplates": "Templates to start from",
+    "relatedGuides": "Related guides",
+    "published": "Published {date}",
+    "readMore": "Read the article"
+  },
+  "account": {
+    "title": "Accounts are coming soon",
+    "metaTitle": "Sign in",
+    "body": "We're building accounts: you'll be able to keep your lists across devices, name household members, and see price history.",
+    "guestNote": "Meanwhile you lose nothing: your guest lists are saved in this browser, and when accounts arrive they will become yours automatically the moment you sign up.",
+    "cta": "Create a list now"
+  },
+  "footer": {
+    "product": "Product",
+    "content": "Content",
+    "createList": "Create a list",
+    "templates": "Templates",
+    "guides": "Guides",
+    "blog": "Blog",
+    "tagline": "The shared shopping list — free, no sign-up."
   }
 }

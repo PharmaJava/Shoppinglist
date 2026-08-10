@@ -61,31 +61,85 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   const t = await getTranslations({ locale, namespace: "metadata" });
   const tNav = await getTranslations({ locale, namespace: "nav" });
+  const tFooter = await getTranslations({ locale, namespace: "footer" });
 
   return (
     <>
       <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
-        <a href={`/${locale}`} className="flex items-center gap-2 text-lg font-bold text-brand">
+        <a
+          href={`/${locale}`}
+          className="flex min-w-0 items-center gap-2 text-lg font-bold text-brand"
+        >
           <Logo size={28} />
-          {t("siteName")}
+          {/* En pantallas muy estrechas el nombre cede el sitio al CTA de login. */}
+          <span className="hidden min-[420px]:inline">{t("siteName")}</span>
         </a>
-        <div className="flex items-center gap-4">
-          <nav className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-3 sm:gap-5">
+          {/* En móvil el espacio es para el CTA de login; las secciones de
+              contenido siguen accesibles desde la landing y el footer. */}
+          <nav className="hidden items-center gap-4 text-sm sm:flex">
             <Link href="/plantillas" className="text-on-surface-muted hover:text-on-surface">
               {tNav("templates")}
             </Link>
             <Link href="/guias" className="text-on-surface-muted hover:text-on-surface">
               {tNav("guides")}
             </Link>
+            <Link href="/blog" className="text-on-surface-muted hover:text-on-surface">
+              {tNav("blog")}
+            </Link>
           </nav>
           <LanguageSwitcher />
+          <Link
+            href="/cuenta"
+            className="shrink-0 whitespace-nowrap rounded-full border border-brand px-4 py-1.5 text-sm font-semibold text-brand transition-colors hover:bg-brand hover:text-brand-contrast"
+          >
+            {tNav("login")}
+          </Link>
         </div>
       </header>
 
       <main className="flex flex-1 flex-col">{children}</main>
 
-      <footer className="border-t border-border px-4 py-6 text-center text-sm text-on-surface-muted sm:px-6">
-        © {new Date().getFullYear()} {t("siteName")}
+      <footer className="border-t border-border px-4 py-10 text-sm sm:px-6">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
+          <div className="flex flex-col justify-between gap-8 sm:flex-row">
+            <div className="flex max-w-xs flex-col gap-2">
+              <span className="flex items-center gap-2 font-bold text-brand">
+                <Logo size={22} />
+                {t("siteName")}
+              </span>
+              <p className="text-on-surface-muted">{tFooter("tagline")}</p>
+            </div>
+
+            <div className="flex gap-16">
+              <nav className="flex flex-col gap-2" aria-label={tFooter("product")}>
+                <span className="font-semibold text-on-surface">{tFooter("product")}</span>
+                <Link href="/" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("createList")}
+                </Link>
+                <Link href="/cuenta" className="text-on-surface-muted hover:text-on-surface">
+                  {tNav("login")}
+                </Link>
+              </nav>
+              <nav className="flex flex-col gap-2" aria-label={tFooter("content")}>
+                <span className="font-semibold text-on-surface">{tFooter("content")}</span>
+                <Link href="/plantillas" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("templates")}
+                </Link>
+                <Link href="/guias" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("guides")}
+                </Link>
+                <Link href="/blog" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("blog")}
+                </Link>
+              </nav>
+            </div>
+          </div>
+
+          <p className="text-on-surface-muted">
+            © {new Date().getFullYear()} {t("siteName")}
+          </p>
+        </div>
       </footer>
     </>
   );

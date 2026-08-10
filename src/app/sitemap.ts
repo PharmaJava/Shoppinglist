@@ -1,5 +1,12 @@
 import type { MetadataRoute } from "next";
-import { getGuideByKey, getGuides, getTemplateByKey, getTemplates } from "@/content";
+import {
+  getGuideByKey,
+  getGuides,
+  getPostByKey,
+  getPosts,
+  getTemplateByKey,
+  getTemplates,
+} from "@/content";
 import { type AppLocale, routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
 import { type ContentSection, contentUrl, sectionUrl } from "@/lib/seo/urls";
@@ -14,17 +21,17 @@ import { type ContentSection, contentUrl, sectionUrl } from "@/lib/seo/urls";
 export default function sitemap(): MetadataRoute.Sitemap {
   const landings: MetadataRoute.Sitemap = routing.locales.map((locale) => ({
     url: `${SITE_URL}/${locale}`,
-    lastModified: mostRecent([...getTemplates(locale), ...getGuides(locale)]),
+    lastModified: mostRecent([...getTemplates(locale), ...getGuides(locale), ...getPosts(locale)]),
     alternates: {
       languages: Object.fromEntries(routing.locales.map((l) => [l, `${SITE_URL}/${l}`])),
     },
   }));
 
   const hubs: MetadataRoute.Sitemap = routing.locales.flatMap((locale) =>
-    (["templates", "guides"] as const).map((section) => ({
+    (["templates", "guides", "blog"] as const).map((section) => ({
       url: sectionUrl(section, locale),
       // Un hub cambia cuando cambia alguna de las piezas que lista.
-      lastModified: mostRecent(section === "templates" ? getTemplates(locale) : getGuides(locale)),
+      lastModified: mostRecent(HUB_ENTRIES[section](locale)),
       alternates: {
         languages: Object.fromEntries(routing.locales.map((l) => [l, sectionUrl(section, l)])),
       },
@@ -47,8 +54,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   );
 
-  return [...landings, ...hubs, ...templates, ...guides];
+  const posts: MetadataRoute.Sitemap = routing.locales.flatMap((locale) =>
+    getPosts(locale).map((post) => ({
+      url: contentUrl("blog", locale, post.slug),
+      lastModified: new Date(post.updatedAt),
+      alternates: { languages: twinLanguages("blog", post.key, getPostByKey) },
+    })),
+  );
+
+  return [...landings, ...hubs, ...templates, ...guides, ...posts];
 }
+
+/** Piezas que lista cada hub, para derivar su lastmod. */
+const HUB_ENTRIES = {
+  templates: getTemplates,
+  guides: getGuides,
+  blog: getPosts,
+} satisfies Record<string, (locale: AppLocale) => Array<{ updatedAt: string }>>;
 
 /** Fecha de revisión más reciente de un conjunto de piezas. */
 function mostRecent(entries: Array<{ updatedAt: string }>): Date {

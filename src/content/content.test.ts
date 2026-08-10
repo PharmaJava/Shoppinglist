@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { getGuideByKey, getGuides, getTemplateByKey, getTemplates } from "./index";
+import {
+  getGuideByKey,
+  getGuides,
+  getPostByKey,
+  getPosts,
+  getTemplateByKey,
+  getTemplates,
+} from "./index";
 import { countTemplateItems, flattenTemplateItems } from "./types";
 
 const LOCALES = ["es", "en"] as const;
@@ -29,21 +36,35 @@ describe("coherencia del contenido entre idiomas", () => {
     }
   });
 
+  it("todo post tiene equivalente en el otro idioma", () => {
+    for (const locale of LOCALES) {
+      const other = locale === "es" ? "en" : "es";
+      for (const post of getPosts(locale)) {
+        expect(getPostByKey(other, post.key), `falta ${post.key} en ${other}`).toBeDefined();
+      }
+    }
+  });
+
   it("los slugs no se repiten dentro de un idioma", () => {
     for (const locale of LOCALES) {
-      const slugs = [...getTemplates(locale), ...getGuides(locale)].map((entry) => entry.slug);
+      const slugs = [...getTemplates(locale), ...getGuides(locale), ...getPosts(locale)].map(
+        (entry) => entry.slug,
+      );
       expect(new Set(slugs).size).toBe(slugs.length);
     }
   });
 
   it("los enlaces internos apuntan a piezas que existen", () => {
     for (const locale of LOCALES) {
-      for (const entry of [...getTemplates(locale), ...getGuides(locale)]) {
+      for (const entry of [...getTemplates(locale), ...getGuides(locale), ...getPosts(locale)]) {
         for (const key of entry.relatedTemplates) {
           expect(getTemplateByKey(locale, key), `${entry.slug} → ${key}`).toBeDefined();
         }
         for (const key of entry.relatedGuides) {
           expect(getGuideByKey(locale, key), `${entry.slug} → ${key}`).toBeDefined();
+        }
+        for (const key of getPosts(locale).find((p) => p.slug === entry.slug)?.relatedPosts ?? []) {
+          expect(getPostByKey(locale, key), `${entry.slug} → ${key}`).toBeDefined();
         }
       }
     }
