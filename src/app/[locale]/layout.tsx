@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { Logo } from "@/components/brand/logo";
 import { LanguageSwitcher } from "@/components/marketing/language-switcher";
+import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
 
@@ -59,6 +60,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!hasLocale(routing.locales, locale)) notFound();
 
   const t = await getTranslations({ locale, namespace: "metadata" });
+  const tNav = await getTranslations({ locale, namespace: "nav" });
 
   return (
     <>
@@ -67,7 +69,17 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Logo size={28} />
           {t("siteName")}
         </a>
-        <LanguageSwitcher />
+        <div className="flex items-center gap-4">
+          <nav className="flex items-center gap-4 text-sm">
+            <Link href="/plantillas" className="text-on-surface-muted hover:text-on-surface">
+              {tNav("templates")}
+            </Link>
+            <Link href="/guias" className="text-on-surface-muted hover:text-on-surface">
+              {tNav("guides")}
+            </Link>
+          </nav>
+          <LanguageSwitcher />
+        </div>
       </header>
 
       <main className="flex flex-1 flex-col">{children}</main>
