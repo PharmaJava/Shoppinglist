@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import {
+  describeSessionForError,
   ensureFreshGuestSession,
   ensureGuestSession,
   isRowLevelSecurityError,
@@ -38,6 +39,11 @@ export async function createList(title: string): Promise<List> {
   if (error && isRowLevelSecurityError(error.message)) {
     const freshOwnerId = await ensureFreshGuestSession();
     ({ data, error } = await insertList(freshOwnerId));
+
+    if (error && isRowLevelSecurityError(error.message)) {
+      const debug = await describeSessionForError();
+      throw new Error(`${error.message} [ownerId=${freshOwnerId}; ${debug}]`);
+    }
   }
 
   if (error || !data) throw new Error(error?.message ?? "No se pudo crear la lista.");
@@ -223,6 +229,11 @@ export async function createInvite(listId: string, options: InviteOptions = {}):
   if (error && isRowLevelSecurityError(error.message)) {
     const freshUserId = await ensureFreshGuestSession();
     ({ error } = await insertInvite(freshUserId));
+
+    if (error && isRowLevelSecurityError(error.message)) {
+      const debug = await describeSessionForError();
+      throw new Error(`${error.message} [userId=${freshUserId}; ${debug}]`);
+    }
   }
 
   if (error) throw new Error(error.message);
