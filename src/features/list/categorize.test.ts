@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { categorize, normalizeProductName } from "./categorize";
+import { categorize, mergeCatalogEntries, normalizeProductName } from "./categorize";
 
 describe("normalizeProductName", () => {
   it("quita acentos y pasa a minúsculas", () => {
@@ -25,5 +25,23 @@ describe("categorize", () => {
 
   it("cae en 'other' cuando no hay coincidencia", () => {
     expect(categorize("xyzzy-no-existe", "es")).toBe("other");
+  });
+});
+
+describe("mergeCatalogEntries", () => {
+  it("añade cobertura sin perder las entradas del diccionario estático", () => {
+    mergeCatalogEntries("es", { quinoa: "pantry" });
+
+    expect(categorize("quinoa", "es")).toBe("pantry");
+    expect(categorize("leche", "es")).toBe("dairy"); // sigue funcionando el diccionario base
+  });
+
+  it("una entrada del catálogo puede sobrescribir al diccionario estático", () => {
+    mergeCatalogEntries("es", { pan: "breakfast" });
+
+    expect(categorize("pan", "es")).toBe("breakfast");
+
+    // se deja como estaba para no filtrar estado entre tests
+    mergeCatalogEntries("es", { pan: "bakery" });
   });
 });
