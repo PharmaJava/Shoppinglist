@@ -5,7 +5,15 @@ import type { ListItem } from "@/features/list/types";
 import { useDeleteItem, useToggleItem } from "@/features/list/use-list-mutations";
 import { cn } from "@/lib/cn";
 
-export function ItemRow({ listId, item }: { listId: string; item: ListItem }) {
+export function ItemRow({
+  listId,
+  item,
+  large = false,
+}: {
+  listId: string;
+  item: ListItem;
+  large?: boolean;
+}) {
   const t = useTranslations("list");
   const toggle = useToggleItem(listId);
   const remove = useDeleteItem(listId);
@@ -21,12 +29,16 @@ export function ItemRow({ listId, item }: { listId: string; item: ListItem }) {
         type="button"
         onClick={handleToggle}
         aria-pressed={item.is_checked}
-        className="flex min-h-tap flex-1 items-center gap-3 px-4 py-2 text-left"
+        className={cn(
+          "flex min-h-tap flex-1 items-center gap-3 px-4 text-left",
+          large ? "py-4" : "py-2",
+        )}
       >
         <span
           aria-hidden
           className={cn(
-            "flex size-6 shrink-0 items-center justify-center rounded-full border-2",
+            "flex shrink-0 items-center justify-center rounded-full border-2",
+            large ? "size-9" : "size-6",
             item.is_checked ? "border-brand bg-brand text-brand-contrast" : "border-border",
           )}
         >
@@ -34,12 +46,15 @@ export function ItemRow({ listId, item }: { listId: string; item: ListItem }) {
         </span>
         <span className="flex flex-1 flex-col">
           <span
-            className={cn("text-base", item.is_checked && "text-on-surface-muted line-through")}
+            className={cn(
+              large ? "text-xl font-medium" : "text-base",
+              item.is_checked && "text-on-surface-muted line-through",
+            )}
           >
             {item.name}
           </span>
           {(item.qty || item.unit) && (
-            <span className="text-sm text-on-surface-muted">
+            <span className={cn("text-on-surface-muted", large ? "text-base" : "text-sm")}>
               {item.qty} {item.unit}
             </span>
           )}

@@ -5,6 +5,7 @@ import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { queueRowMutation } from "@/lib/sync/flush";
 import { categorize } from "./categorize";
+import type { ParsedVoiceItem } from "./parse-voice";
 import { keyAtEnd } from "./sort-key";
 import type { Category, List, ListItem } from "./types";
 
@@ -36,6 +37,7 @@ export async function addItem(
   name: string,
   locale: Locale,
   lastSortKey: string | null,
+  extra?: { qty?: number | null; unit?: string | null },
 ): Promise<ListItem> {
   const userId = await getCurrentUserId();
   const now = new Date().toISOString();
@@ -44,8 +46,8 @@ export async function addItem(
     id: crypto.randomUUID(),
     list_id: listId,
     name: name.trim(),
-    qty: null,
-    unit: null,
+    qty: extra?.qty ?? null,
+    unit: extra?.unit ?? null,
     note: null,
     category_id: categorize(name, locale),
     price_cents: null,
@@ -62,6 +64,31 @@ export async function addItem(
 
   await queueRowMutation("list_items", row);
   return row;
+}
+
+/**
+ * Añade varios productos de una vez (resultado del parser de voz),
+ * conservando el orden hablado con claves de orden consecutivas.
+ */
+export async function addParsedItems(
+  listId: string,
+  items: ParsedVoiceItem[],
+  locale: Locale,
+  lastSortKey: string | null,
+): Promise<ListItem[]> {
+  const created: ListItem[] = [];
+  let cursor = lastSortKey;
+
+  for (const item of items) {
+    const row = await addItem(listId, item.name, locale, cursor, {
+      qty: item.qty,
+      unit: item.unit,
+    });
+    created.push(row);
+    cursor = row.sort_key;
+  }
+
+  return created;
 }
 
 /** Crea la lista y su primer producto en una sola operación (alta directa de la landing). */
