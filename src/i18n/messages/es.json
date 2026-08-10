@@ -17,6 +17,7 @@
     "quickAddPlaceholder": "Ej. leche, pan, tomates…",
     "createButton": "Crear mi lista",
     "creating": "Creando…",
+    "createError": "No se pudo crear la lista. Inténtalo de nuevo.",
     "howItWorksTitle": "Cómo funciona",
     "step1Title": "Crea tu lista",
     "step1Body": "Sin registro. Escribe el primer producto y ya tienes una lista lista para compartir.",
