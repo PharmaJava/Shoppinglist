@@ -1,0 +1,6 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ListaSupermercado">
+  <title>ListaSupermercado</title>
+  <path d="M16 17v-3.5a8 8 0 0 1 16 0V17" stroke="#1fa971" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M6.5 17h35l-3.1 20.8A6 6 0 0 1 32.5 43h-17a6 6 0 0 1-5.9-5.2L6.5 17Z" fill="#1fa971"/>
+  <path d="m17.5 28.5 4.5 4.5 9-9" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

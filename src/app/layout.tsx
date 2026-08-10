@@ -1,6 +1,6 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import type { Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -9,7 +9,17 @@ import { InstallPromptBanner } from "@/components/providers/install-prompt-banne
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ServiceWorkerRegistration } from "@/components/providers/service-worker-registration";
 import { SyncBoot } from "@/components/providers/sync-boot";
+import { SITE_URL } from "@/lib/seo/site";
 import "./globals.css";
+
+/**
+ * Se declara en la raíz, no sólo en `[locale]`, porque las rutas que más se
+ * comparten (`/l/[listId]` e `/i/[token]`) cuelgan fuera de ese segmento y
+ * WhatsApp y Facebook descartan cualquier `og:image` que no sea absoluta.
+ */
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+};
 
 export const viewport: Viewport = {
   themeColor: "#1fa971",

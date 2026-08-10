@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+import { Logo } from "@/components/brand/logo";
 import { LanguageSwitcher } from "@/components/marketing/language-switcher";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
@@ -36,8 +37,19 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
     },
     openGraph: {
       type: "website",
-      locale,
+      // Open Graph espera el formato `idioma_PAÍS`, no el código corto.
+      locale: locale === "es" ? "es_ES" : "en_US",
       siteName: t("siteName"),
+      url: `/${locale}`,
+      // Explícitos a propósito: `title`/`description` de arriba no se copian
+      // solas a Open Graph, y sin ellas WhatsApp no muestra previsualización.
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("ogTitle"),
+      description: t("ogDescription"),
     },
   };
 }
@@ -51,7 +63,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <>
       <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
-        <a href={`/${locale}`} className="text-lg font-bold text-brand">
+        <a href={`/${locale}`} className="flex items-center gap-2 text-lg font-bold text-brand">
+          <Logo size={28} />
           {t("siteName")}
         </a>
         <LanguageSwitcher />
