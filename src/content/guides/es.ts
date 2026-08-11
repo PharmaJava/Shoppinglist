@@ -74,7 +74,7 @@ export const guidesEs: Guide[] = [
       },
     ],
     relatedTemplates: ["weekly", "pantry", "family-of-4"],
-    relatedGuides: ["share-with-family"],
+    relatedGuides: ["share-with-family", "save-money"],
   },
   {
     key: "share-with-family",
@@ -153,6 +153,91 @@ export const guidesEs: Guide[] = [
       },
     ],
     relatedTemplates: ["family-of-4", "weekly"],
+    relatedGuides: ["how-to-make"],
+  },
+  {
+    key: "save-money",
+    slug: "como-ahorrar-en-la-compra",
+    locale: "es",
+    title: "Cómo ahorrar en la compra sin cambiar de supermercado",
+    metaTitle: "Cómo ahorrar en la compra: 6 decisiones que sí funcionan",
+    metaDescription:
+      "Las decisiones que de verdad bajan el ticket del supermercado: precio por kilo, marca blanca donde no se nota, lista cerrada y menos visitas a la tienda.",
+    excerpt:
+      "No hace falta cambiar de supermercado ni renunciar a nada. Casi todo el ahorro está en seis decisiones que se toman antes de entrar.",
+    publishedAt: "2026-08-11",
+    updatedAt: "2026-08-11",
+    body: [
+      {
+        heading: "Mira el precio por kilo, no el de la etiqueta grande",
+        paragraphs: [
+          "Es el número pequeño de la balda, y es el único que permite comparar de verdad. Dos paquetes al mismo precio pueden llevar 400 g y 500 g, y una oferta de tres por dos puede salir más cara por kilo que el formato grande de al lado.",
+          "No siempre gana el envase grande: en fresco, comprar de más para tirar la mitad es el peor precio por kilo posible. La regla es comparar por kilo y luego preguntarse si te lo vas a comer.",
+        ],
+      },
+      {
+        heading: "Marca blanca donde no se nota, marca donde sí",
+        paragraphs: [
+          "La diferencia entre marca y marca blanca es enorme en unos productos e imperceptible en otros, y ahí está la mayor parte del ahorro doméstico.",
+        ],
+        bullets: [
+          "Se nota poco o nada: legumbre de bote, tomate triturado, pasta, arroz, leche, azúcar, harina, congelados básicos y limpieza.",
+          "Se nota más: café, chocolate, aceite de oliva, embutido y conservas de pescado.",
+          "La prueba honesta: cambia un producto por semana. Si nadie en casa lo menciona, se queda.",
+        ],
+      },
+      {
+        heading: "Ir menos veces cuesta menos",
+        paragraphs: [
+          "Cada visita al supermercado añade compras no previstas, por buena que sea tu voluntad. Dos compras grandes al mes con una reposición corta de fresco suele salir más barato que ir cuatro veces, y bastante más barato que pasarse a diario de camino a casa.",
+          "El motivo no es la fuerza de voluntad: es el tiempo dentro de la tienda. Menos visitas y más cortas es la palanca más fiable que existe.",
+        ],
+      },
+      {
+        heading: "Cierra la lista antes de entrar, con cantidades",
+        paragraphs: [
+          "Una lista con «tomates» te obliga a decidir delante del lineal. Una con «tomates, 1 kg» ya decidió por ti en casa, con la nevera a la vista y sin hambre.",
+          "Poner el precio de cada producto en la lista y ver el total antes de llegar a caja cambia el comportamiento más que cualquier consejo: el número deja de ser una sorpresa al final y pasa a ser algo que se decide durante la compra.",
+        ],
+      },
+      {
+        heading: "Ataca el desperdicio antes que el precio",
+        paragraphs: [
+          "Lo que se tira es dinero comprado dos veces: lo pagaste y además tienes que reponerlo. En la mayoría de las casas se tira sobre todo fruta, verdura, pan y lácteos, casi siempre por comprar bien y ordenar mal.",
+          "Congelar el pan al llegar, planificar la verdura de hoja para los dos primeros días y cocinar de más a propósito para congelar raciones ahorra más que perseguir ofertas.",
+        ],
+      },
+      {
+        heading: "Compra con menú, no con intuición",
+        paragraphs: [
+          "Comprar sin saber qué vas a cocinar lleva a comprar ingredientes sueltos que no forman platos. Cinco cenas decididas de antemano convierten la lista en algo cerrado y suelen recortar entre un cuarto y un tercio del carro.",
+          "No hace falta un menú detallado: «pasta, pollo al horno, lentejas, tortilla, pescado» ya es suficiente para saber qué comprar y cuánto.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuánto se puede ahorrar sin cambiar de supermercado?",
+        answer:
+          "Depende del punto de partida, pero las tres palancas grandes —marca blanca donde no se nota, menos visitas y menos desperdicio— suelen valer más que cambiar de cadena, y no cuestan tiempo ni desplazamientos.",
+      },
+      {
+        question: "¿Las ofertas de tres por dos salen a cuenta?",
+        answer:
+          "Sólo si ibas a comprar tres y no se estropea. En fresco casi nunca compensa; en conserva y limpieza, casi siempre. El precio por kilo lo resuelve en dos segundos.",
+      },
+      {
+        question: "¿Comprar en el mercado sale más barato?",
+        answer:
+          "En fruta, verdura y pescado de temporada suele salir mejor, sobre todo a última hora. En despensa y limpieza, casi nunca. Lo caro del mercado no es el precio, es el tiempo.",
+      },
+      {
+        question: "¿Ayuda apuntar los precios en la lista?",
+        answer:
+          "Bastante. Aquí puedes poner el precio de cada producto y un presupuesto para la lista, y ver el total mientras compras en vez de descubrirlo en caja.",
+      },
+    ],
+    relatedTemplates: ["budget", "monthly", "student-flat"],
     relatedGuides: ["how-to-make"],
   },
 ];

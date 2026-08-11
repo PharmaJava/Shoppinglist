@@ -74,7 +74,7 @@ export const guidesEn: Guide[] = [
       },
     ],
     relatedTemplates: ["weekly", "pantry", "family-of-4"],
-    relatedGuides: ["share-with-family"],
+    relatedGuides: ["share-with-family", "save-money"],
   },
   {
     key: "share-with-family",
@@ -151,6 +151,91 @@ export const guidesEn: Guide[] = [
       },
     ],
     relatedTemplates: ["family-of-4", "weekly"],
+    relatedGuides: ["how-to-make"],
+  },
+  {
+    key: "save-money",
+    slug: "save-money-on-groceries",
+    locale: "en",
+    title: "How to save money on groceries without switching stores",
+    metaTitle: "How to Save Money on Groceries: 6 Decisions That Work",
+    metaDescription:
+      "The decisions that actually lower a grocery bill: unit price over shelf price, store brands where it doesn't show, a closed list, and fewer store trips.",
+    excerpt:
+      "You don't need a different store or a smaller diet. Most of the savings come from six decisions made before you walk in.",
+    publishedAt: "2026-08-11",
+    updatedAt: "2026-08-11",
+    body: [
+      {
+        heading: "Read the unit price, not the shelf price",
+        paragraphs: [
+          "It's the small number on the shelf tag, and it's the only one that lets you compare. Two boxes at the same price can hold different amounts, and a buy-two-get-one can cost more per ounce than the larger box beside it.",
+          "Bigger doesn't always win. On fresh food, buying double and throwing half away is the worst unit price there is. Compare per unit, then ask whether you'll actually eat it.",
+        ],
+      },
+      {
+        heading: "Store brand where it doesn't show, name brand where it does",
+        paragraphs: [
+          "The gap between name brand and store brand is enormous in some products and undetectable in others. That's where most household savings live.",
+        ],
+        bullets: [
+          "Barely noticeable: canned beans, crushed tomatoes, pasta, rice, milk, sugar, flour, frozen vegetables, cleaning supplies.",
+          "Noticeable: coffee, chocolate, olive oil, cured meats, canned fish.",
+          "The honest test: swap one product a week. If nobody at home mentions it, it stays.",
+        ],
+      },
+      {
+        heading: "Going less often costs less",
+        paragraphs: [
+          "Every trip adds unplanned purchases, however disciplined you are. Two big shops a month plus a short fresh-food run beats four full trips, and beats stopping by daily on the way home by a wide margin.",
+          "It isn't about willpower. It's time inside the store, which is the most reliable lever anyone has.",
+        ],
+      },
+      {
+        heading: "Close the list before you walk in — with quantities",
+        paragraphs: [
+          'A list that says "tomatoes" makes you decide in the aisle. One that says "tomatoes, 2 lb" already decided at home, with the fridge in sight and on a full stomach.',
+          "Putting a price on each item and watching the total changes behavior more than any tip: the number stops being a surprise at checkout and becomes something you steer during the trip.",
+        ],
+      },
+      {
+        heading: "Attack waste before price",
+        paragraphs: [
+          "Thrown-out food is money spent twice: you paid for it and you still have to replace it. In most homes it's produce, bread and dairy, and almost always because of good buying and bad sequencing.",
+          "Freezing bread on arrival, planning leafy greens for the first two days and deliberately cooking extra to freeze saves more than chasing sales ever will.",
+        ],
+      },
+      {
+        heading: "Shop from a menu, not from instinct",
+        paragraphs: [
+          "Shopping without knowing what you'll cook produces loose ingredients that don't add up to meals. Five dinners decided in advance turn the list into something closed, and usually cut a quarter to a third from the cart.",
+          'It doesn\'t need to be detailed. "Pasta, roast chicken, chili, tacos, fish" is enough to know what to buy and how much.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "How much can I save without switching stores?",
+        answer:
+          "It depends where you start, but the three big levers — store brands where it doesn't show, fewer trips, and less waste — usually beat changing chains, and cost you no extra driving.",
+      },
+      {
+        question: "Are buy-one-get-one deals worth it?",
+        answer:
+          "Only if you were buying two and it won't spoil. On fresh food they rarely pay off; on canned goods and cleaning supplies they almost always do. The unit price settles it in seconds.",
+      },
+      {
+        question: "Is warehouse club shopping cheaper?",
+        answer:
+          "On pantry staples, paper goods and cleaning supplies, usually yes. On fresh food it depends entirely on household size — for one or two people, bulk produce is waste with a discount.",
+      },
+      {
+        question: "Does tracking prices on the list help?",
+        answer:
+          "Quite a bit. You can add a price per item and a budget for the list here, and see the running total while you shop instead of discovering it at the register.",
+      },
+    ],
+    relatedTemplates: ["budget", "monthly", "student-flat"],
     relatedGuides: ["how-to-make"],
   },
 ];

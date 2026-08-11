@@ -84,7 +84,7 @@ export const postsEs: Post[] = [
     ],
     relatedTemplates: ["weekly", "pantry"],
     relatedGuides: ["how-to-make"],
-    relatedPosts: ["forget-items"],
+    relatedPosts: ["forget-items", "what-to-freeze"],
   },
   {
     key: "forget-items",
@@ -148,6 +148,98 @@ export const postsEs: Post[] = [
     ],
     relatedTemplates: ["weekly", "pantry"],
     relatedGuides: ["how-to-make", "share-with-family"],
-    relatedPosts: ["overspending-mistakes"],
+    relatedPosts: ["overspending-mistakes", "what-to-freeze"],
+  },
+  {
+    key: "what-to-freeze",
+    slug: "que-congelar-al-llegar-del-supermercado",
+    locale: "es",
+    title: "Qué congelar nada más llegar del supermercado (y qué no)",
+    metaTitle: "Qué congelar al llegar del súper: la lista de lo que aguanta",
+    metaDescription:
+      "Congelar bien lo que acabas de comprar es lo que decide cuánto tiras el viernes. Qué va al congelador nada más llegar, cómo, y qué no debería entrar nunca.",
+    excerpt:
+      "El desperdicio no empieza el viernes, empieza el sábado al colocar la compra. Diez minutos de congelador salvan media compra.",
+    publishedAt: "2026-08-11",
+    updatedAt: "2026-08-11",
+    body: [
+      {
+        heading: "El desperdicio se decide al colocar la compra",
+        paragraphs: [
+          "Casi todo lo que se acaba tirando estaba en buen estado el día que entró en casa. Se estropea porque se guarda entero, en la nevera, esperando un día de la semana que nunca llega.",
+          "Congelar no es para las sobras: es la decisión que se toma con las bolsas todavía en el suelo de la cocina. Diez minutos, y la mitad de la compra deja de tener fecha de caducidad.",
+        ],
+      },
+      {
+        heading: "Lo que va al congelador nada más llegar",
+        paragraphs: [
+          "No hace falta congelar la mitad de la compra. Con estas cosas se cubre casi todo lo que suele acabar en la basura.",
+        ],
+        bullets: [
+          "Pan: la barra que no vais a comer hoy, cortada en rebanadas. Congelada entera hay que descongelarla entera, y eso no lo hace nadie.",
+          "Carne picada: extendida y plana en una bolsa, no en bola. Se descongela en veinte minutos en vez de en una noche.",
+          "Pechuga y filetes: separados por una hoja de papel, para poder sacar uno sin sacar los cuatro.",
+          "Pescado fresco que no vayáis a comer en dos días. Comprarlo fresco y congelarlo en casa es mejor que dejarlo en la nevera hasta el jueves.",
+          "Queso rallado, mantequilla y beicon: aguantan meses y se usan directamente congelados.",
+          "Plátanos demasiado maduros, pelados y troceados. Es la única forma de que un plátano negro tenga futuro.",
+        ],
+      },
+      {
+        heading: "Lo que no debería entrar",
+        paragraphs: [
+          "Congelar mal es tirar dos veces: el producto y el espacio. Estas cosas salen del congelador peor de lo que entraron, y no hay técnica que lo arregle.",
+        ],
+        bullets: [
+          "Verdura de hoja y ensalada: se convierten en un trapo mojado.",
+          "Patata cruda, pepino, tomate para comer crudo y todo lo que se sirva fresco.",
+          "Huevos con cáscara.",
+          "Yogur, nata para montar y quesos frescos: se cortan.",
+          "Fritos, que pierden todo lo que los hacía fritos.",
+        ],
+      },
+      {
+        heading: "Tres reglas que hacen que funcione",
+        paragraphs: [
+          "Congelar bien no es meterlo y ya. La diferencia entre un congelador útil y un cementerio de bolsas sin identificar está en tres cosas.",
+        ],
+        bullets: [
+          "En porciones de una comida, nunca en bloque. Un kilo congelado entero es un kilo que no se usará.",
+          "Plano y en bolsa, no en táper. Ocupa menos, se congela antes y se descongela mucho más rápido.",
+          "Con fecha escrita encima. No por seguridad: para saber qué sacar primero, que es lo que evita el estrato geológico del fondo.",
+        ],
+      },
+      {
+        heading: "Y lo que hace que no se te olvide",
+        paragraphs: [
+          "El fallo más caro no es congelar mal, es congelar y olvidarlo. Lo que está en el fondo del congelador no existe, y se acaba comprando otra vez lo que ya se tenía.",
+          "Apuntar en la lista compartida «hay pollo congelado» cuesta cinco segundos y lo ve toda la casa. Es el mismo motivo por el que la lista funciona mejor en el móvil que en un papel de la nevera: la ve quien está en el supermercado, no sólo quien está en la cocina.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuánto aguanta la carne en el congelador?",
+        answer:
+          "En buen estado, entre tres y seis meses la carne cruda y algo menos la picada, que tiene más superficie expuesta. Pasado ese tiempo sigue siendo segura si no se ha roto la cadena de frío, pero pierde textura y sabor.",
+      },
+      {
+        question: "¿Se puede congelar el pan ya cortado?",
+        answer:
+          "Es la mejor forma de hacerlo. Rebanadas separadas permiten sacar dos y tostarlas directamente, sin descongelar la barra entera.",
+      },
+      {
+        question: "¿Se puede volver a congelar algo descongelado?",
+        answer:
+          "Crudo no conviene. Cocinado sí: descongelar pollo, cocinarlo y congelar el guiso es perfectamente correcto, y es la base del batch cooking.",
+      },
+      {
+        question: "¿Cómo sé qué tengo congelado?",
+        answer:
+          "Apuntándolo donde ya miras. Una lista compartida en el móvil sirve para eso: quien esté en el supermercado ve que en casa hay medio kilo de carne picada antes de comprar otro.",
+      },
+    ],
+    relatedTemplates: ["batch-cooking", "monthly", "weekly"],
+    relatedGuides: ["save-money", "how-to-make"],
+    relatedPosts: ["overspending-mistakes", "forget-items"],
   },
 ];
