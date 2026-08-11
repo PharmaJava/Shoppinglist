@@ -24,6 +24,8 @@ export const privacyEn: LegalDocument = {
       heading: "Who is responsible",
       paragraphs: [
         "The data controller is [LEGAL NAME], [TAX ID], registered at [ADDRESS]. You can write to [CONTACT EMAIL] about anything related to your data.",
+        "You can also get in touch on LinkedIn, at linkedin.com/in/farmaiant, though email is preferable for exercising your rights: it leaves a record and allows a reply within the statutory deadline.",
+        "Who is behind this app and why it exists is explained on the About page.",
       ],
     },
     {

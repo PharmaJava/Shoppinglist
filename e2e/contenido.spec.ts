@@ -70,3 +70,30 @@ test.describe("Contenido y SEO", () => {
     expect(robots).toContain("noindex");
   });
 });
+
+test.describe("Quiénes somos", () => {
+  test("lleva al perfil de LinkedIn, sin parámetros de seguimiento", async ({ page }) => {
+    await page.goto("/es/quienes-somos");
+
+    const enlace = page.getByRole("link", { name: "Escribir por LinkedIn" });
+    await expect(enlace).toHaveAttribute("href", "https://www.linkedin.com/in/farmaiant");
+    // `me` es lo que declara que ese perfil es de quien publica esta página.
+    await expect(enlace).toHaveAttribute("rel", /me/);
+  });
+
+  test("la versión inglesa vive en /en/about y se apuntan entre sí", async ({ page }) => {
+    await page.goto("/en/about");
+
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    const vuelta = await page
+      .locator('link[rel="alternate"][hrefLang="es-ES"]')
+      .getAttribute("href");
+    expect(vuelta).toContain("/es/quienes-somos");
+  });
+
+  test("el perfil sale también en la política de privacidad", async ({ page }) => {
+    await page.goto("/es/privacidad");
+
+    await expect(page.getByText("linkedin.com/in/farmaiant")).toBeVisible();
+  });
+});

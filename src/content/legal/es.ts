@@ -29,6 +29,8 @@ export const privacyEs: LegalDocument = {
       heading: "Quién es el responsable",
       paragraphs: [
         "El responsable del tratamiento es [NOMBRE O RAZÓN SOCIAL], con [NIF/CIF] y domicilio en [DIRECCIÓN]. Puedes escribir a [CORREO DE CONTACTO] para cualquier cuestión relacionada con tus datos.",
+        "También puedes contactar por LinkedIn, en linkedin.com/in/farmaiant, aunque para ejercer tus derechos sobre los datos es preferible el correo: deja constancia y permite responder en el plazo que marca la ley.",
+        "Quién hay detrás y por qué existe esta aplicación está contado en la página «Quiénes somos».",
       ],
     },
     {

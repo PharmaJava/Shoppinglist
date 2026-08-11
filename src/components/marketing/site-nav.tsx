@@ -9,6 +9,7 @@ const SECTIONS = [
   { href: "/guias", key: "guides" },
   { href: "/blog", key: "blog" },
   { href: "/precios", key: "pricing" },
+  { href: "/quienes-somos", key: "about" },
   { href: "/mis-listas", key: "myLists" },
 ] as const;
 
