@@ -10,6 +10,19 @@ import { cn } from "@/lib/cn";
  *  formato; para lo demás está «sin unidad», que es la mayoría de la cesta. */
 const UNITS = ["g", "kg", "ml", "l", "paq.", "lata", "bote", "docena"] as const;
 
+/**
+ * Cuánto sube o baja cada toque de «+»/«−», según lo que se esté contando.
+ *
+ * Un paso de 1 sobre 500 g no sirve de nada —nadie compra 501 gramos— y uno de
+ * 100 sobre unidades sueltas es absurdo. Lo que se cuenta por piezas va de una
+ * en una; el peso y el volumen, en el salto con el que se compran de verdad.
+ */
+function stepFor(unit: string | null): number {
+  if (unit === "g" || unit === "ml") return 100;
+  if (unit === "kg" || unit === "l") return 0.5;
+  return 1;
+}
+
 export function ItemRow({
   listId,
   item,
@@ -24,7 +37,10 @@ export function ItemRow({
   const t = useTranslations("list");
   const toggle = useToggleItem(listId);
   const remove = useDeleteItem(listId);
+  const update = useUpdateItem(listId);
   const [editing, setEditing] = useState(false);
+
+  const step = stepFor(item.unit);
 
   function handleToggle() {
     if (navigator.vibrate) navigator.vibrate(15);
@@ -33,6 +49,24 @@ export function ItemRow({
 
   function handleDelete() {
     remove.mutate(item, { onSuccess: (deleted) => onDeleted?.(deleted) });
+  }
+
+  /**
+   * Un producto sin cantidad es uno: por eso el primer «+» lleva a dos y no a
+   * uno —si no, parecería que el botón no hace nada— y bajar de uno devuelve
+   * al estado sin cantidad en vez de dejar un «1» que no aporta.
+   */
+  function changeQty(delta: number) {
+    const current = item.qty ?? 1;
+    const next = Math.round((current + delta * step) * 100) / 100;
+
+    // Comparar contra el paso y no contra 1: media docena de kilos es una
+    // cantidad legítima, medio tomate no.
+    if (next < step) {
+      update.mutate({ itemId: item.id, edits: { qty: null, unit: null } });
+      return;
+    }
+    update.mutate({ itemId: item.id, edits: { qty: next } });
   }
 
   if (editing) {
@@ -50,7 +84,7 @@ export function ItemRow({
         onClick={handleToggle}
         aria-pressed={item.is_checked}
         className={cn(
-          "flex min-h-tap flex-1 items-center gap-3 px-4 text-left",
+          "flex min-h-tap min-w-0 flex-1 items-center gap-3 px-4 text-left",
           large ? "py-4" : "py-2",
         )}
       >
@@ -64,7 +98,7 @@ export function ItemRow({
         >
           {item.is_checked && "✓"}
         </span>
-        <span className="flex flex-1 flex-col">
+        <span className="flex min-w-0 flex-1 flex-col">
           <span
             className={cn(
               large ? "text-xl font-medium" : "text-base",
@@ -79,6 +113,26 @@ export function ItemRow({
             </span>
           )}
         </span>
+      </button>
+
+      {/* Ajustar la cantidad sin abrir el editor: es lo que más se repite, y
+          dentro del supermercado también («al final me llevo tres»). */}
+      <button
+        type="button"
+        onClick={() => changeQty(-1)}
+        disabled={item.qty === null}
+        aria-label={t("decrease", { name: item.name })}
+        className="flex min-h-tap w-9 shrink-0 items-center justify-center text-xl text-on-surface-muted hover:text-on-surface disabled:opacity-30"
+      >
+        −
+      </button>
+      <button
+        type="button"
+        onClick={() => changeQty(1)}
+        aria-label={t("increase", { name: item.name })}
+        className="flex min-h-tap w-9 shrink-0 items-center justify-center text-xl text-on-surface-muted hover:text-on-surface"
+      >
+        +
       </button>
 
       {/* En modo supermercado se está comprando, no organizando: sólo estorba. */}

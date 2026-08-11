@@ -43,9 +43,9 @@ const item: ListItem = {
   deleted_at: null,
 };
 
-function renderRow(node: ReactNode) {
+function renderRow(node: ReactNode, cached: ListItem = item) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  client.setQueryData(["list", "list-1"], { list: { id: "list-1" }, items: [item] });
+  client.setQueryData(["list", "list-1"], { list: { id: "list-1" }, items: [cached] });
 
   return render(
     <NextIntlClientProvider locale="es" messages={messages}>
@@ -107,6 +107,65 @@ describe("ItemRow", () => {
       qty: null,
       unit: null,
     });
+  });
+
+  // Un producto sin cantidad ya es uno: si «+» lo dejara en 1, parecería que
+  // el botón no hace nada.
+  it("«+» sobre un producto sin cantidad lo deja en dos", async () => {
+    renderRow(<ItemRow listId="list-1" item={item} />);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Añadir una unidad de Carne picada" }),
+    );
+
+    await waitFor(() => expect(updateItem).toHaveBeenCalled());
+    expect(updateItem.mock.calls[0]?.[1]).toEqual({ qty: 2 });
+  });
+
+  it("sin cantidad no hay nada que quitar", () => {
+    renderRow(<ItemRow listId="list-1" item={item} />);
+
+    expect(
+      screen.getByRole("button", { name: "Quitar una unidad de Carne picada" }),
+    ).toBeDisabled();
+  });
+
+  // Nadie compra 501 gramos: el paso es el de la compra real.
+  it("el peso sube y baja de cien en cien", async () => {
+    const conPeso = { ...item, qty: 500, unit: "g" };
+    renderRow(<ItemRow listId="list-1" item={conPeso} />, conPeso);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Quitar una unidad de Carne picada" }),
+    );
+
+    await waitFor(() => expect(updateItem).toHaveBeenCalled());
+    expect(updateItem.mock.calls[0]?.[1]).toEqual({ qty: 400 });
+  });
+
+  it("bajar del mínimo borra la cantidad, no deja un cero", async () => {
+    const conPeso = { ...item, qty: 100, unit: "g" };
+    renderRow(<ItemRow listId="list-1" item={conPeso} />, conPeso);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Quitar una unidad de Carne picada" }),
+    );
+
+    await waitFor(() => expect(updateItem).toHaveBeenCalled());
+    expect(updateItem.mock.calls[0]?.[1]).toEqual({ qty: null, unit: null });
+  });
+
+  // Medio kilo es una cantidad legítima; medio tomate no.
+  it("los kilos bajan de medio en medio sin llegar a cero", async () => {
+    const conPeso = { ...item, qty: 1, unit: "kg" };
+    renderRow(<ItemRow listId="list-1" item={conPeso} />, conPeso);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Quitar una unidad de Carne picada" }),
+    );
+
+    await waitFor(() => expect(updateItem).toHaveBeenCalled());
+    expect(updateItem.mock.calls[0]?.[1]).toEqual({ qty: 0.5 });
   });
 
   // En modo supermercado se está comprando: editar sólo estorba, borrar no.
