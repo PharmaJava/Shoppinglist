@@ -16,6 +16,7 @@ import {
   updateDisplayName,
   updatePassword,
 } from "@/features/auth/api";
+import { downloadExport, exportMyData } from "@/features/auth/export-data";
 import { useSession } from "@/features/auth/use-session";
 import { Link } from "@/i18n/navigation";
 
@@ -113,6 +114,7 @@ function RegisteredPanel({ email }: { email: string }) {
       </button>
 
       <DisplayNameForm />
+      <DataExport />
       <DangerZone />
     </div>
   );
@@ -190,6 +192,46 @@ function DisplayNameForm() {
       {saved && <p className="text-sm text-brand">{t("nameSaved")}</p>}
       {errorMessage && <ErrorLine message={errorMessage} />}
     </form>
+  );
+}
+
+/**
+ * Portabilidad del RGPD sin escribir un correo. La política de privacidad la
+ * promete desde el primer día y hasta ahora sólo se podía pedir a mano.
+ */
+function DataExport() {
+  const t = useTranslations("account");
+  const [pending, setPending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  async function handleExport() {
+    if (pending) return;
+
+    setPending(true);
+    setErrorMessage(null);
+    try {
+      downloadExport(await exportMyData());
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : String(err));
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <section className="flex w-full max-w-sm flex-col gap-2 border-border border-t pt-6 text-left">
+      <h2 className="font-semibold text-on-surface">{t("exportTitle")}</h2>
+      <p className="text-sm text-on-surface-muted">{t("exportBody")}</p>
+      <button
+        type="button"
+        onClick={handleExport}
+        disabled={pending}
+        className="h-tap self-start rounded-full border border-border px-5 font-semibold text-on-surface disabled:opacity-50"
+      >
+        {pending ? t("exportPending") : t("exportButton")}
+      </button>
+      {errorMessage && <ErrorLine message={errorMessage} />}
+    </section>
   );
 }
 

@@ -1,0 +1,51 @@
+name: CI
+
+# Lo que hasta ahora se comprobaba a mano antes de cada PR. Aquí no hay nada
+# que no se pueda ejecutar en local con `pnpm typecheck && pnpm lint && pnpm
+# test && pnpm build`; la gracia es que ya no dependa de acordarse.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Un push nuevo sobre la misma rama cancela la comprobación anterior: lo que
+# importa es el último commit, no la cola.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Tipos
+        run: pnpm typecheck
+
+      - name: Biome
+        run: pnpm lint
+
+      - name: Tests
+        run: pnpm test
+
+      # La compilación necesita las variables de Supabase para resolver los
+      # módulos del cliente, pero no llega a llamar a nadie: valen las de
+      # ejemplo. Así el CI no depende de secretos y funciona en las PR que
+      # vengan de un fork.
+      - name: Compilar
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: clave-de-ejemplo-para-compilar
+          NEXT_PUBLIC_SITE_URL: https://listasupermercado.com
+        run: pnpm build
