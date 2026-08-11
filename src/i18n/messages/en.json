@@ -254,7 +254,11 @@
     "dangerStart": "I want to delete my account",
     "dangerConfirm": "Yes, delete permanently",
     "dangerCancel": "Cancel",
-    "dangerDeleting": "Deleting…"
+    "dangerDeleting": "Deleting…",
+    "exportTitle": "Your data",
+    "exportBody": "Download everything that's yours in one file: your account, your lists with their items, and what you usually buy.",
+    "exportButton": "Download my data",
+    "exportPending": "Preparing…"
   },
   "footer": {
     "product": "Product",

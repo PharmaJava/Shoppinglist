@@ -68,6 +68,7 @@ export const privacyEs: LegalDocument = {
       bullets: [
         "Acceso y corrección: desde tu cuenta y tus listas, en cualquier momento.",
         "Supresión: hay un botón de borrar cuenta en la página de tu cuenta. Es inmediato y definitivo.",
+        "Portabilidad: desde tu cuenta puedes descargar en un archivo JSON tus datos, tus listas y tu historial de productos.",
         "Para lo demás, escribe a [CORREO DE CONTACTO].",
       ],
     },

@@ -63,6 +63,7 @@ export const privacyEn: LegalDocument = {
       bullets: [
         "Access and correction: from your account and your lists, any time.",
         "Deletion: there's a delete-account button on your account page. Immediate and permanent.",
+        "Portability: from your account you can download your data, your lists and your product history as a JSON file.",
         "For anything else, write to [CONTACT EMAIL].",
       ],
     },

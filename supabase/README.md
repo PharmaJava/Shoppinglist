@@ -35,6 +35,31 @@ para que aparezca en la comprobación. No hay nada que mantener sincronizado.
 > error a mitad deshace todo lo anterior — ejecutar por trozos deja la base en
 > un estado intermedio difícil de diagnosticar.
 
+## Que el proyecto no se pause
+
+El plan gratuito de Supabase pausa un proyecto que pasa una semana entera sin
+recibir una sola petición, y reactivarlo es manual: mientras tanto la web no
+funciona para nadie.
+
+`.github/workflows/keep-supabase-awake.yml` lanza una consulta cada dos días
+para evitarlo. Necesita dos secretos del repositorio, en
+*Settings → Secrets and variables → Actions*:
+
+| Secreto | Valor |
+|---|---|
+| `SUPABASE_URL` | `https://xxxxxxxx.supabase.co` |
+| `SUPABASE_ANON_KEY` | La clave publicable, la misma que usa el navegador |
+
+Consulta `categories`, que es catálogo de sistema con lectura pública: no
+expone datos de nadie y sirve igual para que el proyecto cuente como activo.
+
+Si faltan los secretos la tarea **falla a propósito**, en vez de dar por bueno
+un proyecto que se va a pausar de todas formas.
+
+> GitHub desactiva las tareas programadas de un repositorio que pasa 60 días
+> sin actividad, avisando antes por correo. Si ocurre, se vuelve a activar
+> desde la pestaña *Actions*.
+
 ## Escribir una migración nueva
 
 Numeración correlativa y descripción corta: `0003_precio_por_producto.sql`.

@@ -148,7 +148,11 @@
     "dangerStart": "Quiero borrar mi cuenta",
     "dangerConfirm": "Sí, borrar definitivamente",
     "dangerCancel": "Cancelar",
-    "dangerDeleting": "Borrando…"
+    "dangerDeleting": "Borrando…",
+    "exportTitle": "Tus datos",
+    "exportBody": "Descarga en un archivo todo lo tuyo: tu cuenta, tus listas con sus productos y lo que sueles comprar.",
+    "exportButton": "Descargar mis datos",
+    "exportPending": "Preparando…"
   },
   "footer": {
     "product": "Producto",

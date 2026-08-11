@@ -1,0 +1,56 @@
+name: Mantener despierto Supabase
+
+# El plan gratuito de Supabase pausa un proyecto que pasa una semana sin
+# recibir una sola petición. Reactivarlo es manual y, mientras tanto, la web
+# no funciona para nadie. Una consulta cada dos días evita llegar a eso.
+#
+# Configuración: en Settings → Secrets and variables → Actions hacen falta
+#   SUPABASE_URL          https://xxxxxxxx.supabase.co
+#   SUPABASE_ANON_KEY     la clave publicable (la misma que usa el navegador)
+#
+# Ojo: GitHub desactiva las tareas programadas de un repositorio sin actividad
+# durante 60 días, y avisa por correo antes de hacerlo. Si el proyecto entra en
+# reposo, basta con volver a activarla desde la pestaña Actions.
+
+on:
+  schedule:
+    # A las 6:12 UTC los días impares del mes. El minuto no es redondo a
+    # propósito: GitHub retrasa las tareas que caen en horas en punto porque
+    # es cuando todo el mundo las programa.
+    - cron: "12 6 */2 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar el catálogo
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPABASE_URL}" ] || [ -z "${SUPABASE_ANON_KEY}" ]; then
+            echo "Faltan los secretos SUPABASE_URL o SUPABASE_ANON_KEY."
+            echo "Sin ellos esta tarea no sirve para nada, así que falla a propósito"
+            echo "en vez de dar por bueno un proyecto que se va a pausar igualmente."
+            exit 1
+          fi
+
+          # `categories` es catálogo de sistema con lectura pública (política
+          # categories_select_all): no expone ningún dato de nadie y sirve
+          # igual para que el proyecto cuente como activo.
+          code=$(curl --silent --show-error --output /tmp/respuesta.json --write-out '%{http_code}' \
+            --max-time 30 --retry 3 --retry-delay 10 --retry-all-errors \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            "${SUPABASE_URL}/rest/v1/categories?select=id&limit=1")
+
+          echo "HTTP ${code}"
+          cat /tmp/respuesta.json
+
+          if [ "${code}" != "200" ]; then
+            echo "::error::Supabase no respondió 200. El proyecto puede estar pausado o las claves ya no valen."
+            exit 1
+          fi
