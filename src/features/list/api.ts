@@ -172,10 +172,12 @@ export interface ItemEdits {
   name?: string;
   qty?: number | null;
   unit?: string | null;
+  priceCents?: number | null;
 }
 
 /**
- * Corrige un producto ya añadido: su nombre, su cantidad o su unidad.
+ * Corrige un producto ya añadido: su nombre, su cantidad, su unidad o su
+ * precio.
  *
  * Pasa por el outbox como el resto de escrituras, así que se puede corregir
  * dentro del supermercado sin cobertura. No se recategoriza al cambiar el
@@ -188,6 +190,7 @@ export async function updateItem(item: ListItem, edits: ItemEdits): Promise<List
     name: edits.name?.trim() || item.name,
     qty: edits.qty === undefined ? item.qty : edits.qty,
     unit: edits.unit === undefined ? item.unit : edits.unit,
+    price_cents: edits.priceCents === undefined ? item.price_cents : edits.priceCents,
     updated_at: new Date().toISOString(),
   };
 
@@ -220,6 +223,13 @@ export async function deleteItem(item: ListItem): Promise<void> {
 
 export async function renameList(list: List, title: string): Promise<List> {
   const row: List = { ...list, title, updated_at: new Date().toISOString() };
+  await queueRowMutation("lists", row);
+  return row;
+}
+
+/** Fija o quita el presupuesto de la lista. `null` es «sin presupuesto». */
+export async function setListBudget(list: List, budgetCents: number | null): Promise<List> {
+  const row: List = { ...list, budget_cents: budgetCents, updated_at: new Date().toISOString() };
   await queueRowMutation("lists", row);
   return row;
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import { centsToInput, formatMoney, parsePriceToCents } from "@/features/list/money";
 import type { ListItem } from "@/features/list/types";
 import { useDeleteItem, useToggleItem, useUpdateItem } from "@/features/list/use-list-mutations";
 import { cn } from "@/lib/cn";
@@ -27,14 +28,17 @@ export function ItemRow({
   listId,
   item,
   large = false,
+  currency = "EUR",
   onDeleted,
 }: {
   listId: string;
   item: ListItem;
   large?: boolean;
+  currency?: string;
   onDeleted?: (item: ListItem) => void;
 }) {
   const t = useTranslations("list");
+  const locale = useLocale();
   const toggle = useToggleItem(listId);
   const remove = useDeleteItem(listId);
   const update = useUpdateItem(listId);
@@ -72,7 +76,12 @@ export function ItemRow({
   if (editing) {
     return (
       <li className="border-b border-border last:border-b-0">
-        <ItemEditor listId={listId} item={item} onDone={() => setEditing(false)} />
+        <ItemEditor
+          listId={listId}
+          item={item}
+          currency={currency}
+          onDone={() => setEditing(false)}
+        />
       </li>
     );
   }
@@ -107,9 +116,11 @@ export function ItemRow({
           >
             {item.name}
           </span>
-          {item.qty !== null && (
+          {(item.qty !== null || item.price_cents !== null) && (
             <span className={cn("text-on-surface-muted", large ? "text-base" : "text-sm")}>
-              {formatAmount(item)}
+              {item.qty !== null && formatAmount(item)}
+              {item.qty !== null && item.price_cents !== null && " · "}
+              {item.price_cents !== null && formatMoney(item.price_cents, currency, locale)}
             </span>
           )}
         </span>
@@ -168,18 +179,22 @@ function formatAmount(item: ListItem): string {
 function ItemEditor({
   listId,
   item,
+  currency,
   onDone,
 }: {
   listId: string;
   item: ListItem;
+  currency: string;
   onDone: () => void;
 }) {
   const t = useTranslations("list");
+  const locale = useLocale();
   const update = useUpdateItem(listId);
 
   const [name, setName] = useState(item.name);
   const [qty, setQty] = useState(item.qty === null ? "" : String(item.qty));
   const [unit, setUnit] = useState(item.unit ?? "");
+  const [price, setPrice] = useState(() => centsToInput(item.price_cents, locale));
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -195,6 +210,7 @@ function ItemEditor({
         qty: parsedQty !== null && Number.isNaN(parsedQty) ? item.qty : parsedQty,
         // Sin cantidad, la unidad no significa nada: "kg" de nada no es nada.
         unit: parsedQty === null ? null : unit || null,
+        priceCents: parsePriceToCents(price),
       },
     });
     onDone();
@@ -243,6 +259,23 @@ function ItemEditor({
             </option>
           ))}
         </select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <label className="sr-only" htmlFor={`price-${item.id}`}>
+          {t("editPrice")}
+        </label>
+        <input
+          id={`price-${item.id}`}
+          value={price}
+          onChange={(event) => setPrice(event.target.value)}
+          inputMode="decimal"
+          placeholder={t("editPrice")}
+          className="h-tap w-28 rounded-xl border border-border bg-surface px-3 text-base text-on-surface outline-none focus:border-brand"
+        />
+        {/* El precio es de la línea entera, no por unidad: con "500 g" un
+            precio por unidad no significaría nada. */}
+        <p className="text-on-surface-muted text-xs">{t("editPriceHint", { currency })}</p>
       </div>
 
       <div className="flex gap-2">

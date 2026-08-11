@@ -256,7 +256,20 @@
     "decrease": "Quitar una unidad de {name}",
     "print": "Imprimir",
     "shareAsText": "Copiar la lista",
-    "printFootnote": "Lista hecha en listasupermercado.com — crea la tuya y compártela por WhatsApp, sin registro."
+    "printFootnote": "Lista hecha en listasupermercado.com — crea la tuya y compártela por WhatsApp, sin registro.",
+    "editPrice": "Precio",
+    "editPriceHint": "Lo que cuesta esa línea, en {currency}",
+    "budgetTotal": "Total",
+    "budgetOf": "de {budget}",
+    "budgetSet": "Poner presupuesto",
+    "budgetEdit": "Cambiar presupuesto",
+    "budgetPlaceholder": "Presupuesto",
+    "budgetSave": "Guardar",
+    "budgetCancel": "Cancelar",
+    "budgetOver": "Te pasas {amount}",
+    "budgetLeft": "Te quedan {amount}",
+    "budgetMissing": "{count, plural, one {# producto sin precio} other {# productos sin precio}}",
+    "budgetInCart": "{amount} ya en el carro"
   },
   "invite": {
     "joining": "Uniéndote a la lista…",
@@ -333,7 +346,8 @@
     "included5": "Añadir por voz, modo supermercado y plantillas",
     "planned1": "Historial de precios y cuánto te gastas al mes",
     "planned2": "Menú semanal que genera la lista solo",
-    "planned3": "Listas por tienda y comparación entre supermercados"
+    "planned3": "Listas por tienda y comparación entre supermercados",
+    "included6": "Precio por producto y presupuesto de la lista"
   },
   "notFound": {
     "metaTitle": "Página no encontrada",
