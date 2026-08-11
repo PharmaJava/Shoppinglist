@@ -14,6 +14,22 @@ import { ItemRow } from "./item-row";
 const updateItem = vi.fn(async (item, edits) => ({ ...item, ...edits }));
 const deleteItem = vi.fn(async () => undefined);
 
+vi.mock("@/features/list/history", () => ({
+  fetchProductHistory: async () => [
+    {
+      name: "Carne picada",
+      normalized: "carne picada",
+      categoryId: "meat",
+      timesAdded: 6,
+      avgPriceCents: 435,
+    },
+  ],
+  recordProductsAdded: vi.fn(),
+  recordProductPrice: vi.fn(),
+}));
+
+vi.mock("@/features/list/catalog", () => ({ loadProductCatalog: async () => [] }));
+
 vi.mock("@/features/list/api", () => ({
   updateItem: (item: ListItem, edits: unknown) => updateItem(item, edits),
   deleteItem: () => deleteItem(),
@@ -109,6 +125,19 @@ describe("ItemRow", () => {
       unit: null,
       priceCents: null,
     });
+  });
+
+  it("ofrece el precio de la última vez y lo pone al tocarlo", async () => {
+    renderRow(<ItemRow listId="list-1" item={item} />);
+
+    await userEvent.click(screen.getByRole("button", { name: "Editar Carne picada" }));
+
+    const oferta = await screen.findByRole("button", { name: /4,35/ });
+    await userEvent.click(oferta);
+    await userEvent.click(screen.getByRole("button", { name: "Guardar" }));
+
+    await waitFor(() => expect(updateItem).toHaveBeenCalled());
+    expect(updateItem.mock.calls[0]?.[1]).toMatchObject({ priceCents: 435 });
   });
 
   it("guarda el precio en céntimos, escrito con coma", async () => {

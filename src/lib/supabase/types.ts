@@ -146,6 +146,7 @@ export interface Database {
           times_added: number;
           last_added: string;
           avg_price_cents: number | null;
+          price_samples: number;
         };
         Relationships: [];
         Insert: Partial<Database["public"]["Tables"]["user_product_history"]["Row"]> & {
@@ -220,6 +221,10 @@ export interface Database {
       };
       record_products: {
         Args: { p_items: RecordedProduct[] };
+        Returns: undefined;
+      };
+      record_product_price: {
+        Args: { p_normalized: string; p_name: string; p_price_cents: number };
         Returns: undefined;
       };
     };

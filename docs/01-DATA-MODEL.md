@@ -340,6 +340,11 @@ no son opcionales:
 - **Sin sesión, sale en silencio.** Se llama en segundo plano al añadir productos y no puede
   tumbar esa operación.
 
+El precio se guarda aparte, con `record_product_price(text, text, integer)`, que lleva una media
+exacta gracias a la columna `price_samples` y descarta lo que no puede ser un precio (negativo o
+mayor de 10.000 € por línea). Por qué el precio sale del propio usuario y no del catálogo de una
+cadena: `06-PRECIOS.md`.
+
 Del lado del cliente no pasa por el outbox (`src/features/list/history.ts`): la operación es
 «suma uno», no «escribe esta fila», y una cola que reintenta contaría de más. Si falla, se pierde
 ese registro y ya está — la lista, que es lo que importa, sí va por el outbox.

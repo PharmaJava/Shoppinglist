@@ -5,7 +5,7 @@ import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { queueRowMutation } from "@/lib/sync/flush";
 import { categorize } from "./categorize";
-import { recordProductsAdded } from "./history";
+import { recordProductPrice, recordProductsAdded } from "./history";
 import { type ParsedVoiceItem, parseVoiceTranscript } from "./parse-voice";
 import { keyAtEnd } from "./sort-key";
 import type { Category, List, ListItem } from "./types";
@@ -193,6 +193,12 @@ export async function updateItem(item: ListItem, edits: ItemEdits): Promise<List
     price_cents: edits.priceCents === undefined ? item.price_cents : edits.priceCents,
     updated_at: new Date().toISOString(),
   };
+
+  // Se aprende sólo del precio que alguien escribe a mano; los que vengan de
+  // otro sitio no dicen nada sobre lo que paga esta persona.
+  if (edits.priceCents !== undefined && edits.priceCents !== null) {
+    recordProductPrice(row.name, edits.priceCents);
+  }
 
   await queueRowMutation("list_items", row);
   return row;
