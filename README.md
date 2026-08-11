@@ -15,6 +15,8 @@ va marcando productos mientras compra.
 | [`docs/04-BACKLOG.md`](docs/04-BACKLOG.md) | Desglose en tareas del tamaño de una PR, con criterios de aceptación |
 | [`docs/05-AUTH.md`](docs/05-AUTH.md) | Login por email, conversión de invitado a cuenta y configuración de Supabase |
 | [`docs/06-PRECIOS.md`](docs/06-PRECIOS.md) | Por qué no integramos el catálogo de un supermercado y qué hacemos en su lugar |
+| [`docs/07-PUSH.md`](docs/07-PUSH.md) | Notificaciones push: claves VAPID, webhook de Supabase y qué no cubren |
+| [`e2e/README.md`](e2e/README.md) | Qué cubren los tests end-to-end y qué falta |
 | [`supabase/README.md`](supabase/README.md) | Cómo aplicar migraciones y cómo saber cuáles faltan (`pnpm db:check`) |
 
 ## Resumen en 30 segundos

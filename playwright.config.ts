@@ -38,7 +38,8 @@ export default defineConfig({
     env: {
       // El build no llama a Supabase, sólo necesita las variables para
       // resolver los módulos del cliente (igual que en el CI).
-      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://example.supabase.co",
+      NEXT_PUBLIC_SUPABASE_URL:
+        process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://example.supabase.co",
       NEXT_PUBLIC_SUPABASE_ANON_KEY:
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "clave-de-ejemplo-para-e2e",
       NEXT_PUBLIC_SITE_URL: "http://localhost:3111",

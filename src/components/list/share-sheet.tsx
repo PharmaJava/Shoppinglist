@@ -10,6 +10,7 @@ import { useList } from "@/features/list/use-list";
 import { SITE_URL } from "@/lib/seo/site";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { MembersPanel } from "./members-panel";
+import { PushToggle } from "./push-toggle";
 
 export function ShareSheet({ listId, onClose }: { listId: string; onClose: () => void }) {
   const t = useTranslations("list");
@@ -187,6 +188,8 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
         {members.length > 0 && (
           <MembersPanel listId={listId} members={members} onChanged={loadMembers} />
         )}
+
+        <PushToggle />
       </div>
     </div>
   );

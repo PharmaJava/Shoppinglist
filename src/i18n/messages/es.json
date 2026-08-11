@@ -367,5 +367,11 @@
     "body": "El enlace que has seguido no existe o ha cambiado. Si era una lista compartida, pide que te la vuelvan a enviar: los enlaces de lista no caducan, pero se escriben mal con facilidad.",
     "home": "Ir al inicio",
     "templates": "Ver plantillas"
+  },
+  "push": {
+    "label": "Avisarme de los cambios en esta lista",
+    "on": "Activados",
+    "off": "Activar",
+    "denied": "Tienes las notificaciones bloqueadas para este sitio. Se activan desde los ajustes del navegador."
   }
 }

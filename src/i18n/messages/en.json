@@ -367,5 +367,11 @@
     "body": "The link you followed doesn't exist or has changed. If it was a shared list, ask for it again — list links don't expire, but they're easy to mistype.",
     "home": "Go home",
     "templates": "Browse templates"
+  },
+  "push": {
+    "label": "Notify me about changes to this list",
+    "on": "On",
+    "off": "Turn on",
+    "denied": "Notifications are blocked for this site. You can turn them back on in your browser settings."
   }
 }

@@ -9,7 +9,7 @@
  *
  * Subir VERSION invalida todas las cachés antiguas en el próximo `activate`.
  */
-const VERSION = "v1";
+const VERSION = "v2";
 const SHELL_CACHE = `listasupermercado-shell-${VERSION}`;
 const RUNTIME_CACHE = `listasupermercado-runtime-${VERSION}`;
 const OFFLINE_URL = "/offline.html";
@@ -82,3 +82,50 @@ self.addEventListener("fetch", (event) => {
     );
   }
 });
+
+/**
+ * Notificaciones push.
+ *
+ * El servidor manda un JSON con lo que hay que enseñar y a dónde lleva el
+ * toque. Si por lo que sea llega sin cuerpo, se enseña un aviso genérico: una
+ * push recibida y no mostrada hace que el navegador retire el permiso.
+ */
+self.addEventListener("push", (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    payload = {};
+  }
+
+  const title = payload.title || "ListaSupermercado";
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: payload.body || "",
+      icon: "/icons/icon-192.png",
+      badge: "/icons/icon-192.png",
+      // Agrupa por lista: cinco productos añadidos seguidos son un aviso, no
+      // cinco. El último sustituye al anterior.
+      tag: payload.tag || "listasupermercado",
+      renotify: true,
+      data: { url: payload.url || "/" },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/";
+
+  // Si la lista ya está abierta en alguna pestaña, se enfoca esa en vez de
+  // abrir otra copia.
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if (client.url.includes(url) && "focus" in client) return client.focus();
+      }
+      return self.clients.openWindow(url);
+    }),
+  );
+});
+
