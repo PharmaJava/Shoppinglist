@@ -138,7 +138,7 @@ export const templatesEs: Template[] = [
           "Pulsa «Usar esta plantilla» y comparte el enlace de la lista. Quien lo abra puede añadir y marcar productos desde su móvil, sin registrarse, y los cambios se ven al instante en los dos teléfonos.",
       },
     ],
-    relatedTemplates: ["single", "family-of-4", "budget"],
+    relatedTemplates: ["single", "family-of-4", "batch-cooking"],
     relatedGuides: ["how-to-make", "share-with-family"],
   },
   {
@@ -281,7 +281,7 @@ export const templatesEs: Template[] = [
           "Una compra semanal grande más una reposición corta a mitad de semana de fruta, pan y leche sale mejor que dos compras grandes: reduce lo que se tira sin obligar a cargar con todo de una vez.",
       },
     ],
-    relatedTemplates: ["weekly", "monthly", "budget"],
+    relatedTemplates: ["weekly", "holiday-rental", "monthly"],
     relatedGuides: ["share-with-family", "how-to-make"],
   },
   {
@@ -523,7 +523,7 @@ export const templatesEs: Template[] = [
           "Quita pollo y pescado y sube la legumbre a cuatro botes y las lentejas a kilo y medio, añadiendo tofu o tempeh. La estructura del resto de la lista no cambia.",
       },
     ],
-    relatedTemplates: ["vegetarian", "weekly", "budget"],
+    relatedTemplates: ["gluten-free", "vegetarian", "weekly"],
     relatedGuides: ["how-to-make"],
   },
   {
@@ -661,7 +661,7 @@ export const templatesEs: Template[] = [
           "Anotando lo que se acaba en el momento en que se acaba, no el día de la compra. Una lista compartida en el móvil sirve justo para eso: cualquiera de la casa apunta el bote de tomate cuando abre el último.",
       },
     ],
-    relatedTemplates: ["pantry", "weekly", "budget"],
+    relatedTemplates: ["batch-cooking", "pantry", "weekly"],
     relatedGuides: ["how-to-make"],
   },
   {
@@ -791,7 +791,7 @@ export const templatesEs: Template[] = [
           "Cocina una vez y come dos: la legumbre y el pollo guisado dan para dos días cada uno. Comer barato con prisa se sostiene en cocinar en tandas, no en cocinar rápido cada noche.",
       },
     ],
-    relatedTemplates: ["weekly", "single", "pantry"],
+    relatedTemplates: ["student-flat", "weekly", "single"],
     relatedGuides: ["how-to-make"],
   },
   {
@@ -1052,5 +1052,583 @@ export const templatesEs: Template[] = [
     ],
     relatedTemplates: ["healthy", "weekly", "budget"],
     relatedGuides: ["how-to-make"],
+  },
+  {
+    key: "batch-cooking",
+    slug: "lista-compra-batch-cooking",
+    locale: "es",
+    title: "Lista de la compra para batch cooking",
+    metaTitle: "Lista de la compra para batch cooking (una tarde, cinco cenas)",
+    metaDescription:
+      "Plantilla de la compra para cocinar una vez y comer toda la semana: ingredientes que aguantan cocinados, cantidades por tandas y orden por pasillos.",
+    excerpt:
+      "La compra de quien cocina una tarde y come de ella cinco días. No es la lista semanal de siempre: aquí manda lo que aguanta bien cocinado.",
+    serves: "2-3 personas · 5 comidas cocinadas",
+    budget: "40-50 € por semana",
+    updatedAt: "2026-08-11",
+    sections: [
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Cebollas", qty: 1, unit: "kg", note: "La base de casi todo lo que vas a hacer" },
+          { name: "Zanahorias", qty: 1, unit: "kg" },
+          { name: "Pimiento rojo", qty: 3 },
+          { name: "Calabaza", qty: 1, note: "Asada aguanta cinco días sin ponerse triste" },
+          { name: "Patatas", qty: 2, unit: "kg" },
+          { name: "Brócoli", qty: 2, note: "Escáldalo, no lo cuezas del todo" },
+          { name: "Ajos", qty: 1, unit: "cabeza" },
+          { name: "Limones", qty: 3 },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          {
+            name: "Muslos de pollo deshuesados",
+            qty: 1,
+            unit: "kg",
+            note: "Aguantan mejor que la pechuga",
+          },
+          { name: "Carne picada de ternera", qty: 700, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Lentejas", qty: 500, unit: "g" },
+          { name: "Garbanzos cocidos", qty: 3, unit: "botes" },
+          { name: "Arroz integral", qty: 1, unit: "kg" },
+          { name: "Tomate triturado", qty: 3, unit: "botes" },
+          { name: "Caldo de verduras", qty: 2, unit: "briks" },
+          { name: "Aceite de oliva virgen extra", qty: 1 },
+          {
+            name: "Pimentón, comino y curry",
+            qty: 1,
+            note: "Lo que cambia una base en cinco platos",
+          },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Huevos", qty: 12 },
+          { name: "Yogur natural griego", qty: 4, note: "Para salsas rápidas con limón y ajo" },
+          { name: "Queso feta", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "frozen",
+        items: [
+          { name: "Guisantes", qty: 500, unit: "g" },
+          { name: "Espinacas", qty: 500, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "other",
+        items: [
+          {
+            name: "Táperes de cristal",
+            qty: 6,
+            note: "Sólo la primera vez, pero sin ellos esto no funciona",
+          },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "Por qué esta lista no es la semanal de siempre",
+        paragraphs: [
+          "El batch cooking no cambia cuánto comes, cambia cuándo cocinas. Y eso cambia qué conviene comprar: lo que se sirve recién hecho no es lo que aguanta cuatro días en la nevera.",
+          "Por eso aquí hay muslo de pollo en vez de pechuga, arroz integral en vez de blanco y calabaza en vez de lechuga. No es capricho: la pechuga se seca al recalentarla, el arroz blanco se apelmaza y la hoja verde no sobrevive al táper. Cada elección de esta lista está tomada pensando en el jueves, no en el domingo.",
+        ],
+      },
+      {
+        heading: "Cómo se convierte esto en cinco comidas",
+        paragraphs: [
+          "La idea es cocinar tres bases y combinarlas, no cinco platos distintos. Con lo de esta lista salen: un sofrito grande de cebolla, zanahoria y tomate; una tanda de pollo asado con limón; y una olla de lentejas.",
+        ],
+        bullets: [
+          "Sofrito + carne picada + patata = boloñesa y relleno de empanada.",
+          "Sofrito + garbanzos + espinacas = potaje, y frío con feta es ensalada.",
+          "Pollo + arroz integral + brócoli escaldado = el táper de siempre, pero bueno.",
+          "Calabaza asada + caldo = crema, que se congela mejor que ninguna otra cosa.",
+          "Huevos: la red de seguridad del viernes, cuando ya no queda nada.",
+        ],
+      },
+      {
+        heading: "Qué comprar de más y qué no",
+        paragraphs: [
+          "Duplica sin miedo el sofrito, la legumbre y la crema: aguantan, se congelan y no pierden nada. Es donde el batch cooking gana de verdad.",
+          "No dupliques el pescado, la ensalada ni las patatas fritas de nadie. Y si sólo vas a cocinar una tarde al mes, esta lista no es la tuya: mira la mensual, que está pensada para despensa y congelador.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuánto aguanta la comida del batch cooking en la nevera?",
+        answer:
+          "Entre tres y cuatro días en la parte más fría, guardada en cuanto se enfríe y en recipientes cerrados. Lo que vayas a comer el quinto día conviene congelarlo el mismo día que lo cocinas, no cuando ya lleva tres en la nevera.",
+      },
+      {
+        question: "¿Cuánto se tarda en cocinar todo esto?",
+        answer:
+          "Entre dos horas y media y tres, con el horno trabajando mientras tú estás en los fuegos. La mayor parte es tiempo de cocción, no de estar delante.",
+      },
+      {
+        question: "¿Sirve para una persona?",
+        answer:
+          "Sí, y es donde más se nota, porque cocinar para uno cada día es lo que más tiempo desperdicia. Baja la carne a la mitad y congela media tanda de cada base en raciones individuales.",
+      },
+      {
+        question: "¿Puedo hacer batch cooking sin táperes de cristal?",
+        answer:
+          "Puedes, pero el plástico coge olor y no va al horno ni al microondas con la misma alegría. Es la única compra de esta lista que no repetirás.",
+      },
+    ],
+    relatedTemplates: ["weekly", "healthy", "monthly"],
+    relatedGuides: ["how-to-make", "save-money"],
+  },
+  {
+    key: "student-flat",
+    slug: "lista-compra-piso-estudiantes",
+    locale: "es",
+    title: "Lista de la compra para un piso de estudiantes",
+    metaTitle: "Lista de la compra para estudiantes: la primera y la de cada semana",
+    metaDescription:
+      "Qué comprar al mudarte a un piso de estudiantes: la compra inicial de despensa y limpieza, y la lista semanal barata que la sigue. Compártela con tus compañeros.",
+    excerpt:
+      "Dos listas en una: lo que hay que comprar el primer día en un piso vacío, y lo que se repone cada semana entre varios.",
+    serves: "3-4 compañeros · primera compra + semana",
+    budget: "70-90 € la primera vez, 35-45 € por semana",
+    updatedAt: "2026-08-11",
+    sections: [
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Aceite de oliva", qty: 1 },
+          { name: "Sal y pimienta", qty: 1 },
+          { name: "Pasta", qty: 2, unit: "kg" },
+          { name: "Arroz", qty: 1, unit: "kg" },
+          { name: "Tomate frito", qty: 4, unit: "botes" },
+          { name: "Atún en lata", qty: 6 },
+          { name: "Legumbres cocidas", qty: 4, unit: "botes" },
+          { name: "Azúcar", qty: 1 },
+          { name: "Harina", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Cebollas", qty: 1, unit: "kg" },
+          { name: "Patatas", qty: 2, unit: "kg" },
+          { name: "Ajos", qty: 1, unit: "cabeza" },
+          { name: "Tomates", qty: 1, unit: "kg" },
+          { name: "Plátanos", qty: 6, note: "Lo más barato que se come sin cocinar" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Leche", qty: 6, unit: "briks" },
+          { name: "Huevos", qty: 12, note: "Docena grande: es la cena de emergencia de todos" },
+          { name: "Queso rallado", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          {
+            name: "Pollo entero troceado",
+            qty: 1,
+            note: "Más barato por kilo que la bandeja de filetes",
+          },
+          { name: "Carne picada", qty: 500, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "frozen",
+        items: [
+          { name: "Verdura congelada", qty: 1, unit: "kg" },
+          { name: "Pescado congelado", qty: 500, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [{ name: "Pan de molde", qty: 2, note: "Uno al congelador nada más llegar" }],
+      },
+      {
+        categoryId: "cleaning",
+        items: [
+          { name: "Detergente de lavadora", qty: 1 },
+          { name: "Lavavajillas a mano", qty: 1 },
+          { name: "Bayetas y estropajos", qty: 1 },
+          { name: "Papel higiénico", qty: 12, unit: "rollos" },
+          { name: "Bolsas de basura", qty: 1 },
+          { name: "Papel de cocina", qty: 2 },
+        ],
+      },
+      {
+        categoryId: "personal",
+        items: [
+          { name: "Jabón de manos", qty: 1 },
+          { name: "Papel de aluminio y film", qty: 1 },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "La primera compra no es una compra semanal",
+        paragraphs: [
+          "Cuando llegas a un piso vacío, la mitad de lo que gastas no es comida: es aceite, sal, papel higiénico y detergente. Cosas que compras una vez y duran meses, y que hacen que la primera factura parezca disparatada comparada con las siguientes.",
+          "Esta plantilla mezcla las dos cosas a propósito, marcando lo que es de arranque. La segunda semana quitas la limpieza y la despensa seca y la compra se queda en la mitad.",
+        ],
+      },
+      {
+        heading: "El problema real de un piso compartido no es qué comprar",
+        paragraphs: [
+          "Es quién compra, quién paga y qué es de quién. La comida compartida funciona bien con lo básico —aceite, sal, papel, productos de limpieza— y mal con todo lo demás, porque nadie come lo mismo ni a la misma hora.",
+        ],
+        bullets: [
+          "Compartid la despensa y la limpieza: es lo que todos usáis sin darse cuenta.",
+          "Cada uno lo suyo en fresco: así nadie vigila la nevera.",
+          "Una lista compartida en el móvil evita el clásico «pensaba que lo comprabas tú»: quien ve que se acaba algo, lo apunta en el momento.",
+          "Un solo bote de cada cosa. Tres botes de pimentón abiertos es dinero tirado y espacio robado.",
+        ],
+      },
+      {
+        heading: "Dónde se va el dinero en un piso de estudiantes",
+        paragraphs: [
+          "En comida preparada y en pedir a domicilio los días que nadie tiene ganas. Ninguna lista arregla eso del todo, pero tener pasta, huevos y tomate frito en casa sí quita la excusa más habitual.",
+          "El pollo entero troceado y la verdura congelada son las dos líneas que más bajan el coste por ración sin cocinar mejor ni tener más tiempo.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuánto cuesta la primera compra de un piso de estudiantes?",
+        answer:
+          "Entre 70 y 90 € para tres o cuatro personas, con la limpieza y la despensa incluidas. A partir de la segunda semana baja a 35-45 €, porque lo que dura meses ya está comprado.",
+      },
+      {
+        question: "¿Es mejor comprar juntos o cada uno lo suyo?",
+        answer:
+          "Lo básico y la limpieza, juntos: sale más barato y se usa igual. El fresco, cada uno el suyo, porque los horarios y las dietas no coinciden y es donde empiezan los roces.",
+      },
+      {
+        question: "¿Cómo repartimos lo que gasta cada uno?",
+        answer:
+          "Con precios apuntados en la propia lista compartida y una foto del ticket. Aquí puedes poner el precio de cada producto y ver el total, que es el número que hace falta para dividir sin discutir.",
+      },
+      {
+        question: "¿Qué se puede comprar de marca blanca sin notarlo?",
+        answer:
+          "Legumbre de bote, tomate frito, pasta, arroz, leche y productos de limpieza. Es donde está la mayor parte del ahorro y donde menos se nota la diferencia.",
+      },
+    ],
+    relatedTemplates: ["budget", "single", "pantry"],
+    relatedGuides: ["save-money", "share-with-family"],
+  },
+  {
+    key: "gluten-free",
+    slug: "lista-compra-sin-gluten",
+    locale: "es",
+    title: "Lista de la compra sin gluten",
+    metaTitle: "Lista de la compra sin gluten para celíacos (semana completa)",
+    metaDescription:
+      "Plantilla de la compra sin gluten para una semana: qué es naturalmente apto, dónde se esconde el gluten y qué hay que comprar certificado.",
+    excerpt:
+      "Una semana completa sin gluten, separando lo que ya es apto de forma natural de lo que hay que comprar certificado.",
+    serves: "2 personas · 7 días",
+    budget: "70-90 € por semana",
+    updatedAt: "2026-08-11",
+    sections: [
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Patatas", qty: 2, unit: "kg" },
+          { name: "Tomates", qty: 1, unit: "kg" },
+          { name: "Cebollas", qty: 1, unit: "kg" },
+          { name: "Calabacín", qty: 2 },
+          { name: "Espinacas frescas", qty: 1, unit: "bolsa" },
+          { name: "Manzanas", qty: 6 },
+          { name: "Plátanos", qty: 6 },
+          { name: "Aguacates", qty: 2 },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          { name: "Pechuga de pollo", qty: 700, unit: "g" },
+          {
+            name: "Carne picada",
+            qty: 500,
+            unit: "g",
+            note: "Sin preparar: la hamburguesa formada suele llevar pan rallado",
+          },
+          { name: "Lomo de cerdo", qty: 400, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "fish",
+        items: [
+          { name: "Salmón fresco", qty: 2, unit: "lomos" },
+          { name: "Gambas peladas congeladas", qty: 300, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Leche", qty: 4, unit: "briks" },
+          { name: "Huevos", qty: 12 },
+          {
+            name: "Yogur natural",
+            qty: 8,
+            note: "Natural sin azucarar: los de sabores llevan más aditivos",
+          },
+          { name: "Queso curado en cuña", qty: 1, note: "Mejor en cuña que rallado" },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [
+          { name: "Pan sin gluten certificado", qty: 2, note: "Congela uno: se seca en un día" },
+          { name: "Tortitas de maíz", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Arroz", qty: 1, unit: "kg" },
+          { name: "Pasta sin gluten certificada", qty: 500, unit: "g" },
+          { name: "Legumbres cocidas", qty: 3, unit: "botes" },
+          { name: "Tomate triturado", qty: 2, unit: "botes" },
+          { name: "Harina de arroz o maíz", qty: 1 },
+          { name: "Aceite de oliva virgen extra", qty: 1 },
+          { name: "Caldo sin gluten certificado", qty: 2, unit: "briks" },
+        ],
+      },
+      {
+        categoryId: "breakfast",
+        items: [
+          {
+            name: "Copos de avena certificados",
+            qty: 1,
+            note: "La avena normal se contamina en el molino",
+          },
+          { name: "Café", qty: 1 },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "Lo que ya es apto y no hace falta buscar",
+        paragraphs: [
+          "La mayor parte de una compra normal es naturalmente sin gluten: fruta, verdura, carne y pescado frescos, huevos, legumbre seca, arroz, aceite y leche. Empezar por ahí es lo que hace que la lista no dé vértigo ni cueste el doble.",
+          "El coste extra no está en la comida, está en los sustitutos: pan, pasta y bollería sin gluten valen entre dos y cuatro veces más. Cuanto más gire la semana en torno a arroz, patata y legumbre, menos se nota en el ticket.",
+        ],
+      },
+      {
+        heading: "Dónde se esconde el gluten cuando no lo esperas",
+        paragraphs: [
+          "Los sustos no vienen del pan, que es evidente. Vienen de productos que nadie asocia con el trigo y que se cuelan en cualquier compra.",
+        ],
+        bullets: [
+          "Embutidos y patés: muchos llevan almidón de trigo como ligante.",
+          "Caldos, sopas de sobre y cubitos concentrados.",
+          "Salsa de soja: es de trigo, salvo la que se etiqueta tamari.",
+          "Carne picada preparada, albóndigas y hamburguesas ya formadas.",
+          "Avena: naturalmente apta, pero se procesa donde el trigo. Sólo la certificada sirve.",
+          "Quesos rallados y algunos yogures de sabores, por los antiaglomerantes y espesantes.",
+        ],
+      },
+      {
+        heading: "Certificado o etiqueta: cuándo hace falta cada cosa",
+        paragraphs: [
+          "Para un producto de un solo ingrediente —arroz, patata, pollo— la etiqueta basta. Para todo lo procesado, la espiga barrada certifica que se ha controlado también la contaminación cruzada en fábrica, que es lo que una lista de ingredientes no puede garantizar.",
+          "Si en casa convivís con gluten, la contaminación cruzada en la cocina importa tanto como la compra: tostadora aparte, tabla aparte y untar con cubierto limpio evitan la mayoría de los accidentes.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuánto más cara es la compra sin gluten?",
+        answer:
+          "Entre un 20 % y un 40 % más si se sustituye pan y pasta por sus versiones certificadas. Si la semana se apoya en arroz, patata y legumbre, la diferencia baja mucho.",
+      },
+      {
+        question: "¿La avena es sin gluten?",
+        answer:
+          "La avena en sí no lleva gluten, pero se cultiva y se muele donde el trigo, así que sólo es segura la certificada. Es uno de los descuidos más frecuentes.",
+      },
+      {
+        question: "¿Sirve esta lista para una intolerancia no celíaca?",
+        answer:
+          "Sí, y con más margen: sin celiaquía la contaminación cruzada preocupa menos, así que puedes usar productos que declaran «puede contener trazas» y ahorrar bastante.",
+      },
+      {
+        question: "¿Cómo aviso a quien compra por mí de qué puede coger?",
+        answer:
+          "Comparte la lista y usa la nota de cada producto para escribir «certificado» donde haga falta. Quien la abra ve la nota junto al producto, sin tener que preguntar en mitad del pasillo.",
+      },
+    ],
+    relatedTemplates: ["healthy", "weekly", "pantry"],
+    relatedGuides: ["how-to-make", "share-with-family"],
+  },
+  {
+    key: "holiday-rental",
+    slug: "lista-compra-apartamento-vacaciones",
+    locale: "es",
+    title: "Lista de la compra para un apartamento de vacaciones",
+    metaTitle: "Lista de la compra para apartamento de vacaciones (una semana)",
+    metaDescription:
+      "Qué comprar al llegar a un apartamento de vacaciones: la compra del primer día para una cocina vacía, sin traerte medio armario de casa ni gastar de más.",
+    excerpt:
+      "La compra del primer día en una cocina que no es la tuya: lo justo para una semana, sin comprar un bote de especias que dejarás allí.",
+    serves: "4 personas · 7 días",
+    budget: "90-120 € la compra de llegada",
+    updatedAt: "2026-08-11",
+    sections: [
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Aceite de oliva", qty: 1, note: "Botella pequeña: la grande se queda allí" },
+          { name: "Sal", qty: 1 },
+          { name: "Pasta", qty: 1, unit: "kg" },
+          { name: "Arroz", qty: 500, unit: "g" },
+          { name: "Tomate frito", qty: 2, unit: "botes" },
+          { name: "Atún en lata", qty: 4 },
+          { name: "Aceitunas", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Tomates", qty: 1, unit: "kg" },
+          { name: "Lechuga", qty: 1 },
+          { name: "Cebollas", qty: 3 },
+          { name: "Limones", qty: 3 },
+          {
+            name: "Fruta de temporada",
+            qty: 2,
+            unit: "kg",
+            note: "Lo que mejor pinta tenga y no haya que cocinar",
+          },
+          { name: "Patatas", qty: 1, unit: "kg" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Leche", qty: 4, unit: "briks" },
+          { name: "Huevos", qty: 12 },
+          { name: "Queso en lonchas", qty: 1 },
+          { name: "Mantequilla", qty: 1 },
+          { name: "Yogures", qty: 8 },
+        ],
+      },
+      {
+        categoryId: "deli",
+        items: [
+          { name: "Jamón serrano en lonchas", qty: 200, unit: "g" },
+          { name: "Pavo o jamón cocido", qty: 300, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          { name: "Pollo para plancha", qty: 800, unit: "g" },
+          {
+            name: "Salchichas o hamburguesas",
+            qty: 8,
+            note: "La cena fácil del día que llegáis tarde de la playa",
+          },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [
+          { name: "Pan", qty: 2 },
+          { name: "Pan de molde", qty: 1 },
+          { name: "Galletas o bizcocho", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "drinks",
+        items: [
+          { name: "Agua", qty: 12, unit: "botellas" },
+          { name: "Refrescos", qty: 6 },
+          { name: "Cerveza o vino", qty: 6 },
+          { name: "Café soluble", qty: 1, note: "Salvo que sepas seguro qué cafetera hay" },
+        ],
+      },
+      {
+        categoryId: "cleaning",
+        items: [
+          { name: "Papel higiénico", qty: 4, unit: "rollos" },
+          { name: "Bolsas de basura", qty: 1 },
+          { name: "Lavavajillas a mano", qty: 1 },
+          { name: "Papel de cocina", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "personal",
+        items: [
+          { name: "Crema solar", qty: 1 },
+          { name: "Aftersun", qty: 1 },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "La regla de la cocina prestada",
+        paragraphs: [
+          "En un apartamento de alquiler nunca sabes qué hay hasta que abres los armarios: a veces hay aceite y sal, y a veces ni una sartén decente. La tentación es comprar como si estuvieras en casa, y así es como se acaba dejando allí medio armario de despensa al marcharse.",
+          "La regla que funciona es sencilla: formatos pequeños de todo lo que no vas a terminar, y ninguna especia más allá de la sal. Comer de vacaciones es más simple que en casa, y la lista debería reflejarlo.",
+        ],
+      },
+      {
+        heading: "Qué comprar antes de llegar y qué al llegar",
+        paragraphs: [
+          "Llegar con el coche cargado desde casa sólo compensa para lo que no ocupa y sí cuesta: café si sois exigentes, un aceite decente, alguna especia en bolsita.",
+        ],
+        bullets: [
+          "Antes de salir: agua para el viaje, algo de picar y el desayuno del primer día.",
+          "Al llegar, ese mismo día: desayuno, algo de cena rápida y papel higiénico. Nada más.",
+          "Al día siguiente, con la cocina ya vista: el resto de la lista, ajustando a lo que haya.",
+          "Última compra el penúltimo día, no el último: lo que sobre lo tiraréis.",
+        ],
+      },
+      {
+        heading: "Las tres cosas que se olvidan siempre",
+        paragraphs: [
+          "Bolsas de basura, papel de cocina y algo para fregar. No están en ninguna lista mental porque en casa se reponen solos, y en un apartamento se echan de menos la primera noche.",
+          "La cuarta, si vais con niños: un desayuno que les guste. Un apartamento sin nada conocido a las ocho de la mañana es un mal comienzo del día de playa.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuánto cuesta la compra de llegada a un apartamento?",
+        answer:
+          "Entre 90 y 120 € para cuatro personas y una semana, contando bebida y limpieza. Es más cara de lo que parece porque incluye básicos que en casa ya tienes.",
+      },
+      {
+        question: "¿Qué me llevo de casa y qué compro allí?",
+        answer:
+          "De casa, lo pequeño y caro: café, especias, un buen aceite en botella pequeña. Allí, todo lo voluminoso y el fresco, que no aguanta el viaje.",
+      },
+      {
+        question: "¿Merece la pena hacer una compra grande el primer día?",
+        answer:
+          "No. Compra sólo el desayuno y la primera cena, mira la cocina con calma y haz el resto al día siguiente. Comprar antes de saber si hay horno o sólo dos fuegos es como sobran cosas.",
+      },
+      {
+        question: "¿Cómo nos organizamos entre los que vamos?",
+        answer:
+          "Comparte la lista por WhatsApp antes de salir. Cada uno añade lo suyo desde su móvil y el que llegue primero al supermercado la tiene entera, sin llamadas desde el pasillo.",
+      },
+    ],
+    relatedTemplates: ["weekly", "family-of-4", "pantry"],
+    relatedGuides: ["share-with-family", "save-money"],
   },
 ];

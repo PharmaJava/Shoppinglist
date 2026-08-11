@@ -84,7 +84,7 @@ export const postsEn: Post[] = [
     ],
     relatedTemplates: ["weekly", "pantry"],
     relatedGuides: ["how-to-make"],
-    relatedPosts: ["forget-items"],
+    relatedPosts: ["forget-items", "what-to-freeze"],
   },
   {
     key: "forget-items",
@@ -148,6 +148,98 @@ export const postsEn: Post[] = [
     ],
     relatedTemplates: ["weekly", "pantry"],
     relatedGuides: ["how-to-make", "share-with-family"],
-    relatedPosts: ["overspending-mistakes"],
+    relatedPosts: ["overspending-mistakes", "what-to-freeze"],
+  },
+  {
+    key: "what-to-freeze",
+    slug: "what-to-freeze-when-you-get-home-from-the-store",
+    locale: "en",
+    title: "What to freeze the moment you get home from the store (and what not to)",
+    metaTitle: "What to Freeze When You Get Home From the Grocery Store",
+    metaDescription:
+      "Freezing the right things while you're still unpacking is what decides how much you throw out on Friday. What goes in, how, and what should never go near a freezer.",
+    excerpt:
+      "Food waste doesn't start on Friday. It starts on Saturday, while you're putting the groceries away.",
+    publishedAt: "2026-08-11",
+    updatedAt: "2026-08-11",
+    body: [
+      {
+        heading: "Waste is decided while you unpack",
+        paragraphs: [
+          "Almost everything that gets thrown out was perfectly good the day it came home. It spoils because it went in the fridge whole, waiting for a day of the week that never arrives.",
+          "Freezing isn't for leftovers. It's a decision made with the bags still on the kitchen floor. Ten minutes, and half the groceries stop having an expiration date.",
+        ],
+      },
+      {
+        heading: "What goes in the freezer immediately",
+        paragraphs: [
+          "You don't need to freeze half the cart. These few things cover most of what usually ends up in the trash.",
+        ],
+        bullets: [
+          "Bread: whatever loaf you won't finish today, sliced first. Frozen whole, you have to thaw the whole thing, and nobody does.",
+          "Ground meat: flat in a bag, not in a ball. Thaws in twenty minutes instead of overnight.",
+          "Chicken breasts and steaks: separated by parchment, so you can pull one without pulling all four.",
+          "Fresh fish you won't eat within two days. Buying it fresh and freezing it at home beats leaving it in the fridge until Thursday.",
+          "Shredded cheese, butter and bacon: they keep for months and go straight from frozen into the pan.",
+          "Overripe bananas, peeled and chunked. It's the only future a black banana has.",
+        ],
+      },
+      {
+        heading: "What shouldn't go in",
+        paragraphs: [
+          "Freezing the wrong thing wastes it twice: the food and the space. These come out worse than they went in, and no technique fixes it.",
+        ],
+        bullets: [
+          "Salad greens and lettuce: they come out as a wet rag.",
+          "Raw potatoes, cucumber, and tomatoes meant to be eaten raw.",
+          "Eggs in the shell.",
+          "Yogurt, heavy cream and soft cheeses: they split.",
+          "Anything fried, which loses everything that made it worth frying.",
+        ],
+      },
+      {
+        heading: "Three rules that make it work",
+        paragraphs: [
+          "Freezing well isn't just putting it in there. The difference between a useful freezer and a graveyard of unlabeled bags comes down to three things.",
+        ],
+        bullets: [
+          "Meal-sized portions, never one solid block. A frozen three-pound brick is three pounds you won't use.",
+          "Flat, in bags, not tubs. Less space, faster freeze, much faster thaw.",
+          "Date written on it. Not for safety — so you know what to use first, which is what prevents the geological layer at the bottom.",
+        ],
+      },
+      {
+        heading: "And the part that keeps you from forgetting",
+        paragraphs: [
+          "The expensive mistake isn't freezing badly, it's freezing and forgetting. Anything at the bottom of the freezer effectively doesn't exist, and you end up buying it again.",
+          'Adding "chicken in the freezer" to the shared list takes five seconds and the whole household sees it. It\'s the same reason a list works better on a phone than on the fridge door: the person standing in the store can see it, not just the person standing in the kitchen.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "How long does meat last in the freezer?",
+        answer:
+          "Three to six months for raw cuts and a bit less for ground meat, which has more exposed surface. Beyond that it stays safe if the cold chain held, but texture and flavor suffer.",
+      },
+      {
+        question: "Can you freeze bread already sliced?",
+        answer:
+          "It's the best way to do it. Separate slices let you pull two and toast them straight from frozen, without thawing the loaf.",
+      },
+      {
+        question: "Can you refreeze something that's been thawed?",
+        answer:
+          "Not raw. Cooked, yes: thawing chicken, cooking it and freezing the finished dish is fine, and it's the whole basis of meal prep.",
+      },
+      {
+        question: "How do I keep track of what's in there?",
+        answer:
+          "Write it where you already look. A shared list on your phone does that: whoever is standing in the store can see there's already a pound of ground beef at home.",
+      },
+    ],
+    relatedTemplates: ["batch-cooking", "monthly", "weekly"],
+    relatedGuides: ["save-money", "how-to-make"],
+    relatedPosts: ["overspending-mistakes", "forget-items"],
   },
 ];

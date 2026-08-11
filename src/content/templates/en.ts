@@ -134,7 +134,7 @@ export const templatesEn: Template[] = [
           'Tap "Use this template" and share the link. Whoever opens it can add and check off items from their own phone, with no sign-up, and both phones stay in sync.',
       },
     ],
-    relatedTemplates: ["single", "family-of-4", "budget"],
+    relatedTemplates: ["single", "family-of-4", "batch-cooking"],
     relatedGuides: ["how-to-make", "share-with-family"],
   },
   {
@@ -274,7 +274,7 @@ export const templatesEn: Template[] = [
           "One large trip plus a short midweek run for milk, bread and produce tends to waste less than two large trips, without making you carry everything at once.",
       },
     ],
-    relatedTemplates: ["weekly", "monthly", "budget"],
+    relatedTemplates: ["weekly", "holiday-rental", "monthly"],
     relatedGuides: ["share-with-family", "how-to-make"],
   },
   {
@@ -518,7 +518,7 @@ export const templatesEn: Template[] = [
           "Drop the chicken and fish, raise chickpeas to five cans and lentils to two bags, and add tofu or tempeh. The rest of the structure stays the same.",
       },
     ],
-    relatedTemplates: ["vegetarian", "weekly", "budget"],
+    relatedTemplates: ["gluten-free", "vegetarian", "weekly"],
     relatedGuides: ["how-to-make"],
   },
   {
@@ -661,7 +661,7 @@ export const templatesEn: Template[] = [
           "By noting things the moment they run out, not on shopping day. That's exactly what a shared list on your phone is for: whoever opens the last can of tomatoes adds it right then.",
       },
     ],
-    relatedTemplates: ["pantry", "weekly", "budget"],
+    relatedTemplates: ["batch-cooking", "pantry", "weekly"],
     relatedGuides: ["how-to-make"],
   },
   {
@@ -791,7 +791,7 @@ export const templatesEn: Template[] = [
           "Cook once, eat twice: the beans and the stew each cover two days. Cheap eating on a tight schedule rests on batch cooking, not on cooking fast every night.",
       },
     ],
-    relatedTemplates: ["weekly", "single", "pantry"],
+    relatedTemplates: ["student-flat", "weekly", "single"],
     relatedGuides: ["how-to-make"],
   },
   {
@@ -1050,5 +1050,598 @@ export const templatesEn: Template[] = [
     ],
     relatedTemplates: ["healthy", "weekly", "budget"],
     relatedGuides: ["how-to-make"],
+  },
+  {
+    key: "batch-cooking",
+    slug: "meal-prep-grocery-list",
+    locale: "en",
+    title: "Meal prep grocery list",
+    metaTitle: "Meal Prep Grocery List: Cook Once, Eat All Week",
+    metaDescription:
+      "A grocery list built for meal prep: ingredients that reheat well, quantities by batch, and what to cook on Sunday so Thursday still tastes good.",
+    excerpt:
+      "The list for cooking once and eating from it five days. Not your regular weekly list — here, what reheats well wins.",
+    serves: "2-3 people · 5 prepped meals",
+    budget: "$55-70 per week",
+    updatedAt: "2026-08-11",
+    sections: [
+      {
+        categoryId: "produce",
+        items: [
+          {
+            name: "Yellow onions",
+            qty: 3,
+            unit: "lb",
+            note: "The base of nearly everything you'll cook",
+          },
+          { name: "Carrots", qty: 2, unit: "lb" },
+          { name: "Bell peppers", qty: 4 },
+          { name: "Butternut squash", qty: 1, note: "Roasted, it holds up for five days" },
+          { name: "Sweet potatoes", qty: 4 },
+          { name: "Broccoli", qty: 2, unit: "heads", note: "Blanch it, don't cook it through" },
+          { name: "Garlic", qty: 1, unit: "head" },
+          { name: "Lemons", qty: 3 },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          {
+            name: "Boneless chicken thighs",
+            qty: 2,
+            unit: "lb",
+            note: "Reheats far better than breast",
+          },
+          { name: "Ground beef", qty: 1.5, unit: "lb" },
+        ],
+      },
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Brown rice", qty: 2, unit: "lb" },
+          { name: "Dried lentils", qty: 1, unit: "lb" },
+          { name: "Canned chickpeas", qty: 3, unit: "cans" },
+          { name: "Crushed tomatoes", qty: 3, unit: "cans" },
+          { name: "Chicken stock", qty: 2, unit: "cartons" },
+          { name: "Olive oil", qty: 1 },
+          {
+            name: "Smoked paprika, cumin, curry powder",
+            qty: 1,
+            note: "What turns one base into five meals",
+          },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Eggs", qty: 12 },
+          {
+            name: "Greek yogurt",
+            qty: 1,
+            unit: "tub",
+            note: "For quick sauces with lemon and garlic",
+          },
+          { name: "Feta cheese", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "frozen",
+        items: [
+          { name: "Peas", qty: 1, unit: "bag" },
+          { name: "Spinach", qty: 2, unit: "bags" },
+        ],
+      },
+      {
+        categoryId: "other",
+        items: [
+          {
+            name: "Glass meal prep containers",
+            qty: 6,
+            note: "First time only, but this doesn't work without them",
+          },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "Why this isn't your regular weekly list",
+        paragraphs: [
+          "Meal prep doesn't change how much you eat, it changes when you cook. That changes what's worth buying: what's great straight off the stove is rarely what's still good on day four.",
+          "That's why this list has chicken thighs instead of breast, brown rice instead of white, and squash instead of salad greens. Breast dries out on reheat, white rice turns to paste, and leafy greens don't survive a container. Every choice here is made for Thursday, not Sunday.",
+        ],
+      },
+      {
+        heading: "How this becomes five meals",
+        paragraphs: [
+          "The trick is cooking three bases and combining them, not five separate dishes. From this list: a big onion-carrot-tomato base, a tray of lemon roast chicken, and a pot of lentils.",
+        ],
+        bullets: [
+          "Base + ground beef = bolognese, and the filling for a quick bake.",
+          "Base + chickpeas + spinach = stew hot, grain bowl cold with feta.",
+          "Chicken + brown rice + blanched broccoli = the classic bowl, done well.",
+          "Roasted squash + stock = soup, which freezes better than anything else here.",
+          "Eggs: Friday's safety net, when the containers are empty.",
+        ],
+      },
+      {
+        heading: "What to double and what to leave alone",
+        paragraphs: [
+          "Double the base, the lentils and the soup without hesitation. They keep, they freeze, and they lose nothing — this is where meal prep actually pays.",
+          "Don't double fish, salad or anything fried. And if you only cook once a month, this isn't your list: the monthly one is built around pantry and freezer instead.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "How long does meal prep food last in the fridge?",
+        answer:
+          "Three to four days in the coldest part, packed once cooled and sealed. Anything you plan to eat on day five should go in the freezer the day you cook it, not after three days in the fridge.",
+      },
+      {
+        question: "How long does this take to cook?",
+        answer:
+          "Two and a half to three hours, with the oven working while you're at the stove. Most of that is cooking time, not hands-on time.",
+      },
+      {
+        question: "Does this work for one person?",
+        answer:
+          "It's where meal prep pays off most, since cooking daily for one wastes the most time. Halve the meat and freeze half of each base in single portions.",
+      },
+      {
+        question: "Do I need glass containers?",
+        answer:
+          "Plastic works, but it holds onto smells and doesn't go in the oven. It's the one item on this list you'll never buy twice.",
+      },
+    ],
+    relatedTemplates: ["weekly", "healthy", "monthly"],
+    relatedGuides: ["how-to-make", "save-money"],
+  },
+  {
+    key: "student-flat",
+    slug: "college-apartment-grocery-list",
+    locale: "en",
+    title: "College apartment grocery list",
+    metaTitle: "College Apartment Grocery List: Move-In Day and Every Week After",
+    metaDescription:
+      "What to buy for your first college apartment: the move-in stock-up of pantry and cleaning basics, plus the cheap weekly list that follows.",
+    excerpt:
+      "Two lists in one: what an empty apartment needs on day one, and what roommates actually restock every week.",
+    serves: "3-4 roommates · move-in + one week",
+    budget: "$90-120 to stock up, $45-60 per week",
+    updatedAt: "2026-08-11",
+    sections: [
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Cooking oil", qty: 1 },
+          { name: "Salt and pepper", qty: 1 },
+          { name: "Pasta", qty: 4, unit: "boxes" },
+          { name: "Rice", qty: 2, unit: "lb" },
+          { name: "Pasta sauce", qty: 3, unit: "jars" },
+          { name: "Canned tuna", qty: 6 },
+          { name: "Canned black beans", qty: 4 },
+          { name: "Peanut butter", qty: 1 },
+          { name: "Flour and sugar", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Onions", qty: 3, unit: "lb" },
+          { name: "Potatoes", qty: 5, unit: "lb" },
+          { name: "Garlic", qty: 1, unit: "head" },
+          { name: "Tomatoes", qty: 4 },
+          { name: "Bananas", qty: 6, note: "Cheapest thing you'll eat without cooking" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Milk", qty: 1, unit: "gallon" },
+          { name: "Eggs", qty: 18, note: "Everyone's emergency dinner" },
+          { name: "Shredded cheese", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          { name: "Whole chicken", qty: 1, note: "Cheaper per pound than a tray of breasts" },
+          { name: "Ground beef or turkey", qty: 1, unit: "lb" },
+        ],
+      },
+      {
+        categoryId: "frozen",
+        items: [
+          { name: "Mixed vegetables", qty: 2, unit: "bags" },
+          { name: "Frozen pizza", qty: 2, note: "Be honest about this one" },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [
+          { name: "Sandwich bread", qty: 2, unit: "loaves", note: "One straight into the freezer" },
+        ],
+      },
+      {
+        categoryId: "cleaning",
+        items: [
+          { name: "Laundry detergent", qty: 1 },
+          { name: "Dish soap", qty: 1 },
+          { name: "Sponges", qty: 1, unit: "pack" },
+          { name: "Toilet paper", qty: 12, unit: "rolls" },
+          { name: "Trash bags", qty: 1, unit: "box" },
+          { name: "Paper towels", qty: 1, unit: "pack" },
+        ],
+      },
+      {
+        categoryId: "personal",
+        items: [
+          { name: "Hand soap", qty: 1 },
+          { name: "Foil and plastic wrap", qty: 1 },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "Move-in day isn't a normal grocery run",
+        paragraphs: [
+          "Walk into an empty apartment and half of what you spend isn't food: it's oil, salt, toilet paper and detergent. Things you buy once and use for months, which is why the first receipt looks alarming next to every one after it.",
+          "This template mixes both on purpose. Week two, drop the cleaning supplies and the dry pantry and the bill roughly halves.",
+        ],
+      },
+      {
+        heading: "The hard part isn't what to buy",
+        paragraphs: [
+          "It's who buys, who pays, and whose food is whose. Sharing works well for basics — oil, salt, paper goods, cleaning supplies — and badly for everything else, because nobody eats the same thing at the same time.",
+        ],
+        bullets: [
+          "Share the pantry and cleaning supplies: everyone uses them without noticing.",
+          "Keep fresh food separate, and nobody has to police the fridge.",
+          'A shared list on everyone\'s phone kills the classic "I thought you were buying it": whoever finishes something adds it right then.',
+          "One jar of each thing. Three open jars of paprika is money and shelf space gone.",
+        ],
+      },
+      {
+        heading: "Where the money actually goes",
+        paragraphs: [
+          "Takeout and delivery on the nights nobody feels like cooking. No list fixes that entirely, but having pasta, eggs and sauce in the apartment removes the most common excuse.",
+          "A whole chicken and frozen vegetables are the two lines that cut cost per meal the most without requiring anyone to cook better or have more time.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "How much is the first grocery run for an apartment?",
+        answer:
+          "Around $90-120 for three or four people including cleaning supplies and pantry staples. From week two it drops to $45-60, because the months-long stuff is already bought.",
+      },
+      {
+        question: "Should roommates shop together or separately?",
+        answer:
+          "Together for basics and cleaning supplies — cheaper and used equally. Separately for fresh food, since schedules and diets don't line up, and that's where friction starts.",
+      },
+      {
+        question: "How do we split what everyone spends?",
+        answer:
+          "Put prices on the shared list itself and snap the receipt. You can add a price per item here and see the running total, which is the number you need to split without arguing.",
+      },
+      {
+        question: "What's safe to buy store brand?",
+        answer:
+          "Canned beans, pasta sauce, pasta, rice, milk and cleaning supplies. That's where most of the savings are and where the difference is hardest to taste.",
+      },
+    ],
+    relatedTemplates: ["budget", "single", "pantry"],
+    relatedGuides: ["save-money", "share-with-family"],
+  },
+  {
+    key: "gluten-free",
+    slug: "gluten-free-grocery-list",
+    locale: "en",
+    title: "Gluten-free grocery list",
+    metaTitle: "Gluten-Free Grocery List for Celiacs (Full Week)",
+    metaDescription:
+      "A full week of gluten-free groceries: what's naturally safe, where gluten hides on the label, and what has to be certified rather than just read.",
+    excerpt:
+      "A full gluten-free week, separating what's naturally safe from the short list that has to be certified.",
+    serves: "2 people · 7 days",
+    budget: "$95-120 per week",
+    updatedAt: "2026-08-11",
+    sections: [
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Potatoes", qty: 5, unit: "lb" },
+          { name: "Tomatoes", qty: 4 },
+          { name: "Onions", qty: 3 },
+          { name: "Zucchini", qty: 2 },
+          { name: "Baby spinach", qty: 1, unit: "bag" },
+          { name: "Apples", qty: 6 },
+          { name: "Bananas", qty: 6 },
+          { name: "Avocados", qty: 2 },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          { name: "Chicken breast", qty: 1.5, unit: "lb" },
+          {
+            name: "Ground beef",
+            qty: 1,
+            unit: "lb",
+            note: "Plain: pre-formed patties often contain breadcrumbs",
+          },
+          { name: "Pork loin", qty: 1, unit: "lb" },
+        ],
+      },
+      {
+        categoryId: "fish",
+        items: [
+          { name: "Salmon fillets", qty: 2 },
+          { name: "Frozen shrimp", qty: 1, unit: "lb" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Milk", qty: 1, unit: "half gallon" },
+          { name: "Eggs", qty: 12 },
+          {
+            name: "Plain yogurt",
+            qty: 1,
+            unit: "tub",
+            note: "Plain, not flavored: fewer thickeners to check",
+          },
+          { name: "Block cheese", qty: 1, note: "A block rather than pre-shredded" },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [
+          {
+            name: "Certified gluten-free bread",
+            qty: 2,
+            unit: "loaves",
+            note: "Freeze one: it stales in a day",
+          },
+          { name: "Corn tortillas", qty: 1, unit: "pack" },
+        ],
+      },
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Rice", qty: 2, unit: "lb" },
+          { name: "Certified gluten-free pasta", qty: 2, unit: "boxes" },
+          { name: "Canned beans", qty: 3 },
+          { name: "Crushed tomatoes", qty: 2, unit: "cans" },
+          { name: "Rice or almond flour", qty: 1 },
+          { name: "Olive oil", qty: 1 },
+          { name: "Certified gluten-free stock", qty: 2, unit: "cartons" },
+          { name: "Tamari", qty: 1, note: "Soy sauce is wheat-based; tamari usually isn't" },
+        ],
+      },
+      {
+        categoryId: "breakfast",
+        items: [
+          {
+            name: "Certified gluten-free oats",
+            qty: 1,
+            note: "Regular oats are cross-contaminated at the mill",
+          },
+          { name: "Coffee", qty: 1 },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "Most of this is naturally safe",
+        paragraphs: [
+          "The bulk of any grocery list is already gluten-free: fresh produce, meat and fish, eggs, beans, rice, oil and milk. Starting there is what keeps this list from feeling overwhelming — or costing twice as much.",
+          "The premium isn't on food, it's on substitutes. Gluten-free bread and pasta run two to four times the price of the regular versions. The more the week leans on rice, potatoes and beans, the less that shows up at the register.",
+        ],
+      },
+      {
+        heading: "Where gluten hides when you don't expect it",
+        paragraphs: [
+          "Bread is obvious. The problems come from products nobody associates with wheat and that slip into any normal cart.",
+        ],
+        bullets: [
+          "Soy sauce: wheat-based unless it's labeled tamari.",
+          "Stocks, bouillon cubes and packet soups.",
+          "Deli meats and sausages, which often use wheat starch as a binder.",
+          "Pre-formed burger patties and meatballs.",
+          "Oats: naturally fine, milled alongside wheat. Only certified oats are safe.",
+          "Pre-shredded cheese and flavored yogurts, because of anti-caking agents and thickeners.",
+        ],
+      },
+      {
+        heading: "Certified or just labeled: when each is enough",
+        paragraphs: [
+          "For single-ingredient food — rice, potatoes, chicken — reading the label is enough. For anything processed, certification covers cross-contamination in the facility, which an ingredient list simply can't tell you.",
+          "In a shared kitchen, cross-contact matters as much as the shopping: a separate toaster, a separate cutting board and clean utensils in shared jars prevent most accidents.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "How much more expensive is gluten-free shopping?",
+        answer:
+          "Roughly 20-40% more when bread and pasta are swapped for certified versions. Lean the week on rice, potatoes and beans and the gap narrows a lot.",
+      },
+      {
+        question: "Are oats gluten-free?",
+        answer:
+          "Oats contain no gluten themselves, but they're grown and milled alongside wheat, so only certified oats are safe for celiacs. It's one of the most common oversights.",
+      },
+      {
+        question: "Does this list work for gluten sensitivity rather than celiac disease?",
+        answer:
+          'Yes, with more room. Without celiac disease, cross-contamination matters less, so "may contain traces" products are usually fine and the list gets noticeably cheaper.',
+      },
+      {
+        question: "How do I tell someone shopping for me what's safe?",
+        answer:
+          'Share the list and use each item\'s note to write "certified" where it matters. Whoever opens it sees the note next to the product, without texting you from the aisle.',
+      },
+    ],
+    relatedTemplates: ["healthy", "weekly", "pantry"],
+    relatedGuides: ["how-to-make", "share-with-family"],
+  },
+  {
+    key: "holiday-rental",
+    slug: "vacation-rental-grocery-list",
+    locale: "en",
+    title: "Vacation rental grocery list",
+    metaTitle: "Vacation Rental Grocery List: The First-Day Shop",
+    metaDescription:
+      "What to buy when you arrive at a vacation rental: a first-day grocery list for an empty kitchen, without hauling half your pantry or overbuying.",
+    excerpt:
+      "The first-day shop for a kitchen that isn't yours: enough for a week, without buying a jar of spice you'll leave behind.",
+    serves: "4 people · 7 days",
+    budget: "$140-180 for the arrival shop",
+    updatedAt: "2026-08-11",
+    sections: [
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Olive oil", qty: 1, note: "Small bottle: the big one stays behind" },
+          { name: "Salt and pepper", qty: 1 },
+          { name: "Pasta", qty: 2, unit: "boxes" },
+          { name: "Pasta sauce", qty: 2, unit: "jars" },
+          { name: "Rice", qty: 1, unit: "lb" },
+          { name: "Canned tuna", qty: 4 },
+          { name: "Chips and salsa", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Tomatoes", qty: 4 },
+          { name: "Lettuce or salad mix", qty: 1, unit: "bag" },
+          { name: "Onions", qty: 3 },
+          { name: "Lemons", qty: 3 },
+          {
+            name: "Seasonal fruit",
+            qty: 4,
+            unit: "lb",
+            note: "Whatever looks good and needs no cooking",
+          },
+          { name: "Potatoes", qty: 3, unit: "lb" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Milk", qty: 1, unit: "gallon" },
+          { name: "Eggs", qty: 12 },
+          { name: "Sliced cheese", qty: 1 },
+          { name: "Butter", qty: 1 },
+          { name: "Yogurt", qty: 8 },
+        ],
+      },
+      {
+        categoryId: "deli",
+        items: [
+          { name: "Sliced turkey or ham", qty: 1, unit: "lb" },
+          { name: "Bacon", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          { name: "Chicken for the grill", qty: 2, unit: "lb" },
+          {
+            name: "Burgers or hot dogs",
+            qty: 8,
+            note: "The easy dinner for the night you get back late from the beach",
+          },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [
+          { name: "Bread", qty: 1, unit: "loaf" },
+          { name: "Burger buns", qty: 8 },
+          { name: "Cookies or muffins", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "drinks",
+        items: [
+          { name: "Bottled water", qty: 24 },
+          { name: "Soda", qty: 12 },
+          { name: "Beer or wine", qty: 1 },
+          { name: "Coffee", qty: 1, note: "Ground, unless you know exactly what machine is there" },
+        ],
+      },
+      {
+        categoryId: "cleaning",
+        items: [
+          { name: "Toilet paper", qty: 4, unit: "rolls" },
+          { name: "Trash bags", qty: 1, unit: "box" },
+          { name: "Dish soap", qty: 1 },
+          { name: "Paper towels", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "personal",
+        items: [
+          { name: "Sunscreen", qty: 1 },
+          { name: "Aloe gel", qty: 1 },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "The borrowed-kitchen rule",
+        paragraphs: [
+          "In a rental you never know what's there until you open the cabinets: sometimes oil and salt, sometimes not a single decent pan. The temptation is to shop like you're at home, which is exactly how people end up leaving half a pantry behind.",
+          "The rule that works: small sizes of anything you won't finish, and no spices past salt and pepper. Vacation cooking is simpler than home cooking, and the list should say so.",
+        ],
+      },
+      {
+        heading: "What to bring and what to buy there",
+        paragraphs: [
+          "Packing from home only pays for what's small and expensive: good coffee, a decent olive oil, a couple of spices in a bag.",
+        ],
+        bullets: [
+          "Before leaving: water for the drive, snacks, and day-one breakfast.",
+          "On arrival, same day: breakfast, one easy dinner, toilet paper. Nothing else.",
+          "Next morning, kitchen inspected: the rest of the list, adjusted to what's actually there.",
+          "Last real shop on the second-to-last day. Anything left over gets thrown out.",
+        ],
+      },
+      {
+        heading: "The three things everyone forgets",
+        paragraphs: [
+          "Trash bags, paper towels and dish soap. They're never on a mental list because at home they restock themselves, and in a rental you miss them the first night.",
+          "Fourth, if there are kids: a breakfast they already like. An unfamiliar kitchen at 8am is a bad start to a beach day.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "How much is the arrival shop for a vacation rental?",
+        answer:
+          "Around $140-180 for four people and a week, including drinks and cleaning supplies. It runs higher than expected because it includes basics you already own at home.",
+      },
+      {
+        question: "What should I bring from home?",
+        answer:
+          "Small and expensive things: coffee, spices, a good oil in a small bottle. Buy the bulky items and anything fresh there — it won't survive the drive anyway.",
+      },
+      {
+        question: "Should I do one big shop on arrival?",
+        answer:
+          "No. Buy breakfast and one dinner, look at the kitchen properly, then do the rest the next morning. Shopping before you know whether there's an oven is how you end up with extras.",
+      },
+      {
+        question: "How do we coordinate with everyone coming?",
+        answer:
+          "Share the list before you leave. Everyone adds what they want from their own phone, and whoever hits the store first has the whole thing — no calls from the aisle.",
+      },
+    ],
+    relatedTemplates: ["weekly", "family-of-4", "pantry"],
+    relatedGuides: ["share-with-family", "save-money"],
   },
 ];
