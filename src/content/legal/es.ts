@@ -3,10 +3,13 @@ import type { LegalDocument } from "../types";
 /**
  * Textos legales en español.
  *
- * BORRADOR REVISABLE. Describe con exactitud lo que hace la aplicación hoy,
- * pero los datos del responsable están sin rellenar (ver OPERATOR_PLACEHOLDER
- * en ../types) y conviene que lo revise alguien con criterio jurídico antes de
- * abrir al público.
+ * Describen con exactitud lo que hace la aplicación hoy. El responsable es
+ * una persona física que se identifica por nombre y perfil de LinkedIn, que
+ * es el canal de contacto: es lo que hay, y decirlo así es mejor que un
+ * formulario de contacto que no lee nadie.
+ *
+ * Si el proyecto pasa a facturar o a tener empresa detrás, esta sección hay
+ * que ampliarla con los datos identificativos completos.
  */
 export const privacyEs: LegalDocument = {
   slug: "privacidad",
@@ -14,7 +17,7 @@ export const privacyEs: LegalDocument = {
   metaTitle: "Política de privacidad",
   metaDescription:
     "Qué datos guarda ListaSupermercado, para qué, con quién se comparten y cómo ejercer tus derechos. Sin rodeos.",
-  updatedAt: "2026-08-10",
+  updatedAt: "2026-08-11",
   blocks: [
     {
       heading: "Lo esencial en cuatro líneas",
@@ -28,8 +31,8 @@ export const privacyEs: LegalDocument = {
     {
       heading: "Quién es el responsable",
       paragraphs: [
-        "El responsable del tratamiento es [NOMBRE O RAZÓN SOCIAL], con [NIF/CIF] y domicilio en [DIRECCIÓN]. Puedes escribir a [CORREO DE CONTACTO] para cualquier cuestión relacionada con tus datos.",
-        "También puedes contactar por LinkedIn, en linkedin.com/in/farmaiant, aunque para ejercer tus derechos sobre los datos es preferible el correo: deja constancia y permite responder en el plazo que marca la ley.",
+        "ListaSupermercado es un proyecto personal de Antonio. No hay empresa detrás: lo mantiene una sola persona.",
+        "Para cualquier cuestión relacionada con tus datos —acceso, corrección, borrado, portabilidad u oposición— escribe por LinkedIn, en linkedin.com/in/farmaiant. Se responde a todo.",
         "Quién hay detrás y por qué existe esta aplicación está contado en la página «Quiénes somos».",
       ],
     },
@@ -71,7 +74,7 @@ export const privacyEs: LegalDocument = {
         "Acceso y corrección: desde tu cuenta y tus listas, en cualquier momento.",
         "Supresión: hay un botón de borrar cuenta en la página de tu cuenta. Es inmediato y definitivo.",
         "Portabilidad: desde tu cuenta puedes descargar en un archivo JSON tus datos, tus listas y tu historial de productos.",
-        "Para lo demás, escribe a [CORREO DE CONTACTO].",
+        "Para lo demás, escribe por LinkedIn (linkedin.com/in/farmaiant).",
       ],
     },
     {
@@ -95,13 +98,13 @@ export const termsEs: LegalDocument = {
   metaTitle: "Términos de uso",
   metaDescription:
     "Las condiciones de uso de ListaSupermercado: qué puedes esperar del servicio y qué esperamos de quien lo usa.",
-  updatedAt: "2026-08-10",
+  updatedAt: "2026-08-11",
   blocks: [
     {
       heading: "Qué es este servicio",
       paragraphs: [
         "ListaSupermercado es una aplicación web gratuita para crear listas de la compra y compartirlas. Al usarla aceptas estas condiciones; si no estás de acuerdo con alguna, lo razonable es no usarla.",
-        "El responsable del servicio es [NOMBRE O RAZÓN SOCIAL], [CORREO DE CONTACTO].",
+        "El responsable del servicio es Antonio, y se le puede escribir por LinkedIn (linkedin.com/in/farmaiant).",
       ],
     },
     {

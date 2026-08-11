@@ -9,7 +9,7 @@ export const privacyEn: LegalDocument = {
   metaTitle: "Privacy Policy",
   metaDescription:
     "What ListaSupermercado stores, why, who it's shared with, and how to exercise your rights. No runaround.",
-  updatedAt: "2026-08-10",
+  updatedAt: "2026-08-11",
   blocks: [
     {
       heading: "The short version",
@@ -23,8 +23,8 @@ export const privacyEn: LegalDocument = {
     {
       heading: "Who is responsible",
       paragraphs: [
-        "The data controller is [LEGAL NAME], [TAX ID], registered at [ADDRESS]. You can write to [CONTACT EMAIL] about anything related to your data.",
-        "You can also get in touch on LinkedIn, at linkedin.com/in/farmaiant, though email is preferable for exercising your rights: it leaves a record and allows a reply within the statutory deadline.",
+        "ListaSupermercado is a personal project by Antonio. There is no company behind it: one person maintains it.",
+        "For anything related to your data — access, correction, deletion, portability or objection — get in touch on LinkedIn, at linkedin.com/in/farmaiant. Everything gets answered.",
         "Who is behind this app and why it exists is explained on the About page.",
       ],
     },
@@ -66,7 +66,7 @@ export const privacyEn: LegalDocument = {
         "Access and correction: from your account and your lists, any time.",
         "Deletion: there's a delete-account button on your account page. Immediate and permanent.",
         "Portability: from your account you can download your data, your lists and your product history as a JSON file.",
-        "For anything else, write to [CONTACT EMAIL].",
+        "For anything else, reach out on LinkedIn (linkedin.com/in/farmaiant).",
       ],
     },
     {
@@ -90,13 +90,13 @@ export const termsEn: LegalDocument = {
   metaTitle: "Terms of Use",
   metaDescription:
     "The terms for using ListaSupermercado: what you can expect from the service, and what we expect from you.",
-  updatedAt: "2026-08-10",
+  updatedAt: "2026-08-11",
   blocks: [
     {
       heading: "What this service is",
       paragraphs: [
         "ListaSupermercado is a free web app for making and sharing shopping lists. Using it means accepting these terms; if you disagree with any of them, the sensible thing is not to use it.",
-        "The service is operated by [LEGAL NAME], [CONTACT EMAIL].",
+        "The service is operated by Antonio, who can be reached on LinkedIn (linkedin.com/in/farmaiant).",
       ],
     },
     {

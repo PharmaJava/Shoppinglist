@@ -123,8 +123,9 @@ export interface LegalDocument {
   updatedAt: string;
 }
 
-/** Marcador que queda por rellenar en los textos legales. Buscarlo antes de
- *  abrir al público: publicar una política con corchetes es peor que no tenerla. */
+/** Marcador de hueco en los textos legales. Ya no queda ninguno, y un test lo
+ *  vigila (src/content/legal.test.ts): publicar una política con corchetes es
+ *  peor que no tenerla. */
 export const OPERATOR_PLACEHOLDER = /\[[A-ZÁÉÍÓÚÑ /]+\]/;
 
 /** Total de productos de una plantilla, para el hub y los datos estructurados. */

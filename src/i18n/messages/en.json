@@ -380,18 +380,18 @@
     "metaTitle": "About",
     "metaDescription": "Who is behind ListaSupermercado, why it exists, how it pays for itself, and how to get in touch.",
     "title": "About",
-    "subtitle": "There is no product department behind ListaSupermercado. There is one person who got tired of rebuilding the grocery list out of scattered messages in a family group chat.",
+    "subtitle": "There is no product department behind ListaSupermercado. There is one person, Antonio, who got tired of rebuilding the grocery list out of scattered messages in a family group chat.",
     "whyTitle": "Why it exists",
     "whyBody": "A grocery list is one of the most shared things in a household and one of the worst solved. The pad on the fridge is only visible to whoever is in the kitchen; the group chat falls apart within four messages; and most apps want you to install something and create an account before they will let you type “milk”. This one starts the other way round: you type, you share the link, done.",
     "howTitle": "How it is built",
     "howBody": "It is a web app that works offline — there is rarely signal inside a store — and syncs itself on the way out. You can install it on your phone, but you do not have to. It is built so that the shared part never depends on anyone signing up.",
     "whoTitle": "Who maintains it",
-    "whoBody": "One person, in their own time, helped by whoever reports a bug. That has an upside — things get fixed as soon as they are known — and a downside: there is no 24/7 support and no promises that cannot be kept. Better to say so than to pretend there is a “team”.",
+    "whoBody": "Antonio maintains it, in his own time and helped by whoever reports a bug. That has an upside — things get fixed as soon as they are known — and a downside: there is no 24/7 support and no promises that cannot be kept. Better to say so than to pretend there is a “team”.",
     "moneyTitle": "How it pays for itself",
     "moneyBody": "It is free today because it costs almost nothing to run, and the shared part will stay free: charging for sharing breaks the one thing that makes a household list useful. If something paid ever arrives, it will be for people who use it daily, and it will be announced before anyone is charged.",
     "contactTitle": "Get in touch",
-    "contactBody": "If something is broken, if a feature is missing, or if you want to propose something, reach out on LinkedIn. Everything gets read, even if replies sometimes take a while.",
-    "linkedin": "Message on LinkedIn",
+    "contactBody": "If something is broken, if a feature is missing, or if you want to propose something, reach out to Antonio on LinkedIn. Everything gets read, even if replies sometimes take a while.",
+    "linkedin": "Message {name} on LinkedIn",
     "cta": "Create a list now"
   }
 }

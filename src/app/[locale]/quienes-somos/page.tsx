@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { JsonLd } from "@/components/content/prose";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { AUTHOR_LINKEDIN, SITE_URL } from "@/lib/seo/site";
+import { AUTHOR_LINKEDIN, AUTHOR_NAME, SITE_URL } from "@/lib/seo/site";
 import { sectionUrl } from "@/lib/seo/urls";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -55,12 +55,9 @@ export default async function AboutPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: "about" });
   const tMeta = await getTranslations({ locale, namespace: "metadata" });
 
-  // `sameAs` con el perfil de LinkedIn es lo que permite a Google unir este
-  // sitio con una persona real y no con un dominio anónimo: es la señal de
-  // autoría que pide E-E-A-T, y media razón por la que esta página existe.
-  //
-  // La entidad es la organización y no una `Person` a propósito: declarar una
-  // persona obliga a darle un nombre, y aquí no se inventa ninguno.
+  // Una `Person` con nombre y `sameAs` es lo que permite a Google unir este
+  // sitio con alguien real y no con un dominio anónimo: es la señal de autoría
+  // que pide E-E-A-T, y media razón por la que esta página existe.
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -68,10 +65,11 @@ export default async function AboutPage({ params }: Props) {
       url: sectionUrl("about", locale),
       name: t("metaTitle"),
       mainEntity: {
-        "@type": "Organization",
-        name: tMeta("siteName"),
-        url: SITE_URL,
+        "@type": "Person",
+        name: AUTHOR_NAME,
+        url: AUTHOR_LINKEDIN,
         sameAs: [AUTHOR_LINKEDIN],
+        worksFor: { "@type": "Organization", name: tMeta("siteName"), url: SITE_URL },
       },
     },
   ];
@@ -103,7 +101,7 @@ export default async function AboutPage({ params }: Props) {
           rel="noopener noreferrer me"
           className="h-tap flex w-full items-center justify-center rounded-full bg-brand px-6 font-semibold text-brand-contrast sm:w-auto sm:self-start"
         >
-          {t("linkedin")}
+          {t("linkedin", { name: AUTHOR_NAME })}
         </a>
       </section>
 

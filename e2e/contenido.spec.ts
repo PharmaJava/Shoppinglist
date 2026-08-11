@@ -56,6 +56,30 @@ test.describe("Contenido y SEO", () => {
     expect((xml.match(/<url>/g) ?? []).length).toBeGreaterThanOrEqual(50);
   });
 
+  // El fallo silencioso más caro del SEO: si el build sale sin saber su
+  // dominio, el sitemap se publica lleno de URLs de localhost y Search Console
+  // lo rechaza entero, porque ninguna pertenece al sitio verificado.
+  test("todas las URLs del sitemap son del mismo dominio que el sitio", async ({
+    request,
+    baseURL,
+  }) => {
+    const xml = await (await request.get("/sitemap.xml")).text();
+    const locs = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1] as string);
+
+    expect(locs.length).toBeGreaterThan(0);
+    const origenes = new Set(locs.map((loc) => new URL(loc).origin));
+    expect([...origenes]).toEqual([new URL(baseURL as string).origin]);
+  });
+
+  test("el sitemap declara alternates de idioma en cada entrada", async ({ request }) => {
+    const xml = await (await request.get("/sitemap.xml")).text();
+
+    expect(xml).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"');
+    const urls = (xml.match(/<url>/g) ?? []).length;
+    expect((xml.match(/hreflang="es"/g) ?? []).length).toBe(urls);
+    expect((xml.match(/hreflang="en"/g) ?? []).length).toBe(urls);
+  });
+
   test("robots.txt no bloquea el contenido", async ({ request }) => {
     const texto = await (await request.get("/robots.txt")).text();
 
@@ -75,7 +99,7 @@ test.describe("Quiénes somos", () => {
   test("lleva al perfil de LinkedIn, sin parámetros de seguimiento", async ({ page }) => {
     await page.goto("/es/quienes-somos");
 
-    const enlace = page.getByRole("link", { name: "Escribir por LinkedIn" });
+    const enlace = page.getByRole("link", { name: /LinkedIn/ });
     await expect(enlace).toHaveAttribute("href", "https://www.linkedin.com/in/farmaiant");
     // `me` es lo que declara que ese perfil es de quien publica esta página.
     await expect(enlace).toHaveAttribute("rel", /me/);
@@ -94,6 +118,7 @@ test.describe("Quiénes somos", () => {
   test("el perfil sale también en la política de privacidad", async ({ page }) => {
     await page.goto("/es/privacidad");
 
-    await expect(page.getByText("linkedin.com/in/farmaiant")).toBeVisible();
+    // Sale más de una vez —responsable y derechos—, y con que se vea basta.
+    await expect(page.getByText("linkedin.com/in/farmaiant").first()).toBeVisible();
   });
 });
