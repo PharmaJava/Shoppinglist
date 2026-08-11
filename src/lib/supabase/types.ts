@@ -223,6 +223,18 @@ export interface Database {
         Args: { p_items: RecordedProduct[] };
         Returns: undefined;
       };
+      set_member_role: {
+        Args: { p_list: string; p_user: string; p_role: ListRole };
+        Returns: undefined;
+      };
+      remove_list_member: {
+        Args: { p_list: string; p_user: string };
+        Returns: undefined;
+      };
+      transfer_list_ownership: {
+        Args: { p_list: string; p_to: string };
+        Returns: undefined;
+      };
       record_product_price: {
         Args: { p_normalized: string; p_name: string; p_price_cents: number };
         Returns: undefined;

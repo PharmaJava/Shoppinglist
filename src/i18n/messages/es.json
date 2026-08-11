@@ -270,7 +270,18 @@
     "budgetLeft": "Te quedan {amount}",
     "budgetMissing": "{count, plural, one {# producto sin precio} other {# productos sin precio}}",
     "budgetInCart": "{amount} ya en el carro",
-    "editPriceRemembered": "La última vez lo pagaste a {amount}. Usar"
+    "editPriceRemembered": "La última vez lo pagaste a {amount}. Usar",
+    "inviteRole": "Con qué permiso entra quien reciba el enlace",
+    "roleEditor": "Puede editar",
+    "roleViewer": "Sólo ver",
+    "memberRole": "Permiso",
+    "memberRemove": "Sacar a {name} de la lista",
+    "memberRemoveShort": "Sacar",
+    "memberLeave": "Salir de la lista",
+    "memberTransfer": "Hacer propietario",
+    "memberTransferConfirm": "Sí, traspasar",
+    "memberTransferWarning": "Al traspasar dejas de ser propietario: pasas a editor y ya no podrás gestionar los permisos.",
+    "memberError": "No se pudo hacer el cambio. Inténtalo de nuevo."
   },
   "invite": {
     "joining": "Uniéndote a la lista…",
