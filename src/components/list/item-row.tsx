@@ -2,9 +2,11 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import { normalizeProductName } from "@/features/list/categorize";
 import { centsToInput, formatMoney, parsePriceToCents } from "@/features/list/money";
 import type { ListItem } from "@/features/list/types";
 import { useDeleteItem, useToggleItem, useUpdateItem } from "@/features/list/use-list-mutations";
+import { useProductHistory } from "@/features/list/use-suggestions";
 import { cn } from "@/lib/cn";
 
 /** Unidades ofrecidas al editar. Cubren lo que se compra por peso, volumen y
@@ -196,6 +198,13 @@ function ItemEditor({
   const [unit, setUnit] = useState(item.unit ?? "");
   const [price, setPrice] = useState(() => centsToInput(item.price_cents, locale));
 
+  // Lo que costó las veces anteriores. Se ofrece, no se rellena solo: un total
+  // que aparece sin que nadie lo escriba no se puede distinguir de uno real.
+  const history = useProductHistory();
+  const remembered = history.data?.find(
+    (entry) => entry.normalized === normalizeProductName(item.name),
+  )?.avgPriceCents;
+
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const trimmed = name.trim();
@@ -273,9 +282,19 @@ function ItemEditor({
           placeholder={t("editPrice")}
           className="h-tap w-28 rounded-xl border border-border bg-surface px-3 text-base text-on-surface outline-none focus:border-brand"
         />
-        {/* El precio es de la línea entera, no por unidad: con "500 g" un
-            precio por unidad no significaría nada. */}
-        <p className="text-on-surface-muted text-xs">{t("editPriceHint", { currency })}</p>
+        {remembered != null && price.trim() === "" ? (
+          <button
+            type="button"
+            onClick={() => setPrice(centsToInput(remembered, locale))}
+            className="text-left font-medium text-brand text-xs underline"
+          >
+            {t("editPriceRemembered", { amount: formatMoney(remembered, currency, locale) })}
+          </button>
+        ) : (
+          /* El precio es de la línea entera, no por unidad: con "500 g" un
+             precio por unidad no significaría nada. */
+          <p className="text-on-surface-muted text-xs">{t("editPriceHint", { currency })}</p>
+        )}
       </div>
 
       <div className="flex gap-2">

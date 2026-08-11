@@ -4,9 +4,27 @@ import type { HistoryEntry } from "./history";
 import { suggestProducts } from "./suggest";
 
 const history: HistoryEntry[] = [
-  { name: "Leche desnatada", normalized: "leche desnatada", categoryId: "dairy", timesAdded: 12 },
-  { name: "Tomates cherry", normalized: "tomates cherry", categoryId: "produce", timesAdded: 5 },
-  { name: "Pan de molde", normalized: "pan de molde", categoryId: "bakery", timesAdded: 3 },
+  {
+    name: "Leche desnatada",
+    normalized: "leche desnatada",
+    categoryId: "dairy",
+    timesAdded: 12,
+    avgPriceCents: 145,
+  },
+  {
+    name: "Tomates cherry",
+    normalized: "tomates cherry",
+    categoryId: "produce",
+    timesAdded: 5,
+    avgPriceCents: null,
+  },
+  {
+    name: "Pan de molde",
+    normalized: "pan de molde",
+    categoryId: "bakery",
+    timesAdded: 3,
+    avgPriceCents: null,
+  },
 ];
 
 const catalog: CatalogProduct[] = [
@@ -71,7 +89,13 @@ describe("suggestProducts", () => {
 
   it("no repite un producto presente en el historial y en el catálogo", () => {
     const repetido: HistoryEntry[] = [
-      { name: "Leche", normalized: "leche", categoryId: "dairy", timesAdded: 4 },
+      {
+        name: "Leche",
+        normalized: "leche",
+        categoryId: "dairy",
+        timesAdded: 4,
+        avgPriceCents: null,
+      },
     ];
     const result = suggestProducts("leche", { history: repetido, catalog });
 

@@ -9,6 +9,8 @@ export interface HistoryEntry {
   normalized: string;
   categoryId: string | null;
   timesAdded: number;
+  /** Lo que suele costar, según lo que esta persona ha ido apuntando. */
+  avgPriceCents: number | null;
 }
 
 /**
@@ -50,7 +52,7 @@ export async function fetchProductHistory(limit = 60): Promise<HistoryEntry[]> {
 
   const { data, error } = await getSupabaseBrowserClient()
     .from("user_product_history")
-    .select("name, normalized, category_id, times_added")
+    .select("name, normalized, category_id, times_added, avg_price_cents")
     .order("times_added", { ascending: false })
     .order("last_added", { ascending: false })
     .limit(limit);
@@ -62,5 +64,32 @@ export async function fetchProductHistory(limit = 60): Promise<HistoryEntry[]> {
     normalized: row.normalized,
     categoryId: row.category_id,
     timesAdded: row.times_added,
+    avgPriceCents: row.avg_price_cents,
   }));
+}
+
+/**
+ * Apunta lo que ha costado un producto, para no tener que volver a teclearlo.
+ *
+ * Igual que el resto del historial: en segundo plano, sin propagar errores y
+ * fuera del outbox. Guardar el precio es aprendizaje; el precio del producto
+ * de la lista, que es el dato de verdad, ya viaja por la cola.
+ */
+export function recordProductPrice(name: string, priceCents: number): void {
+  const normalized = normalizeProductName(name);
+  if (!normalized) return;
+
+  void (async () => {
+    try {
+      const userId = await getCurrentUserId();
+      if (!userId) return;
+      await getSupabaseBrowserClient().rpc("record_product_price", {
+        p_normalized: normalized,
+        p_name: name.trim(),
+        p_price_cents: priceCents,
+      });
+    } catch {
+      // Ver arriba.
+    }
+  })();
 }

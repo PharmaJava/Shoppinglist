@@ -269,7 +269,8 @@
     "budgetOver": "Te pasas {amount}",
     "budgetLeft": "Te quedan {amount}",
     "budgetMissing": "{count, plural, one {# producto sin precio} other {# productos sin precio}}",
-    "budgetInCart": "{amount} ya en el carro"
+    "budgetInCart": "{amount} ya en el carro",
+    "editPriceRemembered": "La última vez lo pagaste a {amount}. Usar"
   },
   "invite": {
     "joining": "Uniéndote a la lista…",

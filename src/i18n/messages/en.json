@@ -174,7 +174,8 @@
     "budgetOver": "{amount} over",
     "budgetLeft": "{amount} left",
     "budgetMissing": "{count, plural, one {# item with no price} other {# items with no price}}",
-    "budgetInCart": "{amount} already in the cart"
+    "budgetInCart": "{amount} already in the cart",
+    "editPriceRemembered": "Last time you paid {amount}. Use it"
   },
   "invite": {
     "joining": "Joining the list…",
