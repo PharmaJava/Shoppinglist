@@ -156,6 +156,24 @@ export interface Database {
         };
         Update: Partial<Database["public"]["Tables"]["user_product_history"]["Row"]>;
       };
+      push_subscriptions: {
+        Row: {
+          endpoint: string;
+          user_id: string;
+          p256dh: string;
+          auth: string;
+          locale: Locale;
+          created_at: string;
+        };
+        Relationships: [];
+        Insert: Partial<Database["public"]["Tables"]["push_subscriptions"]["Row"]> & {
+          endpoint: string;
+          user_id: string;
+          p256dh: string;
+          auth: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["push_subscriptions"]["Row"]>;
+      };
       list_templates: {
         Row: {
           id: string;
@@ -221,6 +239,22 @@ export interface Database {
       };
       record_products: {
         Args: { p_items: RecordedProduct[] };
+        Returns: undefined;
+      };
+      push_targets_for_list: {
+        Args: { p_list: string; p_actor: string | null };
+        Returns: Array<{ endpoint: string; p256dh: string; auth: string; locale: string }>;
+      };
+      set_member_role: {
+        Args: { p_list: string; p_user: string; p_role: ListRole };
+        Returns: undefined;
+      };
+      remove_list_member: {
+        Args: { p_list: string; p_user: string };
+        Returns: undefined;
+      };
+      transfer_list_ownership: {
+        Args: { p_list: string; p_to: string };
         Returns: undefined;
       };
       record_product_price: {

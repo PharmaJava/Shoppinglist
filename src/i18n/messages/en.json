@@ -175,7 +175,18 @@
     "budgetLeft": "{amount} left",
     "budgetMissing": "{count, plural, one {# item with no price} other {# items with no price}}",
     "budgetInCart": "{amount} already in the cart",
-    "editPriceRemembered": "Last time you paid {amount}. Use it"
+    "editPriceRemembered": "Last time you paid {amount}. Use it",
+    "inviteRole": "What the link gives access to",
+    "roleEditor": "Can edit",
+    "roleViewer": "View only",
+    "memberRole": "Access",
+    "memberRemove": "Remove {name} from the list",
+    "memberRemoveShort": "Remove",
+    "memberLeave": "Leave list",
+    "memberTransfer": "Make owner",
+    "memberTransferConfirm": "Yes, transfer",
+    "memberTransferWarning": "Transferring makes you an editor: you'll no longer be able to manage access.",
+    "memberError": "That didn't work. Try again."
   },
   "invite": {
     "joining": "Joining the list…",
@@ -356,5 +367,11 @@
     "body": "The link you followed doesn't exist or has changed. If it was a shared list, ask for it again — list links don't expire, but they're easy to mistype.",
     "home": "Go home",
     "templates": "Browse templates"
+  },
+  "push": {
+    "label": "Notify me about changes to this list",
+    "on": "On",
+    "off": "Turn on",
+    "denied": "Notifications are blocked for this site. You can turn them back on in your browser settings."
   }
 }

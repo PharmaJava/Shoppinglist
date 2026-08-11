@@ -1,14 +1,16 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ListMember } from "@/features/list/api";
 import { fetchListMembers, getOrCreateActiveInvite } from "@/features/list/api";
 import { listToText } from "@/features/list/to-text";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
 import { SITE_URL } from "@/lib/seo/site";
-import type { Locale } from "@/lib/supabase/types";
+import type { ListRole, Locale } from "@/lib/supabase/types";
+import { MembersPanel } from "./members-panel";
+import { PushToggle } from "./push-toggle";
 
 export function ShareSheet({ listId, onClose }: { listId: string; onClose: () => void }) {
   const t = useTranslations("list");
@@ -17,28 +19,35 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
   const [copied, setCopied] = useState(false);
   const [textCopied, setTextCopied] = useState(false);
   const [members, setMembers] = useState<ListMember[]>([]);
+  const [inviteRole, setInviteRole] = useState<ListRole>("editor");
 
   // Ambas ya están en caché: es la misma consulta que pinta la lista de fondo.
   const { data } = useList(listId);
   const { data: categories } = useCategories();
 
-  useEffect(() => {
-    let cancelled = false;
-    getOrCreateActiveInvite(listId).then((token) => {
-      if (!cancelled) setUrl(`${SITE_URL}/i/${token}`);
-    });
+  const loadMembers = useCallback(() => {
     // Los miembros no bloquean el compartir: si fallan, la hoja sigue siendo
     // útil para lo que se ha abierto.
     fetchListMembers(listId)
-      .then((list) => {
-        if (!cancelled) setMembers(list);
-      })
+      .then(setMembers)
       .catch(() => {});
+  }, [listId]);
+
+  useEffect(() => {
+    let cancelled = false;
+    // El enlace se pide cada vez que cambia el rol: el de lectura y el de
+    // edición son dos invitaciones distintas, no la misma con una etiqueta.
+    setUrl(null);
+    getOrCreateActiveInvite(listId, inviteRole).then((token) => {
+      if (!cancelled) setUrl(`${SITE_URL}/i/${token}`);
+    });
 
     return () => {
       cancelled = true;
     };
-  }, [listId]);
+  }, [listId, inviteRole]);
+
+  useEffect(loadMembers, [loadMembers]);
 
   async function handleCopy() {
     if (!url) return;
@@ -108,6 +117,23 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
         <h2 className="mb-1 text-lg font-semibold">{t("shareTitle")}</h2>
         <p className="mb-4 text-sm text-on-surface-muted">{t("shareHelp")}</p>
 
+        {/* Quien recibe el enlace entra con este rol. Un lector ve la lista y
+            no puede tocarla, que es lo que hace falta para enseñarla. */}
+        <fieldset className="mb-3 flex items-center gap-2">
+          <legend className="sr-only">{t("inviteRole")}</legend>
+          {(["editor", "viewer"] as const).map((role) => (
+            <button
+              key={role}
+              type="button"
+              onClick={() => setInviteRole(role)}
+              aria-pressed={inviteRole === role}
+              className="rounded-full border border-border px-3 py-1.5 text-sm text-on-surface aria-pressed:border-brand aria-pressed:bg-brand/10 aria-pressed:font-semibold"
+            >
+              {role === "editor" ? t("roleEditor") : t("roleViewer")}
+            </button>
+          ))}
+        </fieldset>
+
         <div className="flex flex-col gap-2">
           <button
             type="button"
@@ -159,24 +185,11 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
           </button>
         </div>
 
-        {members.length > 1 && (
-          <section className="mt-5 border-border border-t pt-4">
-            <h3 className="mb-2 font-semibold text-sm text-on-surface">{t("members")}</h3>
-            <ul className="flex flex-wrap gap-2">
-              {members.map((member) => (
-                <li
-                  key={member.userId}
-                  className="rounded-full bg-surface-muted px-3 py-1 text-sm text-on-surface"
-                >
-                  {member.isMe ? t("memberYou") : member.displayName || t("memberUnnamed")}
-                  {member.role === "owner" && (
-                    <span className="ml-1 text-on-surface-muted text-xs">{t("memberOwner")}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </section>
+        {members.length > 0 && (
+          <MembersPanel listId={listId} members={members} onChanged={loadMembers} />
         )}
+
+        <PushToggle />
       </div>
     </div>
   );

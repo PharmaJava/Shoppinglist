@@ -49,3 +49,36 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: clave-de-ejemplo-para-compilar
           NEXT_PUBLIC_SITE_URL: https://listasupermercado.com
         run: pnpm build
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Sólo Chromium: los tests comprueban comportamiento propio, no
+      # compatibilidad entre motores, y bajar tres navegadores para eso
+      # triplicaría el tiempo de cada PR.
+      - run: pnpm exec playwright install --with-deps chromium
+
+      # Playwright compila y arranca el servidor él mismo
+      # (ver playwright.config.ts). Mismas variables de ejemplo que el build:
+      # ninguna prueba llega a llamar a Supabase.
+      - name: E2E
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: clave-de-ejemplo-para-e2e
+        run: pnpm e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: informe-playwright
+          path: playwright-report/
+          retention-days: 7

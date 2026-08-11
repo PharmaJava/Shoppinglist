@@ -426,8 +426,16 @@ export interface InviteOptions {
   expiresInDays?: number;
 }
 
-/** Reutiliza una invitación activa del propietario si existe; si no, crea una nueva. */
-export async function getOrCreateActiveInvite(listId: string): Promise<string> {
+/**
+ * Reutiliza una invitación activa del propietario si existe; si no, crea una.
+ *
+ * Filtra también por rol: el enlace de lectura y el de edición son dos cosas
+ * distintas, y reutilizar el que hubiera daría permisos que no se pidieron.
+ */
+export async function getOrCreateActiveInvite(
+  listId: string,
+  role: ListRole = "editor",
+): Promise<string> {
   await ensureGuestSession();
   const supabase = getSupabaseBrowserClient();
 
@@ -436,6 +444,7 @@ export async function getOrCreateActiveInvite(listId: string): Promise<string> {
     .from("list_invites")
     .select()
     .eq("list_id", listId)
+    .eq("role", role)
     .is("revoked_at", null)
     .or(`expires_at.is.null,expires_at.gt.${nowIso}`)
     .order("created_at", { ascending: false })
@@ -443,7 +452,40 @@ export async function getOrCreateActiveInvite(listId: string): Promise<string> {
     .maybeSingle();
 
   if (existing) return existing.token;
-  return createInvite(listId);
+  return createInvite(listId, { role });
+}
+
+/**
+ * Cambia el rol de alguien, lo saca de la lista o le traspasa la propiedad.
+ *
+ * Las tres pasan por funciones de la base y no por escrituras directas: las
+ * reglas —que no haya dos propietarios, que nadie se quede la lista huérfana—
+ * son de negocio y tienen que valer también para quien no use esta interfaz
+ * (ver supabase/migrations/0005_members_and_roles.sql).
+ */
+export async function setMemberRole(listId: string, userId: string, role: ListRole): Promise<void> {
+  const { error } = await getSupabaseBrowserClient().rpc("set_member_role", {
+    p_list: listId,
+    p_user: userId,
+    p_role: role,
+  });
+  if (error) throw new Error(error.message);
+}
+
+export async function removeMember(listId: string, userId: string): Promise<void> {
+  const { error } = await getSupabaseBrowserClient().rpc("remove_list_member", {
+    p_list: listId,
+    p_user: userId,
+  });
+  if (error) throw new Error(error.message);
+}
+
+export async function transferOwnership(listId: string, userId: string): Promise<void> {
+  const { error } = await getSupabaseBrowserClient().rpc("transfer_list_ownership", {
+    p_list: listId,
+    p_to: userId,
+  });
+  if (error) throw new Error(error.message);
 }
 
 export async function createInvite(listId: string, options: InviteOptions = {}): Promise<string> {
