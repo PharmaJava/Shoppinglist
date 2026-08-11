@@ -10,6 +10,7 @@ import { useRestoreItem } from "@/features/list/use-list-mutations";
 import { useWakeLock } from "@/features/list/use-wake-lock";
 import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
+import { BudgetBar } from "./budget-bar";
 import { ItemRow } from "./item-row";
 import { ListHeader } from "./list-header";
 import { SyncStatusBanner } from "./sync-status-banner";
@@ -106,6 +107,7 @@ export function ListView({ listId }: { listId: string }) {
         onToggleSupermarketMode={() => setSupermarketMode((current) => !current)}
       />
       <SyncStatusBanner />
+      <BudgetBar listId={listId} list={data.list} items={data.items} />
 
       <div className="flex-1 overflow-y-auto pb-4 print:h-auto print:overflow-visible">
         {total === 0 && <p className="p-6 text-center text-on-surface-muted">{t("empty")}</p>}
@@ -123,6 +125,7 @@ export function ListView({ listId }: { listId: string }) {
                   listId={listId}
                   item={item}
                   large={supermarketMode}
+                  currency={data.list.currency}
                   onDeleted={setJustDeleted}
                 />
               ))}
@@ -138,7 +141,13 @@ export function ListView({ listId }: { listId: string }) {
             </h2>
             <ul>
               {checked.map((item) => (
-                <ItemRow key={item.id} listId={listId} item={item} onDeleted={setJustDeleted} />
+                <ItemRow
+                  key={item.id}
+                  listId={listId}
+                  item={item}
+                  currency={data.list.currency}
+                  onDeleted={setJustDeleted}
+                />
               ))}
             </ul>
           </section>

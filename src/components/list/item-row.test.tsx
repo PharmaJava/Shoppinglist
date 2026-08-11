@@ -91,6 +91,7 @@ describe("ItemRow", () => {
       name: "Carne picada",
       qty: 500,
       unit: "g",
+      priceCents: null,
     });
   });
 
@@ -106,7 +107,19 @@ describe("ItemRow", () => {
       name: "Carne picada",
       qty: null,
       unit: null,
+      priceCents: null,
     });
+  });
+
+  it("guarda el precio en céntimos, escrito con coma", async () => {
+    renderRow(<ItemRow listId="list-1" item={item} />);
+
+    await userEvent.click(screen.getByRole("button", { name: "Editar Carne picada" }));
+    await userEvent.type(screen.getByLabelText("Precio"), "4,35");
+    await userEvent.click(screen.getByRole("button", { name: "Guardar" }));
+
+    await waitFor(() => expect(updateItem).toHaveBeenCalled());
+    expect(updateItem.mock.calls[0]?.[1]).toMatchObject({ priceCents: 435 });
   });
 
   // Un producto sin cantidad ya es uno: si «+» lo dejara en 1, parecería que

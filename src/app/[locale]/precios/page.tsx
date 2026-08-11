@@ -9,7 +9,14 @@ import { sectionUrl } from "@/lib/seo/urls";
 
 type Props = { params: Promise<{ locale: string }> };
 
-const INCLUDED = ["included1", "included2", "included3", "included4", "included5"] as const;
+const INCLUDED = [
+  "included1",
+  "included2",
+  "included3",
+  "included4",
+  "included5",
+  "included6",
+] as const;
 const PLANNED = ["planned1", "planned2", "planned3"] as const;
 
 export function generateStaticParams() {

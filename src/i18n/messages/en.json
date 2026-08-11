@@ -161,7 +161,20 @@
     "decrease": "Remove one {name}",
     "print": "Print",
     "shareAsText": "Copy the list",
-    "printFootnote": "Made with listasupermercado.com — create yours and share it on WhatsApp, no sign-up."
+    "printFootnote": "Made with listasupermercado.com — create yours and share it on WhatsApp, no sign-up.",
+    "editPrice": "Price",
+    "editPriceHint": "What that line costs, in {currency}",
+    "budgetTotal": "Total",
+    "budgetOf": "of {budget}",
+    "budgetSet": "Set a budget",
+    "budgetEdit": "Change budget",
+    "budgetPlaceholder": "Budget",
+    "budgetSave": "Save",
+    "budgetCancel": "Cancel",
+    "budgetOver": "{amount} over",
+    "budgetLeft": "{amount} left",
+    "budgetMissing": "{count, plural, one {# item with no price} other {# items with no price}}",
+    "budgetInCart": "{amount} already in the cart"
   },
   "invite": {
     "joining": "Joining the list…",
@@ -333,7 +346,8 @@
     "included5": "Voice input, store mode and templates",
     "planned1": "Price history and what you spend per month",
     "planned2": "Weekly meal plan that builds the list for you",
-    "planned3": "Per-store lists and supermarket comparison"
+    "planned3": "Per-store lists and supermarket comparison",
+    "included6": "Price per item and a budget for the list"
   },
   "notFound": {
     "metaTitle": "Page not found",
