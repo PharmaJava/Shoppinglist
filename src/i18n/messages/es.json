@@ -249,7 +249,10 @@
     "suggestionsLabel": "Sugerencias",
     "frequentLabel": "Lo que sueles comprar",
     "increase": "Añadir una unidad de {name}",
-    "decrease": "Quitar una unidad de {name}"
+    "decrease": "Quitar una unidad de {name}",
+    "print": "Imprimir",
+    "shareAsText": "Copiar la lista",
+    "printFootnote": "Lista hecha en listasupermercado.com — crea la tuya y compártela por WhatsApp, sin registro."
   },
   "invite": {
     "joining": "Uniéndote a la lista…",

@@ -74,6 +74,37 @@ body {
   font-family: var(--font-sans);
 }
 
+/*
+ * Papel. «Lista de la compra para imprimir» es de las cosas más buscadas del
+ * sector, así que imprimir tiene que salir bien, no salir.
+ */
+@media print {
+  :root {
+    /* Tinta negra sobre blanco pase lo que pase: el móvil puede estar en modo
+       oscuro y eso no debe convertirse en una página negra. */
+    --surface: white;
+    --surface-raised: white;
+    --surface-muted: white;
+    --on-surface: black;
+    --on-surface-muted: oklch(0.4 0 0);
+    --border: oklch(0.75 0 0);
+    --brand: black;
+    --brand-contrast: white;
+  }
+
+  @page {
+    margin: 15mm;
+  }
+
+  /* La lista vive en un contenedor con scroll a la altura de la pantalla; en
+     papel eso recortaría todo lo que no cupiera en la primera página. */
+  html,
+  body {
+    height: auto;
+    min-height: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

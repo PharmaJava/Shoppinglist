@@ -122,7 +122,7 @@ export function ItemRow({
         onClick={() => changeQty(-1)}
         disabled={item.qty === null}
         aria-label={t("decrease", { name: item.name })}
-        className="flex min-h-tap w-9 shrink-0 items-center justify-center text-xl text-on-surface-muted hover:text-on-surface disabled:opacity-30"
+        className="flex min-h-tap w-9 shrink-0 items-center justify-center text-xl text-on-surface-muted hover:text-on-surface disabled:opacity-30 print:hidden"
       >
         −
       </button>
@@ -130,7 +130,7 @@ export function ItemRow({
         type="button"
         onClick={() => changeQty(1)}
         aria-label={t("increase", { name: item.name })}
-        className="flex min-h-tap w-9 shrink-0 items-center justify-center text-xl text-on-surface-muted hover:text-on-surface"
+        className="flex min-h-tap w-9 shrink-0 items-center justify-center text-xl text-on-surface-muted hover:text-on-surface print:hidden"
       >
         +
       </button>
@@ -141,7 +141,7 @@ export function ItemRow({
           type="button"
           onClick={() => setEditing(true)}
           aria-label={t("edit", { name: item.name })}
-          className="flex size-tap shrink-0 items-center justify-center text-on-surface-muted hover:text-on-surface"
+          className="flex size-tap shrink-0 items-center justify-center text-on-surface-muted hover:text-on-surface print:hidden"
         >
           <PencilIcon />
         </button>
@@ -151,7 +151,7 @@ export function ItemRow({
         type="button"
         onClick={handleDelete}
         aria-label={t("delete", { name: item.name })}
-        className="flex size-tap shrink-0 items-center justify-center text-on-surface-muted hover:text-red-600"
+        className="flex size-tap shrink-0 items-center justify-center text-on-surface-muted hover:text-red-600 print:hidden"
       >
         <TrashIcon />
       </button>

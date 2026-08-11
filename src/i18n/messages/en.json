@@ -158,7 +158,10 @@
     "suggestionsLabel": "Suggestions",
     "frequentLabel": "What you usually buy",
     "increase": "Add one more {name}",
-    "decrease": "Remove one {name}"
+    "decrease": "Remove one {name}",
+    "print": "Print",
+    "shareAsText": "Copy the list",
+    "printFootnote": "Made with listasupermercado.com — create yours and share it on WhatsApp, no sign-up."
   },
   "invite": {
     "joining": "Joining the list…",

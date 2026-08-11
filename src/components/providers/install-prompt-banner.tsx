@@ -10,7 +10,7 @@ export function InstallPromptBanner() {
   if (!canPrompt) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-border bg-surface-raised p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg">
+    <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-border bg-surface-raised p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg print:hidden">
       <span className="text-2xl" aria-hidden>
         🛒
       </span>

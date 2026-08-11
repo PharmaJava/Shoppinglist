@@ -67,7 +67,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <>
-      <header className="relative flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+      <header className="relative flex items-center justify-between border-b border-border px-4 py-3 sm:px-6 print:hidden">
         <a
           href={`/${locale}`}
           className="flex min-w-0 items-center gap-2 text-lg font-bold text-brand"
@@ -85,7 +85,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
       <main className="flex flex-1 flex-col">{children}</main>
 
-      <footer className="border-t border-border px-4 py-10 text-sm sm:px-6">
+      <footer className="border-t border-border px-4 py-10 text-sm sm:px-6 print:hidden">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
           <div className="flex flex-col justify-between gap-8 sm:flex-row">
             <div className="flex max-w-xs flex-col gap-2">

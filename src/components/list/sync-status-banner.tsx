@@ -12,7 +12,7 @@ export function SyncStatusBanner() {
   return (
     <div
       role="status"
-      className="border-b border-border bg-surface-muted px-4 py-1.5 text-center text-xs text-on-surface-muted"
+      className="border-b border-border bg-surface-muted px-4 py-1.5 text-center text-xs text-on-surface-muted print:hidden"
     >
       {isOffline ? t("offline") : t("pendingChanges", { count: pendingCount })}
     </div>

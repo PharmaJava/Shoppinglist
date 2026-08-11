@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ListView } from "@/components/list/list-view";
+import { PrintFooter } from "@/components/list/print-footer";
 
 /**
  * La previsualización es deliberadamente genérica: quien la genera es el
@@ -31,5 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ListPage({ params }: { params: Promise<{ listId: string }> }) {
   const { listId } = await params;
-  return <ListView listId={listId} />;
+  return (
+    <>
+      <ListView listId={listId} />
+      <PrintFooter />
+    </>
+  );
 }
