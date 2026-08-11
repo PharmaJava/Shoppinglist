@@ -1,6 +1,6 @@
 /**
  * Tipos de la base de datos, escritos a mano a partir de
- * supabase/migrations/20260810000000_init.sql.
+ * supabase/migrations/0001_baseline.sql.
  *
  * Regenerar con `pnpm db:types` (requiere SUPABASE_PROJECT_REF y sesión de
  * `supabase login`) en cuanto haya acceso de CLI al proyecto — sustituye

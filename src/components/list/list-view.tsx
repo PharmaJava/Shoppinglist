@@ -1,10 +1,11 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ListItem } from "@/features/list/types";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
+import { useRestoreItem } from "@/features/list/use-list-mutations";
 import { useWakeLock } from "@/features/list/use-wake-lock";
 import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
@@ -25,8 +26,18 @@ export function ListView({ listId }: { listId: string }) {
   const { data, isLoading, isError } = useList(listId);
   const { data: categories } = useCategories();
   const [supermarketMode, setSupermarketMode] = useState(false);
+  const [justDeleted, setJustDeleted] = useState<ListItem | null>(null);
+  const restore = useRestoreItem(listId);
 
   useWakeLock(supermarketMode);
+
+  // El aviso se retira solo: un borrado tiene ventana para arrepentirse, no
+  // una barra permanente ocupando pantalla dentro del supermercado.
+  useEffect(() => {
+    if (!justDeleted) return;
+    const timer = setTimeout(() => setJustDeleted(null), 6000);
+    return () => clearTimeout(timer);
+  }, [justDeleted]);
 
   const { pending, checked } = useMemo(() => {
     const items = data?.items ?? [];
@@ -99,7 +110,13 @@ export function ListView({ listId }: { listId: string }) {
             </h2>
             <ul>
               {group.items.map((item) => (
-                <ItemRow key={item.id} listId={listId} item={item} large={supermarketMode} />
+                <ItemRow
+                  key={item.id}
+                  listId={listId}
+                  item={item}
+                  large={supermarketMode}
+                  onDeleted={setJustDeleted}
+                />
               ))}
             </ul>
           </section>
@@ -113,12 +130,31 @@ export function ListView({ listId }: { listId: string }) {
             </h2>
             <ul>
               {checked.map((item) => (
-                <ItemRow key={item.id} listId={listId} item={item} />
+                <ItemRow key={item.id} listId={listId} item={item} onDeleted={setJustDeleted} />
               ))}
             </ul>
           </section>
         )}
       </div>
+
+      {justDeleted && (
+        <div
+          role="status"
+          className="sticky bottom-0 z-10 flex items-center justify-between gap-3 border-t border-border bg-on-surface px-4 py-3 text-sm text-surface"
+        >
+          <span className="truncate">{t("deleted")}</span>
+          <button
+            type="button"
+            onClick={() => {
+              restore.mutate(justDeleted);
+              setJustDeleted(null);
+            }}
+            className="shrink-0 font-semibold text-brand-300 underline"
+          >
+            {t("undo")}
+          </button>
+        </div>
+      )}
 
       <AddItemBar listId={listId} />
     </div>

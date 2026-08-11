@@ -14,6 +14,7 @@ va marcando productos mientras compra.
 | [`docs/03-UX.md`](docs/03-UX.md) | Diseño mobile-first, design system, pantallas clave, accesibilidad |
 | [`docs/04-BACKLOG.md`](docs/04-BACKLOG.md) | Desglose en tareas del tamaño de una PR, con criterios de aceptación |
 | [`docs/05-AUTH.md`](docs/05-AUTH.md) | Login por email, conversión de invitado a cuenta y configuración de Supabase |
+| [`supabase/README.md`](supabase/README.md) | Cómo aplicar migraciones y cómo saber cuáles faltan (`pnpm db:check`) |
 
 ## Resumen en 30 segundos
 

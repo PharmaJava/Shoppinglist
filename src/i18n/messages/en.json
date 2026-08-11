@@ -143,7 +143,16 @@
     "exitSupermarketMode": "Exit store mode",
     "memberYou": "You",
     "memberUnnamed": "Someone else",
-    "memberOwner": "· owner"
+    "memberOwner": "· owner",
+    "edit": "Edit {name}",
+    "delete": "Delete {name}",
+    "editName": "Item",
+    "editQty": "Quantity",
+    "editUnit": "Unit",
+    "editSave": "Save",
+    "editCancel": "Cancel",
+    "unitNone": "no unit",
+    "addHint": "Type “ground beef 500g” or “tomatoes x3” and the quantity is saved."
   },
   "invite": {
     "joining": "Joining the list…",
