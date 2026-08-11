@@ -48,5 +48,9 @@ export const routing = defineRouting({
       es: "/precios",
       en: "/pricing",
     },
+    "/quienes-somos": {
+      es: "/quienes-somos",
+      en: "/about",
+    },
   },
 });

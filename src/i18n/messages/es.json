@@ -20,7 +20,8 @@
     "account": "Mi cuenta",
     "myLists": "Mis listas",
     "sections": "Secciones",
-    "menu": "Menú"
+    "menu": "Menú",
+    "about": "Quiénes somos"
   },
   "categories": {
     "produce": "Fruta y verdura",
@@ -166,7 +167,8 @@
     "privacy": "Privacidad",
     "terms": "Términos",
     "pricing": "Precios",
-    "legal": "Legal"
+    "legal": "Legal",
+    "about": "Quiénes somos"
   },
   "landing": {
     "eyebrow": "Sin registro · Tiempo real · Funciona sin conexión",
@@ -373,5 +375,23 @@
     "on": "Activados",
     "off": "Activar",
     "denied": "Tienes las notificaciones bloqueadas para este sitio. Se activan desde los ajustes del navegador."
+  },
+  "about": {
+    "metaTitle": "Quiénes somos",
+    "metaDescription": "Quién está detrás de ListaSupermercado, por qué existe, cómo se sostiene y cómo ponerse en contacto.",
+    "title": "Quiénes somos",
+    "subtitle": "Detrás de ListaSupermercado no hay una empresa con un departamento de producto: hay una persona, Antonio, que se cansó de reconstruir la lista de la compra a partir de mensajes sueltos en el grupo de WhatsApp.",
+    "whyTitle": "Por qué existe",
+    "whyBody": "La lista de la compra es de las cosas más compartidas que hay en una casa y de las peor resueltas. El papel de la nevera sólo lo ve quien está en la cocina; el grupo de chat se descontrola en cuatro mensajes; y casi todas las aplicaciones piden instalar algo y registrarse antes de dejarte escribir «leche». Esta empieza al revés: escribes, compartes el enlace y ya está.",
+    "howTitle": "Cómo está hecha",
+    "howBody": "Es una aplicación web que funciona sin conexión —dentro del supermercado no suele haber cobertura— y sincroniza sola al salir. Se puede instalar en el móvil, pero no hace falta. Está construida para que la parte compartida no dependa de que nadie se registre.",
+    "whoTitle": "Quién la mantiene",
+    "whoBody": "La mantiene Antonio, en su tiempo y con la ayuda de quien reporta fallos. Eso tiene una parte buena —las cosas se arreglan en cuanto se saben— y una mala: no hay soporte 24/7 ni promesas que no se puedan cumplir. Preferimos decirlo antes que fingir un «equipo».",
+    "moneyTitle": "Cómo se sostiene",
+    "moneyBody": "Hoy no cuesta nada porque no cuesta casi nada mantenerla, y lo compartido va a seguir siendo gratis: cobrar por compartir rompe justo lo que hace útil una lista familiar. Si algún día hay algo de pago será para quien la usa a diario, y se anunciará antes de cobrar un euro.",
+    "contactTitle": "Hablemos",
+    "contactBody": "Si algo no funciona, si echas de menos una función o si quieres proponer algo, escribe a Antonio por LinkedIn. Se lee todo, aunque a veces se tarde en contestar.",
+    "linkedin": "Escribir a {name} por LinkedIn",
+    "cta": "Crear una lista ahora"
   }
 }

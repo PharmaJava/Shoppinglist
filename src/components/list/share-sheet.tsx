@@ -7,7 +7,6 @@ import { fetchListMembers, getOrCreateActiveInvite } from "@/features/list/api";
 import { listToText } from "@/features/list/to-text";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
-import { SITE_URL } from "@/lib/seo/site";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { MembersPanel } from "./members-panel";
 import { PushToggle } from "./push-toggle";
@@ -39,7 +38,10 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
     // edición son dos invitaciones distintas, no la misma con una etiqueta.
     setUrl(null);
     getOrCreateActiveInvite(listId, inviteRole).then((token) => {
-      if (!cancelled) setUrl(`${SITE_URL}/i/${token}`);
+      // El enlace se arma con el origen real del navegador y no con
+      // `SITE_URL`: así el que se comparte desde una previsualización apunta a
+      // esa previsualización, y no manda a nadie a producción por error.
+      if (!cancelled) setUrl(`${window.location.origin}/i/${token}`);
     });
 
     return () => {

@@ -13,18 +13,30 @@ function placeholdersIn(doc: LegalDocument): string[] {
 }
 
 describe("documentos legales", () => {
-  // El fallo realista no es olvidar los marcadores, sino rellenarlos en un
-  // idioma y no en el otro: quedaría publicada una política a medias sin que
-  // nada avise. Se compara la cantidad, no el texto, porque los marcadores
-  // están escritos en el idioma de cada documento.
-  it("privacidad tiene los mismos datos pendientes en ambos idiomas", () => {
-    const counts = LOCALES.map((locale) => placeholdersIn(getPrivacy(locale)).length);
-    expect(counts[0]).toBe(counts[1]);
+  // Los marcadores ya están rellenos. El test cambia de sentido: antes vigilaba
+  // que no se rellenara un idioma y se olvidara el otro; ahora, que no vuelva a
+  // colarse un `[HUECO]` al editar los textos. Publicar una política con
+  // corchetes es peor que no tenerla.
+  it("no queda ningún dato del responsable sin rellenar", () => {
+    for (const locale of LOCALES) {
+      expect(placeholdersIn(getPrivacy(locale)), `privacidad en ${locale}`).toEqual([]);
+      expect(placeholdersIn(getTerms(locale)), `términos en ${locale}`).toEqual([]);
+    }
   });
 
-  it("términos tiene los mismos datos pendientes en ambos idiomas", () => {
-    const counts = LOCALES.map((locale) => placeholdersIn(getTerms(locale)).length);
-    expect(counts[0]).toBe(counts[1]);
+  // Quien lee una política necesita saber a quién escribir. Que exista el dato
+  // en un idioma y no en el otro es el descuido realista.
+  it("ambos documentos dicen a quién dirigirse, en los dos idiomas", () => {
+    for (const locale of LOCALES) {
+      for (const doc of [getPrivacy(locale), getTerms(locale)]) {
+        const text = doc.blocks
+          .flatMap((block) => [...block.paragraphs, ...(block.bullets ?? [])])
+          .join(" ");
+
+        expect(text, `${doc.slug} en ${locale}`).toContain("Antonio");
+        expect(text, `${doc.slug} en ${locale}`).toContain("linkedin.com/in/farmaiant");
+      }
+    }
   });
 
   it("todo documento legal declara fecha de revisión y descripción", () => {

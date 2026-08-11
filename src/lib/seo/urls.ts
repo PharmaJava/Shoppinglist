@@ -19,6 +19,7 @@ const SECTION_SEGMENT = {
   privacy: { es: "privacidad", en: "privacy" },
   terms: { es: "terminos", en: "terms" },
   pricing: { es: "precios", en: "pricing" },
+  about: { es: "quienes-somos", en: "about" },
 } as const;
 
 export type ContentSection = keyof typeof SECTION_SEGMENT;

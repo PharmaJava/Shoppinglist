@@ -123,6 +123,9 @@ export default async function LocaleLayout({ children, params }: Props) {
                 <Link href="/precios" className="text-on-surface-muted hover:text-on-surface">
                   {tFooter("pricing")}
                 </Link>
+                <Link href="/quienes-somos" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("about")}
+                </Link>
               </nav>
               <nav className="flex flex-col gap-2" aria-label={tFooter("legal")}>
                 <span className="font-semibold text-on-surface">{tFooter("legal")}</span>

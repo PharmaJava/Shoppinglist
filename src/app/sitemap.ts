@@ -82,6 +82,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       },
     },
     {
+      url: sectionUrl("about", locale),
+      lastModified: new Date(ABOUT_UPDATED_AT),
+      alternates: {
+        languages: Object.fromEntries(routing.locales.map((l) => [l, sectionUrl("about", l)])),
+      },
+    },
+    {
       url: sectionUrl("pricing", locale),
       lastModified: mostRecent([
         ...getTemplates(locale),
@@ -96,6 +103,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [...landings, ...hubs, ...templates, ...guides, ...posts, ...legal];
 }
+
+/** La página de «quiénes somos» no tiene contenido versionado: su fecha se
+ *  toca a mano cuando se reescribe, como cualquier otra revisión real. */
+const ABOUT_UPDATED_AT = "2026-08-11";
 
 /** Piezas que lista cada hub, para derivar su lastmod. */
 const HUB_ENTRIES = {
