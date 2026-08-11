@@ -1,8 +1,13 @@
--- Catálogo de productos (F1-3) — sustituye el diccionario en memoria de
--- src/features/list/categorize.ts como fuente principal de categorización.
--- El diccionario en memoria se conserva como fallback offline-first (ver
--- src/features/list/catalog.ts): esta tabla se carga en segundo plano al
--- abrir la app y se fusiona con él, nunca lo sustituye por completo.
+-- ═══════════════════════════════════════════════════════════════════
+-- 0002 · Semilla del catálogo de productos
+-- ═══════════════════════════════════════════════════════════════════
+--
+-- Sustituye el diccionario en memoria de src/features/list/categorize.ts como
+-- fuente principal de categorización. El diccionario se conserva como respaldo
+-- sin conexión (ver src/features/list/catalog.ts): esta tabla se carga en
+-- segundo plano al abrir la app y se fusiona con él, nunca lo reemplaza.
+--
+-- Repetible: `on conflict do nothing` al final.
 
 insert into public.products (locale, name, normalized, category_id) values
   -- ── produce ──────────────────────────────────────────────────────
@@ -510,3 +515,6 @@ insert into public.products (locale, name, normalized, category_id) values
   ('en', 'Cat litter', 'cat litter', 'pet'),
   ('en', 'Dog treats', 'dog treats', 'pet')
 on conflict (locale, normalized) do nothing;
+
+insert into public.schema_migrations (version) values ('0002_catalog_seed')
+on conflict (version) do nothing;

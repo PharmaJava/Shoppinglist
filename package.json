@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "db:types": "supabase gen types typescript --project-id \"$SUPABASE_PROJECT_REF\" --schema public > src/lib/supabase/types.generated.ts"
+    "db:types": "supabase gen types typescript --project-id \"$SUPABASE_PROJECT_REF\" --schema public > src/lib/supabase/types.generated.ts",
+    "db:check": "node scripts/db-check.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
