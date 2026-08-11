@@ -177,7 +177,7 @@ function DisplayNameForm() {
           placeholder={t("namePlaceholder")}
           autoComplete="nickname"
           maxLength={40}
-          className="h-tap flex-1 rounded-full border border-border bg-surface px-5 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
+          className="h-tap w-full rounded-full border border-border bg-surface px-5 sm:flex-1 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
         />
         <button
           type="submit"
