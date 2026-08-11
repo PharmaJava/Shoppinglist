@@ -4,6 +4,8 @@ import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { FaqSection, JsonLd, ProseBlocks } from "@/components/content/prose";
 import { UseTemplateButton } from "@/components/content/use-template-button";
+import { PrintButton } from "@/components/list/print-button";
+import { PrintFooter } from "@/components/list/print-footer";
 import { getGuideByKey, getTemplate, getTemplateByKey, getTemplates } from "@/content";
 import { flattenTemplateItems } from "@/content/types";
 import { Link } from "@/i18n/navigation";
@@ -94,7 +96,7 @@ export default async function TemplatePage({ params }: Props) {
     <article className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-12 sm:px-6">
       <JsonLd blocks={jsonLd} />
 
-      <nav aria-label="breadcrumb" className="text-sm text-on-surface-muted">
+      <nav aria-label="breadcrumb" className="text-sm text-on-surface-muted print:hidden">
         <Link href="/plantillas" className="underline">
           {tNav("templates")}
         </Link>
@@ -115,7 +117,12 @@ export default async function TemplatePage({ params }: Props) {
             <dd className="font-medium text-on-surface">{template.budget}</dd>
           </div>
         </dl>
-        <UseTemplateButton title={template.title} items={items} />
+        {/* «Lista de la compra para imprimir» es una búsqueda enorme: quien
+            llega aquí a veces no quiere una app, quiere un papel. */}
+        <div className="flex flex-wrap items-center gap-3 print:hidden">
+          <UseTemplateButton title={template.title} items={items} />
+          <PrintButton className="h-tap rounded-full border border-border px-5 font-medium text-on-surface" />
+        </div>
       </header>
 
       <section className="flex flex-col gap-5">
@@ -129,6 +136,12 @@ export default async function TemplatePage({ params }: Props) {
                   key={item.name}
                   className="flex flex-wrap items-baseline gap-x-2 border-border border-b py-1.5"
                 >
+                  {/* Sólo en papel: en pantalla la casilla no hace nada, y una
+                      casilla que no se puede marcar es peor que ninguna. */}
+                  <span
+                    aria-hidden
+                    className="hidden size-3.5 shrink-0 self-center border border-on-surface print:inline-block"
+                  />
                   <span className="text-on-surface">{item.name}</span>
                   {item.qty && (
                     <span className="text-on-surface-muted text-sm">
@@ -146,14 +159,16 @@ export default async function TemplatePage({ params }: Props) {
         ))}
       </section>
 
-      <ProseBlocks blocks={template.body} />
+      <div className="flex flex-col gap-10 print:hidden">
+        <ProseBlocks blocks={template.body} />
 
-      <FaqSection title={t("faqTitle")} faq={template.faq} />
+        <FaqSection title={t("faqTitle")} faq={template.faq} />
 
-      <UseTemplateButton title={template.title} items={items} />
+        <UseTemplateButton title={template.title} items={items} />
+      </div>
 
       {related.length > 0 && (
-        <section className="flex flex-col gap-3">
+        <section className="flex flex-col gap-3 print:hidden">
           <h2 className="text-xl font-bold text-on-surface">{t("related")}</h2>
           <ul className="flex flex-col gap-2">
             {related.map((entry) => (
@@ -171,7 +186,7 @@ export default async function TemplatePage({ params }: Props) {
       )}
 
       {relatedGuides.length > 0 && (
-        <section className="flex flex-col gap-3">
+        <section className="flex flex-col gap-3 print:hidden">
           <h2 className="text-xl font-bold text-on-surface">{t("relatedGuides")}</h2>
           <ul className="flex flex-col gap-2">
             {relatedGuides.map((entry) => (
@@ -188,7 +203,11 @@ export default async function TemplatePage({ params }: Props) {
         </section>
       )}
 
-      <p className="text-sm text-on-surface-muted">{t("updated", { date: template.updatedAt })}</p>
+      <p className="text-sm text-on-surface-muted print:hidden">
+        {t("updated", { date: template.updatedAt })}
+      </p>
+
+      <PrintFooter />
     </article>
   );
 }

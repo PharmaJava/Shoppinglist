@@ -64,7 +64,7 @@ export function ListHeader({
         onClick={onToggleSupermarketMode}
         aria-pressed={supermarketMode}
         aria-label={supermarketMode ? t("exitSupermarketMode") : t("supermarketMode")}
-        className="flex size-tap shrink-0 items-center justify-center rounded-full border border-border text-xl"
+        className="flex size-tap shrink-0 items-center justify-center rounded-full border border-border text-xl print:hidden"
       >
         {supermarketMode ? "✕" : "🛒"}
       </button>
@@ -73,7 +73,7 @@ export function ListHeader({
         <button
           type="button"
           onClick={() => setShareOpen(true)}
-          className="flex h-10 items-center gap-1.5 rounded-full bg-brand px-4 text-sm font-medium text-brand-contrast"
+          className="flex h-10 items-center gap-1.5 rounded-full bg-brand px-4 text-sm font-medium text-brand-contrast print:hidden"
         >
           {t("share")}
         </button>

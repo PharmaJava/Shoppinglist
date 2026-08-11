@@ -47,7 +47,7 @@ export function AddItemBar({ listId, existingNormalized }: AddItemBarProps) {
   const showSuggestions = (focused || value.trim() !== "") && suggestions.length > 0;
 
   return (
-    <div className="sticky bottom-0 border-t border-border bg-surface-raised">
+    <div className="sticky bottom-0 border-t border-border bg-surface-raised print:hidden">
       {showSuggestions && (
         <ul
           aria-label={value.trim() === "" ? t("frequentLabel") : t("suggestionsLabel")}

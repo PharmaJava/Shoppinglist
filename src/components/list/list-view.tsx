@@ -107,7 +107,7 @@ export function ListView({ listId }: { listId: string }) {
       />
       <SyncStatusBanner />
 
-      <div className="flex-1 overflow-y-auto pb-4">
+      <div className="flex-1 overflow-y-auto pb-4 print:h-auto print:overflow-visible">
         {total === 0 && <p className="p-6 text-center text-on-surface-muted">{t("empty")}</p>}
 
         {groups.map((group) => (
@@ -148,7 +148,7 @@ export function ListView({ listId }: { listId: string }) {
       {justDeleted && (
         <div
           role="status"
-          className="sticky bottom-0 z-10 flex items-center justify-between gap-3 border-t border-border bg-on-surface px-4 py-3 text-sm text-surface"
+          className="sticky bottom-0 z-10 flex items-center justify-between gap-3 border-t border-border bg-on-surface px-4 py-3 text-sm text-surface print:hidden"
         >
           <span className="truncate">{t("deleted")}</span>
           <button

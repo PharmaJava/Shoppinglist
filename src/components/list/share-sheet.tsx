@@ -1,16 +1,26 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import type { ListMember } from "@/features/list/api";
 import { fetchListMembers, getOrCreateActiveInvite } from "@/features/list/api";
+import { listToText } from "@/features/list/to-text";
+import { useCategories } from "@/features/list/use-categories";
+import { useList } from "@/features/list/use-list";
 import { SITE_URL } from "@/lib/seo/site";
+import type { Locale } from "@/lib/supabase/types";
 
 export function ShareSheet({ listId, onClose }: { listId: string; onClose: () => void }) {
   const t = useTranslations("list");
+  const locale = useLocale() as Locale;
   const [url, setUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [textCopied, setTextCopied] = useState(false);
   const [members, setMembers] = useState<ListMember[]>([]);
+
+  // Ambas ya están en caché: es la misma consulta que pinta la lista de fondo.
+  const { data } = useList(listId);
+  const { data: categories } = useCategories();
 
   useEffect(() => {
     let cancelled = false;
@@ -37,6 +47,46 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
     setTimeout(() => setCopied(false), 2000);
   }
 
+  /**
+   * Copia el contenido, no el enlace. Es lo que la gente hace igualmente
+   * —reescribir la lista en el chat del grupo— y a veces es lo que toca: el
+   * enlace invita a editar, y hay quien sólo necesita leerla.
+   */
+  async function handleCopyText() {
+    const text = buildText();
+    if (!text) return;
+
+    // Si hay compartir nativo, mejor: sale el selector del sistema y va
+    // directo al chat sin pasar por el portapapeles.
+    if (navigator.share) {
+      await navigator.share({ text, title: data?.list.title });
+      return;
+    }
+    await navigator.clipboard.writeText(text);
+    setTextCopied(true);
+    setTimeout(() => setTextCopied(false), 2000);
+  }
+
+  function buildText(): string | null {
+    if (!data || !categories) return null;
+    return listToText({
+      title: data.list.title,
+      items: data.items,
+      categories,
+      locale,
+      checkedLabel: t("checkedSection"),
+      otherLabel: t("otherCategory"),
+    });
+  }
+
+  function handlePrint() {
+    // Cerrar antes de imprimir: aunque la hoja no se imprime, el diálogo del
+    // sistema aparecería sobre ella y al volver seguiría abierta encima de lo
+    // que se acaba de mandar al papel.
+    onClose();
+    requestAnimationFrame(() => window.print());
+  }
+
   async function handleNativeShare() {
     if (!url) return;
     if (navigator.share) {
@@ -47,7 +97,7 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center print:hidden">
       <button
         type="button"
         aria-label={t("shareTitle")}
@@ -86,6 +136,26 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
             className="flex h-tap items-center justify-center rounded-xl border border-border px-4 font-medium text-on-surface disabled:opacity-50"
           >
             {copied ? t("shareCopied") : t("shareCopy")}
+          </button>
+        </div>
+
+        {/* Sacar la lista de la aplicación, no invitar a nadie: por eso van
+            separadas del bloque de arriba. */}
+        <div className="mt-4 flex gap-2 border-border border-t pt-4">
+          <button
+            type="button"
+            onClick={handleCopyText}
+            disabled={!data || !categories}
+            className="flex h-tap flex-1 items-center justify-center rounded-xl border border-border px-3 text-sm font-medium text-on-surface disabled:opacity-50"
+          >
+            {textCopied ? t("shareCopied") : t("shareAsText")}
+          </button>
+          <button
+            type="button"
+            onClick={handlePrint}
+            className="flex h-tap flex-1 items-center justify-center rounded-xl border border-border px-3 text-sm font-medium text-on-surface"
+          >
+            {t("print")}
           </button>
         </div>
 
