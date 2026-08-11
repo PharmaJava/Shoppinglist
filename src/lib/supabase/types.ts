@@ -218,6 +218,10 @@ export interface Database {
         Args: Record<string, never>;
         Returns: undefined;
       };
+      record_products: {
+        Args: { p_items: RecordedProduct[] };
+        Returns: undefined;
+      };
     };
   };
 }
@@ -227,3 +231,11 @@ export type ListItemRow = Database["public"]["Tables"]["list_items"]["Row"];
 export type ListMemberRow = Database["public"]["Tables"]["list_members"]["Row"];
 export type CategoryRow = Database["public"]["Tables"]["categories"]["Row"];
 export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+export type ProductHistoryRow = Database["public"]["Tables"]["user_product_history"]["Row"];
+
+/** Lo que `record_products` espera de cada producto (jsonb en la función). */
+export interface RecordedProduct {
+  normalized: string;
+  name: string;
+  category_id: string | null;
+}

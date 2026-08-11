@@ -325,6 +325,25 @@ grant  execute on function public.join_list_by_token(text) to authenticated;
 Un mismo mensaje de error para «no existe», «caducada» y «revocada»: no damos pistas a quien
 pruebe tokens al azar.
 
+### 3.4 Historial personal
+
+`user_product_history` se escribe con `record_products(jsonb)`, que recibe la tanda entera de
+productos recién añadidos y suma al contador en lugar de pisarlo
+(`supabase/migrations/0003_product_history.sql`).
+
+Es `security invoker` a propósito: la política `history_own` ya limita cada fila a su dueño y
+`auth.uid()` es la única fuente del `user_id`, así que no hay nada que elevar. Dos detalles que
+no son opcionales:
+
+- **Agrupa antes de insertar.** `on conflict do update` no admite tocar la misma fila dos veces
+  en una sentencia, y añadir «leche, leche» de una vez es normal.
+- **Sin sesión, sale en silencio.** Se llama en segundo plano al añadir productos y no puede
+  tumbar esa operación.
+
+Del lado del cliente no pasa por el outbox (`src/features/list/history.ts`): la operación es
+«suma uno», no «escribe esta fila», y una cola que reintenta contaría de más. Si falla, se pierde
+ese registro y ya está — la lista, que es lo que importa, sí va por el outbox.
+
 ---
 
 ## 4. Realtime

@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
+import { normalizeProductName } from "@/features/list/categorize";
 import type { ListItem } from "@/features/list/types";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
@@ -46,6 +47,13 @@ export function ListView({ listId }: { listId: string }) {
       checked: items.filter((item) => item.is_checked),
     };
   }, [data?.items]);
+
+  // Lo que ya está en la lista no se vuelve a sugerir. Incluye lo marcado:
+  // que un producto esté en el carro no lo convierte en una sugerencia útil.
+  const existingNormalized = useMemo(
+    () => (data?.items ?? []).map((item) => normalizeProductName(item.name)),
+    [data?.items],
+  );
 
   const groups = useMemo<Group[]>(() => {
     if (!categories) return [];
@@ -156,7 +164,7 @@ export function ListView({ listId }: { listId: string }) {
         </div>
       )}
 
-      <AddItemBar listId={listId} />
+      <AddItemBar listId={listId} existingNormalized={existingNormalized} />
     </div>
   );
 }

@@ -152,7 +152,9 @@
     "editSave": "Save",
     "editCancel": "Cancel",
     "unitNone": "no unit",
-    "addHint": "Type “ground beef 500g” or “tomatoes x3” and the quantity is saved."
+    "addHint": "Type “ground beef 500g” or “tomatoes x3” and the quantity is saved.",
+    "suggestionsLabel": "Suggestions",
+    "frequentLabel": "What you usually buy"
   },
   "invite": {
     "joining": "Joining the list…",
@@ -279,7 +281,17 @@
     "create": "Create",
     "createError": "Couldn't create the list. Please try again.",
     "guestWarning": "These lists live only in this browser. Add your email to have them on any device.",
-    "guestWarningCta": "Save my lists"
+    "guestWarningCta": "Save my lists",
+    "searchLabel": "Search your lists",
+    "searchPlaceholder": "Search list…",
+    "noResults": "No list matches that search.",
+    "duplicate": "Buy again",
+    "duplicating": "Copying…",
+    "copyTitle": "{title} (copy)",
+    "archive": "Archive",
+    "unarchive": "Restore",
+    "archivedSection": "Archived ({count})",
+    "actionError": "That didn't work. Try again."
   },
   "legal": {
     "updated": "Last reviewed: {date}",
