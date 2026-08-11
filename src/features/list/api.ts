@@ -258,6 +258,52 @@ export async function fetchMyLists(): Promise<ListSummary[]> {
   }));
 }
 
+export interface ListMember {
+  userId: string;
+  role: ListRole;
+  /** Nombre elegido en la cuenta. Vacío mientras no lo haya puesto o si es
+   *  invitado, que no tiene dónde ponerlo. */
+  displayName: string;
+  isMe: boolean;
+}
+
+/**
+ * Quién comparte una lista. Dos consultas y no un `join` embebido porque la
+ * clave foránea de `list_members.user_id` apunta a `auth.users`, no a
+ * `profiles`, y PostgREST no puede inferir esa relación.
+ */
+export async function fetchListMembers(listId: string): Promise<ListMember[]> {
+  const supabase = getSupabaseBrowserClient();
+  const myId = await getCurrentUserId();
+
+  const { data: members, error } = await supabase
+    .from("list_members")
+    .select("user_id, role")
+    .eq("list_id", listId);
+
+  if (error) throw new Error(error.message);
+  if (!members || members.length === 0) return [];
+
+  // Sólo devuelve los perfiles que RLS permite ver: los de quienes comparten
+  // lista contigo. Si alguno falta, se queda sin nombre en vez de romper.
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("id, display_name")
+    .in(
+      "id",
+      members.map((member) => member.user_id),
+    );
+
+  const names = new Map((profiles ?? []).map((p) => [p.id, p.display_name ?? ""]));
+
+  return members.map((member) => ({
+    userId: member.user_id,
+    role: member.role,
+    displayName: names.get(member.user_id) ?? "",
+    isMe: member.user_id === myId,
+  }));
+}
+
 export async function fetchCategories(): Promise<Category[]> {
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase.from("categories").select().order("sort_order");

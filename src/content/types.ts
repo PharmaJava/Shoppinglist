@@ -109,6 +109,24 @@ export interface Post extends ContentBase {
   relatedPosts: ContentKey[];
 }
 
+/**
+ * Documento legal. No lleva `key` ni gemela por idioma como el contenido
+ * editorial: privacidad y términos son la misma obligación descrita en dos
+ * lenguas, y la equivalencia es por tipo de documento, no por contenido.
+ */
+export interface LegalDocument {
+  slug: string;
+  title: string;
+  metaTitle: string;
+  metaDescription: string;
+  blocks: ContentBlock[];
+  updatedAt: string;
+}
+
+/** Marcador que queda por rellenar en los textos legales. Buscarlo antes de
+ *  abrir al público: publicar una política con corchetes es peor que no tenerla. */
+export const OPERATOR_PLACEHOLDER = /\[[A-ZÁÉÍÓÚÑ /]+\]/;
+
 /** Total de productos de una plantilla, para el hub y los datos estructurados. */
 export function countTemplateItems(template: Template): number {
   return template.sections.reduce((total, section) => total + section.items.length, 0);

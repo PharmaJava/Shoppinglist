@@ -107,7 +107,7 @@ export default async function LocaleLayout({ children, params }: Props) {
               <p className="text-on-surface-muted">{tFooter("tagline")}</p>
             </div>
 
-            <div className="flex gap-16">
+            <div className="flex flex-wrap gap-10 sm:gap-16">
               <nav className="flex flex-col gap-2" aria-label={tFooter("product")}>
                 <span className="font-semibold text-on-surface">{tFooter("product")}</span>
                 <Link href="/" className="text-on-surface-muted hover:text-on-surface">
@@ -130,6 +130,18 @@ export default async function LocaleLayout({ children, params }: Props) {
                 </Link>
                 <Link href="/blog" className="text-on-surface-muted hover:text-on-surface">
                   {tFooter("blog")}
+                </Link>
+                <Link href="/precios" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("pricing")}
+                </Link>
+              </nav>
+              <nav className="flex flex-col gap-2" aria-label={tFooter("legal")}>
+                <span className="font-semibold text-on-surface">{tFooter("legal")}</span>
+                <Link href="/privacidad" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("privacy")}
+                </Link>
+                <Link href="/terminos" className="text-on-surface-muted hover:text-on-surface">
+                  {tFooter("terms")}
                 </Link>
               </nav>
             </div>

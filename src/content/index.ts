@@ -1,11 +1,13 @@
 import type { AppLocale } from "@/i18n/routing";
 import { guidesEn } from "./guides/en";
 import { guidesEs } from "./guides/es";
+import { privacyEn, termsEn } from "./legal/en";
+import { privacyEs, termsEs } from "./legal/es";
 import { postsEn } from "./posts/en";
 import { postsEs } from "./posts/es";
 import { templatesEn } from "./templates/en";
 import { templatesEs } from "./templates/es";
-import type { ContentKey, Guide, Post, Template } from "./types";
+import type { ContentKey, Guide, LegalDocument, Post, Template } from "./types";
 
 const TEMPLATES: Record<AppLocale, Template[]> = { es: templatesEs, en: templatesEn };
 const GUIDES: Record<AppLocale, Guide[]> = { es: guidesEs, en: guidesEn };
@@ -52,3 +54,16 @@ export function getPostByKey(locale: AppLocale, key: ContentKey): Post | undefin
 export const allTemplates: Template[] = [...templatesEs, ...templatesEn];
 export const allGuides: Guide[] = [...guidesEs, ...guidesEn];
 export const allPosts: Post[] = [...postsEs, ...postsEn];
+
+const PRIVACY: Record<AppLocale, LegalDocument> = { es: privacyEs, en: privacyEn };
+const TERMS: Record<AppLocale, LegalDocument> = { es: termsEs, en: termsEn };
+
+export function getPrivacy(locale: AppLocale): LegalDocument {
+  return PRIVACY[locale];
+}
+
+export function getTerms(locale: AppLocale): LegalDocument {
+  return TERMS[locale];
+}
+
+export const allLegal: LegalDocument[] = [privacyEs, privacyEn, termsEs, termsEn];

@@ -140,7 +140,10 @@
     "voiceAdd": "Add by voice",
     "voiceListening": "Listening…",
     "supermarketMode": "Store mode",
-    "exitSupermarketMode": "Exit store mode"
+    "exitSupermarketMode": "Exit store mode",
+    "memberYou": "You",
+    "memberUnnamed": "Someone else",
+    "memberOwner": "· owner"
   },
   "invite": {
     "joining": "Joining the list…",
@@ -220,7 +223,20 @@
     "passwordTooShort": "Password needs at least 8 characters.",
     "genericError": "Something went wrong.",
     "signedOutBodyPassword": "Sign in with your email and password, or create a new account.",
-    "passwordPlaceholderExisting": "Your password"
+    "passwordPlaceholderExisting": "Your password",
+    "nameTitle": "Your name",
+    "nameHint": "People who share a list with you will see it, so they know who added or checked each item. You can leave it empty.",
+    "namePlaceholder": "e.g. Maria",
+    "nameSave": "Save",
+    "nameSaving": "Saving…",
+    "nameSaved": "Name saved.",
+    "dangerTitle": "Delete account",
+    "dangerBody": "This deletes your account, your profile and the lists you own. It's immediate and can't be undone.",
+    "dangerShared": "Careful: lists you created will also disappear for the people sharing them with you. If one needs to survive, ask someone else to copy it first.",
+    "dangerStart": "I want to delete my account",
+    "dangerConfirm": "Yes, delete permanently",
+    "dangerCancel": "Cancel",
+    "dangerDeleting": "Deleting…"
   },
   "footer": {
     "product": "Product",
@@ -230,7 +246,11 @@
     "guides": "Guides",
     "blog": "Blog",
     "tagline": "The shared shopping list — free, no sign-up.",
-    "myLists": "My lists"
+    "myLists": "My lists",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "pricing": "Pricing",
+    "legal": "Legal"
   },
   "myLists": {
     "metaTitle": "My lists",
@@ -251,5 +271,43 @@
     "createError": "Couldn't create the list. Please try again.",
     "guestWarning": "These lists live only in this browser. Add your email to have them on any device.",
     "guestWarningCta": "Save my lists"
+  },
+  "legal": {
+    "updated": "Last reviewed: {date}",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "pricing": {
+    "metaTitle": "Pricing: free, and what comes later",
+    "metaDescription": "Creating, sharing and using lists is free and will stay that way. Here's what's included and which paid features are planned.",
+    "title": "Free, and meant to stay that way",
+    "subtitle": "The shared list is the product, not the bait. No limit on lists, items, or the people you share them with.",
+    "freeTitle": "Free",
+    "freePrice": "$0",
+    "freeNote": "Forever, no card and no mandatory sign-up.",
+    "premiumTitle": "Premium",
+    "premiumPrice": "No price yet",
+    "premiumNote": "In the works. When it exists, it'll be announced before anything is charged.",
+    "includedTitle": "What the free tier includes",
+    "plannedTitle": "What we're preparing for premium",
+    "whyTitle": "Why free",
+    "whyBody1": "A shopping list only works if the whole household has it, and charging for sharing breaks exactly that: one person not paying is enough to make the list useless for everyone.",
+    "whyBody2": "So sharing is free and will stay free. Anything paid, if it arrives, will be what helps people already using the app daily and paying out of pocket — not what it takes to make it work.",
+    "cta": "Create a list now",
+    "included1": "Unlimited lists and items",
+    "included2": "Share with anyone, no sign-up on their side",
+    "included3": "Real-time sync across every phone",
+    "included4": "Works offline and syncs when you're back",
+    "included5": "Voice input, store mode and templates",
+    "planned1": "Price history and what you spend per month",
+    "planned2": "Weekly meal plan that builds the list for you",
+    "planned3": "Per-store lists and supermarket comparison"
+  },
+  "notFound": {
+    "metaTitle": "Page not found",
+    "title": "Nothing here",
+    "body": "The link you followed doesn't exist or has changed. If it was a shared list, ask for it again — list links don't expire, but they're easy to mistype.",
+    "home": "Go home",
+    "templates": "Browse templates"
   }
 }

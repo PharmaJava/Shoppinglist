@@ -36,6 +36,14 @@ export const routing = defineRouting({
       es: "/mis-listas",
       en: "/my-lists",
     },
+    "/privacidad": {
+      es: "/privacidad",
+      en: "/privacy",
+    },
+    "/terminos": {
+      es: "/terminos",
+      en: "/terms",
+    },
     "/precios": {
       es: "/precios",
       en: "/pricing",
