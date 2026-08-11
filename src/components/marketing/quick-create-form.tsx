@@ -34,13 +34,16 @@ export function QuickCreateForm() {
 
   return (
     <div className="flex w-full max-w-md flex-col gap-2">
+      {/* `flex-1` sólo a partir de `sm`: en columna, su `flex-basis: 0%` cae
+          sobre el ALTO y aplasta el campo a la altura del texto. En fila cae
+          sobre el ancho, que es lo que se busca. */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
         <input
           value={value}
           onChange={(event) => setValue(event.target.value)}
           placeholder={t("quickAddPlaceholder")}
           autoComplete="off"
-          className="h-tap flex-1 rounded-full border border-border bg-surface px-5 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
+          className="h-tap w-full rounded-full border border-border bg-surface px-5 sm:flex-1 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
         />
         <button
           type="submit"
