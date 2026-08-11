@@ -131,17 +131,20 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
             {t("templatesTitle")}
           </h2>
           <ul className="grid gap-3 sm:grid-cols-2">
-            {getTemplates(locale).map((template) => (
-              <li key={template.slug}>
-                <Link
-                  href={{ pathname: "/plantillas/[slug]", params: { slug: template.slug } }}
-                  className="flex h-full flex-col gap-1 rounded-card bg-surface-muted p-4 transition-colors hover:bg-surface-raised"
-                >
-                  <span className="font-semibold text-on-surface">{template.title}</span>
-                  <span className="text-sm text-on-surface-muted">{template.serves}</span>
-                </Link>
-              </li>
-            ))}
+            {/* Sólo las primeras: el teaser invita al hub, no lo sustituye. */}
+            {getTemplates(locale)
+              .slice(0, 4)
+              .map((template) => (
+                <li key={template.slug}>
+                  <Link
+                    href={{ pathname: "/plantillas/[slug]", params: { slug: template.slug } }}
+                    className="flex h-full flex-col gap-1 rounded-card bg-surface-muted p-4 transition-colors hover:bg-surface-raised"
+                  >
+                    <span className="font-semibold text-on-surface">{template.title}</span>
+                    <span className="text-sm text-on-surface-muted">{template.serves}</span>
+                  </Link>
+                </li>
+              ))}
           </ul>
           <Link href="/plantillas" className="font-medium text-brand underline">
             {t("templatesCta")}
