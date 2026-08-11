@@ -18,7 +18,9 @@
     "createList": "Crear lista gratis",
     "login": "Iniciar sesión",
     "account": "Mi cuenta",
-    "myLists": "Mis listas"
+    "myLists": "Mis listas",
+    "sections": "Secciones",
+    "menu": "Menú"
   },
   "categories": {
     "produce": "Fruta y verdura",
@@ -243,7 +245,11 @@
     "editSave": "Guardar",
     "editCancel": "Cancelar",
     "unitNone": "sin unidad",
-    "addHint": "Escribe «carne picada 500g» o «tomates x3» y se guarda la cantidad."
+    "addHint": "Escribe «carne picada 500g» o «tomates x3» y se guarda la cantidad.",
+    "suggestionsLabel": "Sugerencias",
+    "frequentLabel": "Lo que sueles comprar",
+    "increase": "Añadir una unidad de {name}",
+    "decrease": "Quitar una unidad de {name}"
   },
   "invite": {
     "joining": "Uniéndote a la lista…",
@@ -279,7 +285,17 @@
     "create": "Crear",
     "createError": "No se pudo crear la lista. Inténtalo de nuevo.",
     "guestWarning": "Estas listas viven sólo en este navegador. Añade tu correo para tenerlas en cualquier dispositivo.",
-    "guestWarningCta": "Guardar mis listas"
+    "guestWarningCta": "Guardar mis listas",
+    "searchLabel": "Buscar entre tus listas",
+    "searchPlaceholder": "Buscar lista…",
+    "noResults": "Ninguna lista coincide con esa búsqueda.",
+    "duplicate": "Volver a comprar",
+    "duplicating": "Copiando…",
+    "copyTitle": "{title} (copia)",
+    "archive": "Archivar",
+    "unarchive": "Recuperar",
+    "archivedSection": "Archivadas ({count})",
+    "actionError": "No se pudo completar. Inténtalo de nuevo."
   },
   "legal": {
     "updated": "Última revisión: {date}",

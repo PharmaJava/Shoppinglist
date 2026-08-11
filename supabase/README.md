@@ -56,12 +56,12 @@ on conflict (version) do nothing;
 Sin esa línea la migración no aparecerá como aplicada y `pnpm db:check` seguirá
 pidiéndola.
 
-## Por qué sólo hay dos archivos
+## Por qué el histórico empieza en 0001
 
-Antes había seis, y entre ellos una reparación de RLS que duplicaba el esquema
-inicial y una función de depuración que otra migración ya borraba. El histórico
-completo describía cómo se llegó hasta aquí, no qué hay ahora, y para auditar
-la base servía de poco.
+Antes había seis archivos, y entre ellos una reparación de RLS que duplicaba el
+esquema inicial y una función de depuración que otra migración ya borraba. El
+histórico completo describía cómo se llegó hasta aquí, no qué hay ahora, y para
+auditar la base servía de poco.
 
 `0001_baseline.sql` es el estado completo y es idempotente: se puede ejecutar
 sobre una base vacía o sobre producción sin romper nada. A partir de aquí, un

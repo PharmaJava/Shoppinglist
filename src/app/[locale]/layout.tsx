@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { AccountNavLink } from "@/components/auth/account-nav-link";
 import { Logo } from "@/components/brand/logo";
 import { LanguageSwitcher } from "@/components/marketing/language-switcher";
+import { SiteNav } from "@/components/marketing/site-nav";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
@@ -66,7 +67,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <>
-      <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+      <header className="relative flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <a
           href={`/${locale}`}
           className="flex min-w-0 items-center gap-2 text-lg font-bold text-brand"
@@ -75,20 +76,8 @@ export default async function LocaleLayout({ children, params }: Props) {
           {/* En pantallas muy estrechas el nombre cede el sitio al CTA de login. */}
           <span className="hidden min-[420px]:inline">{t("siteName")}</span>
         </a>
-        <div className="flex items-center gap-3 sm:gap-5">
-          {/* En móvil el espacio es para el CTA de login; las secciones de
-              contenido siguen accesibles desde la landing y el footer. */}
-          <nav className="hidden items-center gap-4 text-sm sm:flex">
-            <Link href="/plantillas" className="text-on-surface-muted hover:text-on-surface">
-              {tNav("templates")}
-            </Link>
-            <Link href="/guias" className="text-on-surface-muted hover:text-on-surface">
-              {tNav("guides")}
-            </Link>
-            <Link href="/blog" className="text-on-surface-muted hover:text-on-surface">
-              {tNav("blog")}
-            </Link>
-          </nav>
+        <div className="flex items-center gap-2 sm:gap-5">
+          <SiteNav />
           <LanguageSwitcher />
           <AccountNavLink />
         </div>

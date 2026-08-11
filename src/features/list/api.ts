@@ -5,6 +5,7 @@ import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { queueRowMutation } from "@/lib/sync/flush";
 import { categorize } from "./categorize";
+import { recordProductsAdded } from "./history";
 import { type ParsedVoiceItem, parseVoiceTranscript } from "./parse-voice";
 import { keyAtEnd } from "./sort-key";
 import type { Category, List, ListItem } from "./types";
@@ -90,6 +91,10 @@ export async function addParsedItems(
     cursor = row.sort_key;
   }
 
+  // Único punto donde se aprende del usuario al añadir a mano o por voz: todo
+  // lo que crea productos pasa por aquí. En segundo plano y sin esperar.
+  recordProductsAdded(created.map((row) => ({ name: row.name, categoryId: row.category_id })));
+
   return created;
 }
 
@@ -143,6 +148,8 @@ export async function createListFromTemplate(
     });
     cursor = row.sort_key;
   }
+
+  recordProductsAdded(items.map((item) => ({ name: item.name, categoryId: item.categoryId })));
 
   return list;
 }
@@ -217,6 +224,51 @@ export async function renameList(list: List, title: string): Promise<List> {
   return row;
 }
 
+/**
+ * Archiva o recupera una lista. Archivar no borra nada: la saca del panel y
+ * la deja en su propia sección, que es lo que se quiere con la compra de la
+ * semana pasada.
+ *
+ * Es un cambio de la lista, no de quien la mira, así que afecta a todos sus
+ * miembros. Con una sola columna `archived_at` no hay alternativa, y para el
+ * caso real —una lista terminada entre quienes la compartieron— es lo
+ * esperable.
+ */
+export async function setListArchived(list: List, archived: boolean): Promise<List> {
+  const row: List = {
+    ...list,
+    archived_at: archived ? new Date().toISOString() : null,
+    updated_at: new Date().toISOString(),
+  };
+  await queueRowMutation("lists", row);
+  return row;
+}
+
+/**
+ * Copia una lista con todos sus productos sin marcar: «volver a comprar».
+ *
+ * Conserva cantidad, unidad y categoría —incluidas las que se movieron de
+ * pasillo a mano— y el orden original. No toca el historial personal: son los
+ * mismos productos de siempre, contarlos otra vez sólo desvirtuaría el «lo
+ * que sueles comprar».
+ */
+export async function duplicateList(listId: string, title: string, locale: Locale): Promise<List> {
+  const { items } = await fetchListWithItems(listId);
+  const copy = await createList(title);
+
+  let cursor: string | null = null;
+  for (const item of items) {
+    const row = await addItem(copy.id, item.name, locale, cursor, {
+      qty: item.qty,
+      unit: item.unit,
+      categoryId: item.category_id,
+    });
+    cursor = row.sort_key;
+  }
+
+  return copy;
+}
+
 export async function fetchListWithItems(
   listId: string,
 ): Promise<{ list: List; items: ListItem[] }> {
@@ -263,10 +315,12 @@ export async function fetchMyLists(): Promise<ListSummary[]> {
 
   const supabase = getSupabaseBrowserClient();
 
+  // Se traen también las archivadas: el panel las separa en su sección y son
+  // pocas por definición, así que partirlo en dos consultas sólo añadiría
+  // latencia.
   const { data: lists, error } = await supabase
     .from("lists")
     .select()
-    .is("archived_at", null)
     .order("updated_at", { ascending: false });
 
   if (error) throw new Error(error.message);
