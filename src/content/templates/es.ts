@@ -138,7 +138,7 @@ export const templatesEs: Template[] = [
           "Pulsa «Usar esta plantilla» y comparte el enlace de la lista. Quien lo abra puede añadir y marcar productos desde su móvil, sin registrarse, y los cambios se ven al instante en los dos teléfonos.",
       },
     ],
-    relatedTemplates: ["family-of-4", "pantry", "healthy"],
+    relatedTemplates: ["single", "family-of-4", "budget"],
     relatedGuides: ["how-to-make", "share-with-family"],
   },
   {
@@ -281,7 +281,7 @@ export const templatesEs: Template[] = [
           "Una compra semanal grande más una reposición corta a mitad de semana de fruta, pan y leche sale mejor que dos compras grandes: reduce lo que se tira sin obligar a cargar con todo de una vez.",
       },
     ],
-    relatedTemplates: ["weekly", "pantry", "healthy"],
+    relatedTemplates: ["weekly", "monthly", "budget"],
     relatedGuides: ["share-with-family", "how-to-make"],
   },
   {
@@ -397,7 +397,7 @@ export const templatesEs: Template[] = [
           "Especialmente. Vivir solo es cuando más rentable resulta tener despensa, porque evita la compra diaria y el pedido a domicilio, que es donde se va el dinero.",
       },
     ],
-    relatedTemplates: ["weekly", "family-of-4", "healthy"],
+    relatedTemplates: ["monthly", "weekly", "budget"],
     relatedGuides: ["how-to-make"],
   },
   {
@@ -523,7 +523,534 @@ export const templatesEs: Template[] = [
           "Quita pollo y pescado y sube la legumbre a cuatro botes y las lentejas a kilo y medio, añadiendo tofu o tempeh. La estructura del resto de la lista no cambia.",
       },
     ],
-    relatedTemplates: ["weekly", "family-of-4", "pantry"],
+    relatedTemplates: ["vegetarian", "weekly", "budget"],
+    relatedGuides: ["how-to-make"],
+  },
+  {
+    key: "monthly",
+    slug: "lista-compra-mensual",
+    locale: "es",
+    title: "Lista de la compra mensual",
+    metaTitle: "Lista de la compra mensual: qué comprar de una vez y qué no",
+    metaDescription:
+      "La compra grande del mes, con lo que de verdad aguanta y lo que no puede esperar. Cantidades para dos personas y estrategia de congelador.",
+    excerpt:
+      "Una compra mensual no es cuatro semanales juntas: es separar lo que aguanta de lo que no, y eso cambia la lista entera.",
+    serves: "2 personas · 1 mes",
+    budget: "160-200 € la compra grande",
+    updatedAt: "2026-08-10",
+    sections: [
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Arroz", qty: 5, unit: "kg" },
+          { name: "Pasta", qty: 3, unit: "kg" },
+          { name: "Lentejas", qty: 2, unit: "kg" },
+          { name: "Garbanzos secos", qty: 1, unit: "kg" },
+          { name: "Garbanzos cocidos", qty: 8, unit: "botes" },
+          { name: "Tomate triturado", qty: 12, unit: "botes" },
+          { name: "Atún en lata", qty: 12 },
+          { name: "Aceite de oliva virgen extra", qty: 5, unit: "l" },
+          { name: "Harina", qty: 2, unit: "kg" },
+          { name: "Azúcar", qty: 1, unit: "kg" },
+          { name: "Sal", qty: 1, unit: "kg" },
+          { name: "Caldo de verduras", qty: 6, unit: "briks" },
+        ],
+      },
+      {
+        categoryId: "frozen",
+        items: [
+          { name: "Merluza congelada", qty: 2, unit: "kg" },
+          { name: "Pollo troceado para congelar", qty: 3, unit: "kg" },
+          { name: "Guisantes congelados", qty: 2, unit: "bolsas" },
+          { name: "Verdura para salteado", qty: 3, unit: "bolsas" },
+          { name: "Pan de molde", qty: 2, note: "Al congelador, sale como recién comprado" },
+        ],
+      },
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Patatas", qty: 5, unit: "kg" },
+          { name: "Cebollas", qty: 3, unit: "kg" },
+          { name: "Ajos", qty: 2, unit: "cabezas" },
+          { name: "Zanahorias", qty: 2, unit: "kg" },
+          { name: "Calabaza", qty: 1, note: "Entera aguanta semanas en sitio fresco" },
+        ],
+      },
+      {
+        categoryId: "drinks",
+        items: [
+          { name: "Leche", qty: 24, unit: "briks" },
+          { name: "Café", qty: 2 },
+          { name: "Agua mineral", qty: 2, unit: "packs" },
+        ],
+      },
+      {
+        categoryId: "cleaning",
+        items: [
+          { name: "Detergente lavadora", qty: 2 },
+          { name: "Lavavajillas", qty: 2 },
+          { name: "Papel higiénico", qty: 2, unit: "packs" },
+          { name: "Papel de cocina", qty: 2, unit: "packs" },
+          { name: "Bolsas de basura", qty: 2, unit: "rollos" },
+        ],
+      },
+      {
+        categoryId: "personal",
+        items: [
+          { name: "Gel de ducha", qty: 2 },
+          { name: "Champú", qty: 2 },
+          { name: "Pasta de dientes", qty: 3 },
+        ],
+      },
+    ],
+    body: [
+      {
+        heading: "Lo que decide esta lista no es la cantidad, es la caducidad",
+        paragraphs: [
+          "Una compra mensual no es una semanal multiplicada por cuatro. Si lo intentas, la mitad de la fruta acaba en la basura la segunda semana y habrás pagado por tirarla.",
+          "El criterio aquí es otro: entra lo que aguanta un mes sin cuidados —despensa, congelado, tubérculos, limpieza e higiene— y se queda fuera todo lo fresco, que sigue comprándose aparte cada semana en una visita corta.",
+        ],
+      },
+      {
+        heading: "Qué aguanta de verdad un mes",
+        paragraphs: [
+          "Más de lo que parece, si se guarda bien. Y bastante menos de lo que la gente asume con la fruta y la verdura.",
+        ],
+        bullets: [
+          "Aguantan sin problema: arroz, pasta, legumbre, conservas, aceite, café, leche UHT, limpieza e higiene.",
+          "Aguantan si tienen sitio fresco y oscuro: patatas, cebollas, ajos, calabaza entera, zanahorias.",
+          "Aguantan sólo congelados: carne, pescado, pan y verdura. De ahí que el congelador sea la pieza clave.",
+          "No aguantan: fruta de temporada, ensalada, lácteos frescos, huevos más allá de tres semanas.",
+        ],
+      },
+      {
+        heading: "El congelador es el límite real",
+        paragraphs: [
+          "Esta lista sólo funciona si cabe. Tres kilos de pollo y dos de merluza ocupan bastante, y conviene congelarlos el mismo día en porciones planas de ración: se descongelan en una hora y evitan sacar un bloque de tres kilos para dos filetes.",
+          "Si tu congelador es el cajón de una nevera pequeña, esta compra no es para ti: sale mejor una quincenal. Es la limitación más honesta de comprar por meses, y casi nadie la menciona.",
+        ],
+      },
+      {
+        heading: "Lo que sigue siendo semanal",
+        paragraphs: [
+          "Fruta, ensalada, tomate, yogures, huevos y pan fresco. Son diez minutos de compra a mitad de semana, y son justo lo que hace que la compra mensual no acabe en una dieta de conservas.",
+          "Lo práctico es tener dos listas vivas: esta, que se revisa una vez al mes, y una corta de fresco que se va llenando sola durante la semana. Con la lista compartida las dos las puede actualizar cualquiera de la casa.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuánto se ahorra comprando una vez al mes?",
+        answer:
+          "El ahorro no viene del formato grande, viene de pisar menos el supermercado: menos visitas son menos compras no previstas. En formato grande sólo compensa de verdad en aceite, arroz, legumbre, papel y detergente.",
+      },
+      {
+        question: "¿Y la fruta y la verdura?",
+        answer:
+          "No entran en la mensual salvo las que aguantan (patata, cebolla, zanahoria, calabaza). El resto se compra en una visita corta cada semana; intentar mensualizarlas es la forma más rápida de tirar comida.",
+      },
+      {
+        question: "¿Necesito un congelador grande?",
+        answer:
+          "Para esta lista tal cual, sí: sólo la carne y el pescado ocupan un cajón entero. Con un congelador pequeño la alternativa razonable es la compra quincenal.",
+      },
+      {
+        question: "¿Cómo sé qué me queda a mitad de mes?",
+        answer:
+          "Anotando lo que se acaba en el momento en que se acaba, no el día de la compra. Una lista compartida en el móvil sirve justo para eso: cualquiera de la casa apunta el bote de tomate cuando abre el último.",
+      },
+    ],
+    relatedTemplates: ["pantry", "weekly", "budget"],
+    relatedGuides: ["how-to-make"],
+  },
+  {
+    key: "budget",
+    slug: "lista-compra-barata",
+    locale: "es",
+    title: "Lista de la compra barata para toda la semana",
+    metaTitle: "Lista de la compra barata: comer bien con poco presupuesto",
+    metaDescription:
+      "Una semana entera de comida para dos por menos de 45 €, sin vivir de pasta. Con el criterio para saber qué recortar y qué no tocar nunca.",
+    excerpt:
+      "Comer barato no es comer peor: es saber qué alimentos dan más comida por euro. Estos son, y esta es la cesta que sale.",
+    serves: "2 personas · 7 días",
+    budget: "38-45 € por semana",
+    updatedAt: "2026-08-10",
+    sections: [
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Lentejas", qty: 1, unit: "kg" },
+          { name: "Garbanzos secos", qty: 1, unit: "kg" },
+          { name: "Arroz", qty: 1, unit: "kg" },
+          { name: "Pasta", qty: 1, unit: "kg" },
+          { name: "Tomate triturado", qty: 3, unit: "botes" },
+          { name: "Aceite de oliva", qty: 1 },
+          { name: "Atún en lata", qty: 4 },
+        ],
+      },
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Patatas", qty: 3, unit: "kg" },
+          { name: "Cebollas", qty: 1, unit: "kg" },
+          { name: "Zanahorias", qty: 1, unit: "kg" },
+          { name: "Calabacín", qty: 3 },
+          { name: "Repollo", qty: 1, note: "Rinde muchísimo y aguanta dos semanas" },
+          { name: "Plátanos", qty: 6 },
+          { name: "Naranjas", qty: 2, unit: "kg", note: "De temporada, el kilo más barato" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Huevos", qty: 24 },
+          { name: "Leche", qty: 6, unit: "briks" },
+          { name: "Yogur natural", qty: 8 },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [
+          {
+            name: "Contramuslos de pollo",
+            qty: 1,
+            unit: "kg",
+            note: "Mitad de precio que la pechuga",
+          },
+          { name: "Carne picada", qty: 500, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "frozen",
+        items: [
+          { name: "Verdura congelada", qty: 2, unit: "bolsas" },
+          { name: "Merluza congelada", qty: 500, unit: "g" },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [{ name: "Pan de barra", qty: 3, note: "Congela dos" }],
+      },
+    ],
+    body: [
+      {
+        heading: "El coste por ración, no el precio de la etiqueta",
+        paragraphs: [
+          "Lo que hace cara una cesta no son los productos caros, es cuántas comidas salen de ella. Un kilo de lentejas cuesta poco más que una bandeja de pechuga y da diez raciones en vez de cuatro.",
+          "Esta lista está construida con esa cuenta: la proteína sale de legumbre, huevo, pollo de la parte barata y pescado congelado. Es la combinación que más comida da por euro sin caer en una semana de pasta con tomate.",
+        ],
+      },
+      {
+        heading: "Dónde recortar de verdad",
+        paragraphs: [
+          "Casi todo el gasto evitable de una compra media está en cuatro sitios, y ninguno es la comida en sí.",
+        ],
+        bullets: [
+          "Bebidas: refrescos, zumos y cerveza pueden ser un tercio del ticket sin aportar una sola comida.",
+          "Snacks y bollería: caros por kilo y no quitan el hambre. Es lo primero que sale.",
+          "Precocinados: pagas la elaboración a precio de restaurante barato.",
+          "Cortes caros de carne: el contramuslo cuesta la mitad que la pechuga y sale más jugoso guisado.",
+        ],
+      },
+      {
+        heading: "Lo que no conviene recortar",
+        paragraphs: [
+          "El aceite de oliva, la fruta y el huevo. Ahorrar ahí sale mal: el aceite barato se nota en todo lo que cocinas, la fruta es lo primero que se echa de menos, y el huevo ya es de lo más barato que hay por gramo de proteína.",
+          "Tampoco la verdura congelada. Parece un lujo frente a la fresca de oferta, pero no se estropea, y lo que no se tira no hay que volver a comprarlo.",
+        ],
+      },
+      {
+        heading: "Cómo se reparte la semana",
+        paragraphs: [
+          "Con esta cesta salen unas doce comidas principales: dos de lentejas, dos de garbanzos, dos de pollo guisado con patata, una de pescado, una de pasta con tomate y carne, y el resto tortillas, arroces y ensaladas de repollo.",
+          "Cocinar la legumbre en olla el domingo es lo que hace que funcione entre semana. Sin eso, la tentación de pedir a domicilio se come el ahorro de tres compras.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Se puede comer bien con 40 € a la semana para dos?",
+        answer:
+          "Sí, si la proteína sale sobre todo de legumbre y huevo y la verdura es de temporada o congelada. Lo que no cabe en ese presupuesto es carne roja a diario, precocinados ni bebidas.",
+      },
+      {
+        question: "¿Marca blanca en todo?",
+        answer:
+          "En básicos como legumbre, arroz, pasta, conservas, leche y congelados, la diferencia de calidad rara vez justifica el precio de marca. En aceite y café es donde más se nota, y donde puede compensar pagar algo más.",
+      },
+      {
+        question: "¿Las ofertas ayudan?",
+        answer:
+          "Sólo si ibas a comprar ese producto igualmente. Un 3x2 de algo que no estaba en la lista no es un ahorro, es un gasto que no habías previsto.",
+      },
+      {
+        question: "¿Y si tengo poco tiempo para cocinar?",
+        answer:
+          "Cocina una vez y come dos: la legumbre y el pollo guisado dan para dos días cada uno. Comer barato con prisa se sostiene en cocinar en tandas, no en cocinar rápido cada noche.",
+      },
+    ],
+    relatedTemplates: ["weekly", "single", "pantry"],
+    relatedGuides: ["how-to-make"],
+  },
+  {
+    key: "single",
+    slug: "lista-compra-1-persona",
+    locale: "es",
+    title: "Lista de la compra para una persona",
+    metaTitle: "Lista de la compra para 1 persona (sin que sobre la mitad)",
+    metaDescription:
+      "El problema de comprar para uno no es la cantidad, son los formatos. Lista semanal para una persona pensada para que no acabe medio carro en la basura.",
+    excerpt:
+      "Comprar para uno no es dividir entre dos: los formatos no bajan contigo. Esta lista está pensada alrededor de ese problema.",
+    serves: "1 persona · 7 días",
+    budget: "35-45 € por semana",
+    updatedAt: "2026-08-10",
+    sections: [
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Cebollas", qty: 3, note: "Sueltas, no en malla de dos kilos" },
+          { name: "Zanahorias", qty: 4 },
+          { name: "Calabacín", qty: 2 },
+          { name: "Tomates", qty: 4 },
+          { name: "Patatas", qty: 1, unit: "kg" },
+          { name: "Manzanas", qty: 4 },
+          { name: "Plátanos", qty: 4 },
+          { name: "Limón", qty: 2 },
+        ],
+      },
+      {
+        categoryId: "frozen",
+        items: [
+          {
+            name: "Verdura congelada",
+            qty: 2,
+            unit: "bolsas",
+            note: "Aquí el formato grande sí compensa",
+          },
+          { name: "Filetes de pescado congelado", qty: 1, unit: "bolsa" },
+          { name: "Guisantes congelados", qty: 1, unit: "bolsa" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Huevos", qty: 12 },
+          { name: "Leche", qty: 3, unit: "briks" },
+          { name: "Yogur natural", qty: 4 },
+          {
+            name: "Queso curado en cuña",
+            qty: 1,
+            note: "Aguanta semanas, a diferencia del fresco",
+          },
+        ],
+      },
+      {
+        categoryId: "meat",
+        items: [{ name: "Pollo", qty: 500, unit: "g", note: "Congela la mitad al llegar" }],
+      },
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Arroz", qty: 1, unit: "kg" },
+          { name: "Pasta", qty: 500, unit: "g" },
+          { name: "Lentejas cocidas", qty: 3, unit: "botes" },
+          { name: "Tomate triturado", qty: 2, unit: "botes" },
+          { name: "Atún en lata", qty: 4 },
+          { name: "Aceite de oliva", qty: 1 },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [{ name: "Pan de molde", qty: 1, note: "Al congelador; se tuesta directamente" }],
+      },
+    ],
+    body: [
+      {
+        heading: "El problema no es la cantidad, son los formatos",
+        paragraphs: [
+          "Quien vive solo no gasta la mitad que una pareja: gasta bastante más de la mitad. La razón es que los formatos mínimos no se dividen. Una lechuga, una malla de cebollas o un bote de tomate son lo mismo para uno que para cuatro, y lo que sobra acaba en la basura.",
+          "Por eso esta lista prioriza lo que se compra suelto, lo que aguanta semanas y lo que se congela bien. No es una lista de raciones pequeñas: es una lista de formatos que perdonan.",
+        ],
+      },
+      {
+        heading: "Congelar en raciones es lo que lo hace viable",
+        paragraphs: [
+          "Cocinar para uno cada día no compensa ni en tiempo ni en dinero. Lo que funciona es cocinar cuatro raciones y congelar tres, con lo que la semana se resuelve con calentar.",
+        ],
+        bullets: [
+          "Nada más comprar: parte el pollo en dos y congela una mitad; el pan de molde entero al congelador.",
+          "Al cocinar: haz cuatro raciones de arroz, lentejas o guiso y congela tres en táperes individuales.",
+          "Etiqueta con la fecha. Sin eso, el congelador se convierte en un museo de cosas sin identificar.",
+        ],
+      },
+      {
+        heading: "Dónde el formato grande sí compensa",
+        paragraphs: [
+          "En lo que no se estropea: arroz, pasta, aceite, conservas, papel. Ahí el precio por kilo manda y no hay riesgo.",
+          "Y en la verdura congelada, que es el mejor invento para quien vive solo: coges la cantidad exacta que vas a cocinar, y el resto sigue en el cajón sin echarse a perder. Es la diferencia entre comer verdura a diario o comprarla con buena intención y tirarla el jueves.",
+        ],
+      },
+      {
+        heading: "Comparado con pedir a domicilio",
+        paragraphs: [
+          "Esta cesta ronda los 40 € y cubre la semana entera. Dos pedidos a domicilio cuestan lo mismo y cubren dos cenas. La cuenta no está reñida: cocinar para uno sale caro comparado con cocinar para cuatro, pero sigue siendo mucho más barato que la alternativa.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuánto cuesta la compra semanal de una persona?",
+        answer:
+          "Entre 35 y 45 € con esta lista. No baja mucho más porque los formatos mínimos ponen un suelo: la despensa cuesta casi lo mismo se cocine para uno o para dos.",
+      },
+      {
+        question: "¿Cómo evito tirar comida?",
+        answer:
+          "Comprando suelto lo fresco, congelando en raciones el día de la compra y usando verdura congelada para el día a día. El desperdicio de quien vive solo casi siempre viene de un formato demasiado grande, no de comprar de más.",
+      },
+      {
+        question: "¿Merece la pena hacer la compra online?",
+        answer:
+          "Para una persona suele salir a cuenta si evitas el coste de envío juntando la compra grande, sobre todo porque no compras por impulso. La contrapartida es que no eliges tú el fresco.",
+      },
+      {
+        question: "¿Y si como fuera varios días?",
+        answer:
+          "Baja el pollo y el pescado, no la verdura ni la despensa. Es el ajuste que menos desperdicio genera, porque la proteína fresca es lo que peor aguanta si cambian los planes.",
+      },
+    ],
+    relatedTemplates: ["weekly", "budget", "pantry"],
+    relatedGuides: ["how-to-make"],
+  },
+  {
+    key: "vegetarian",
+    slug: "lista-compra-vegetariana",
+    locale: "es",
+    title: "Lista de la compra vegetariana",
+    metaTitle: "Lista de la compra vegetariana semanal (con la proteína cubierta)",
+    metaDescription:
+      "Cesta vegetariana para una semana, con las fuentes de proteína repartidas y sin sustitutos caros. Cantidades para dos personas.",
+    excerpt:
+      "Quitar la carne es la parte fácil. Lo que decide si una cesta vegetariana funciona es de dónde sale la proteína.",
+    serves: "2 personas · 7 días",
+    budget: "50-65 € por semana",
+    updatedAt: "2026-08-10",
+    sections: [
+      {
+        categoryId: "pantry",
+        items: [
+          { name: "Lentejas", qty: 1, unit: "kg" },
+          { name: "Garbanzos cocidos", qty: 4, unit: "botes" },
+          { name: "Alubias blancas", qty: 2, unit: "botes" },
+          { name: "Arroz integral", qty: 1, unit: "kg" },
+          { name: "Pasta", qty: 500, unit: "g" },
+          { name: "Cuscús", qty: 500, unit: "g" },
+          { name: "Tomate triturado", qty: 3, unit: "botes" },
+          { name: "Aceite de oliva virgen extra", qty: 1 },
+          { name: "Nueces", qty: 250, unit: "g" },
+          { name: "Almendras", qty: 250, unit: "g" },
+          { name: "Tahini", qty: 1, note: "Para hummus casero, sale mucho más barato" },
+        ],
+      },
+      {
+        categoryId: "produce",
+        items: [
+          { name: "Espinacas frescas", qty: 2, unit: "bolsas" },
+          { name: "Brócoli", qty: 2 },
+          { name: "Pimientos", qty: 4 },
+          { name: "Calabacín", qty: 3 },
+          { name: "Berenjena", qty: 2 },
+          { name: "Cebollas", qty: 1, unit: "kg" },
+          { name: "Ajos", qty: 1, unit: "cabeza" },
+          { name: "Tomates", qty: 1, unit: "kg" },
+          { name: "Aguacates", qty: 3 },
+          { name: "Champiñones", qty: 500, unit: "g" },
+          { name: "Naranjas", qty: 2, unit: "kg" },
+        ],
+      },
+      {
+        categoryId: "dairy",
+        items: [
+          { name: "Huevos", qty: 18 },
+          { name: "Yogur natural", qty: 8 },
+          { name: "Queso feta", qty: 1 },
+          { name: "Leche", qty: 4, unit: "briks" },
+        ],
+      },
+      {
+        categoryId: "frozen",
+        items: [
+          { name: "Tofu firme", qty: 2, unit: "bloques" },
+          { name: "Guisantes congelados", qty: 1, unit: "bolsa" },
+          { name: "Edamame", qty: 1, unit: "bolsa" },
+        ],
+      },
+      {
+        categoryId: "bakery",
+        items: [{ name: "Pan integral", qty: 1 }],
+      },
+    ],
+    body: [
+      {
+        heading: "La proteína, repartida y sin dramas",
+        paragraphs: [
+          "La duda habitual al dejar la carne es de dónde sale la proteína. La respuesta corta: de la legumbre, el huevo, los lácteos, el tofu y los frutos secos, y con esta cesta sale de sobra sin comprar un solo producto especializado.",
+          "Tampoco hace falta combinar legumbre y cereal en el mismo plato, como se decía hace décadas. Comiendo variado a lo largo del día el asunto se resuelve solo, y eso libera la lista de reglas que sólo complican la cocina.",
+        ],
+      },
+      {
+        heading: "Lo que encarece una cesta vegetariana",
+        paragraphs: [
+          "No es la verdura: son los sustitutos. Las hamburguesas vegetales, los embutidos veganos y las bebidas vegetales de marca pueden duplicar el ticket, y en su mayoría son ultraprocesados con buena etiqueta.",
+        ],
+        bullets: [
+          "Legumbre seca en vez de bote cuando haya tiempo de remojo: el kilo cuesta una fracción.",
+          "Hummus casero con garbanzos, tahini y limón, en vez de tarrina: sale por menos de la mitad.",
+          "Tofu natural en vez de preparados marinados, que se pagan al triple por el adobo.",
+          "Frutos secos a granel, que es donde más se nota la diferencia por kilo.",
+        ],
+      },
+      {
+        heading: "Lo que conviene vigilar de verdad",
+        paragraphs: [
+          "Dos cosas, y ninguna es la proteína. El hierro de origen vegetal se absorbe peor, y ayuda acompañar la legumbre y las espinacas con algo de vitamina C —el limón exprimido por encima o una naranja de postre bastan—. Por eso los limones y las naranjas están en la lista y no son decorativos.",
+          "La vitamina B12 es el otro punto: en una dieta ovolactovegetariana los huevos y los lácteos suelen cubrirla, pero si tiendes al veganismo conviene suplementarla. Eso ya no es una cuestión de lista de la compra, sino de hablarlo con tu médico.",
+        ],
+      },
+      {
+        heading: "Cómo se reparte la semana",
+        paragraphs: [
+          "Salen unas doce comidas: lentejas dos días, garbanzos al curry y en ensalada, tofu salteado con verduras, pasta con champiñones, tortillas y revueltos, cuscús con verdura asada y alubias con tomate.",
+          "La verdura asada del domingo —pimiento, berenjena, calabacín, cebolla— es la que más rinde: sirve de guarnición, de relleno, en el cuscús y en bocadillo.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Es más cara una compra vegetariana?",
+        answer:
+          "Al contrario, si se basa en legumbre, huevo y verdura de temporada: la legumbre es de lo más barato que hay por gramo de proteína. Se encarece cuando entran sustitutos procesados y bebidas vegetales de marca.",
+      },
+      {
+        question: "¿Se cubre la proteína sin carne ni pescado?",
+        answer:
+          "Con esta cesta sí, holgadamente: legumbre casi a diario, dieciocho huevos, lácteos, tofu y frutos secos. No hace falta calcular nada ni combinar alimentos en el mismo plato.",
+      },
+      {
+        question: "¿Sirve para una dieta vegana?",
+        answer:
+          "Quitando huevos, yogur, queso y leche, y subiendo legumbre, tofu y frutos secos. En ese caso la vitamina B12 hay que suplementarla, y eso conviene consultarlo con un profesional.",
+      },
+      {
+        question: "¿Qué hago si el resto de la casa come carne?",
+        answer:
+          "Compartir la lista y que cada uno añada lo suyo funciona mejor que llevar dos listas: la base de verdura, legumbre y despensa es común, y sólo cambia la proteína principal.",
+      },
+    ],
+    relatedTemplates: ["healthy", "weekly", "budget"],
     relatedGuides: ["how-to-make"],
   },
 ];
