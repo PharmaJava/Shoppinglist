@@ -3,7 +3,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import type { Locale } from "@/lib/supabase/types";
-import { addItem, addParsedItems, deleteItem, toggleItem } from "./api";
+import {
+  addItem,
+  addParsedItems,
+  deleteItem,
+  type ItemEdits,
+  restoreItem,
+  toggleItem,
+  updateItem,
+} from "./api";
 import type { ParsedVoiceItem } from "./parse-voice";
 import type { ListItem, ListWithItems } from "./types";
 
@@ -92,25 +100,72 @@ export function useDeleteItem(listId: string) {
   const queryKey = ["list", listId] as const;
 
   return useMutation({
-    mutationFn: (itemId: string) => {
-      const current = queryClient.getQueryData<ListWithItems>(queryKey);
-      const item = findItem(current, itemId);
-      if (!item) throw new Error(`Producto ${itemId} no encontrado en caché.`);
-      return deleteItem(item);
+    // Recibe la fila entera, no su id. Buscarla en la caché aquí no funciona:
+    // `onMutate` corre ANTES que `mutationFn` y ya la ha quitado, así que la
+    // búsqueda fallaba siempre, `onError` restauraba la lista y el producto
+    // reaparecía — el borrado no llegaba a ejecutarse nunca.
+    // Devuelve la fila para que el aviso pueda ofrecer deshacer.
+    mutationFn: async (item: ListItem) => {
+      await deleteItem(item);
+      return item;
     },
-    onMutate: async (itemId: string) => {
+    onMutate: async (item: ListItem) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData<ListWithItems>(queryKey);
 
       queryClient.setQueryData<ListWithItems>(queryKey, (current) => {
         if (!current) return current;
-        return { ...current, items: current.items.filter((item) => item.id !== itemId) };
+        return { ...current, items: current.items.filter((entry) => entry.id !== item.id) };
       });
 
       return { previous };
     },
     onError: (_err, _vars, context) => {
       if (context?.previous) queryClient.setQueryData(queryKey, context.previous);
+    },
+  });
+}
+
+export function useUpdateItem(listId: string) {
+  const queryClient = useQueryClient();
+  const queryKey = ["list", listId] as const;
+
+  return useMutation({
+    mutationFn: ({ itemId, edits }: { itemId: string; edits: ItemEdits }) => {
+      const current = queryClient.getQueryData<ListWithItems>(queryKey);
+      const item = findItem(current, itemId);
+      if (!item) throw new Error(`Producto ${itemId} no encontrado en caché.`);
+      return updateItem(item, edits);
+    },
+    onSuccess: (updated) => {
+      queryClient.setQueryData<ListWithItems>(queryKey, (current) => {
+        if (!current) return current;
+        return {
+          ...current,
+          items: current.items.map((item) => (item.id === updated.id ? updated : item)),
+        };
+      });
+    },
+  });
+}
+
+/**
+ * Devuelve a la lista un producto recién borrado. Recibe la fila entera y no
+ * un id porque para entonces ya no está en la caché — es justo lo que hizo el
+ * borrado optimista.
+ */
+export function useRestoreItem(listId: string) {
+  const queryClient = useQueryClient();
+  const queryKey = ["list", listId] as const;
+
+  return useMutation({
+    mutationFn: (item: ListItem) => restoreItem(item),
+    onSuccess: (restored) => {
+      queryClient.setQueryData<ListWithItems>(queryKey, (current) => {
+        if (!current) return current;
+        if (current.items.some((item) => item.id === restored.id)) return current;
+        return { ...current, items: [...current.items, restored] };
+      });
     },
   });
 }
