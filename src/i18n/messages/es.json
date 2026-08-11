@@ -234,7 +234,16 @@
     "exitSupermarketMode": "Salir del modo supermercado",
     "memberYou": "Tú",
     "memberUnnamed": "Alguien más",
-    "memberOwner": "· propietario"
+    "memberOwner": "· propietario",
+    "edit": "Editar {name}",
+    "delete": "Eliminar {name}",
+    "editName": "Producto",
+    "editQty": "Cantidad",
+    "editUnit": "Unidad",
+    "editSave": "Guardar",
+    "editCancel": "Cancelar",
+    "unitNone": "sin unidad",
+    "addHint": "Escribe «carne picada 500g» o «tomates x3» y se guarda la cantidad."
   },
   "invite": {
     "joining": "Uniéndote a la lista…",

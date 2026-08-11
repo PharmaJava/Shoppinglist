@@ -161,6 +161,46 @@ export async function toggleItem(item: ListItem, isChecked: boolean): Promise<Li
   return row;
 }
 
+export interface ItemEdits {
+  name?: string;
+  qty?: number | null;
+  unit?: string | null;
+}
+
+/**
+ * Corrige un producto ya añadido: su nombre, su cantidad o su unidad.
+ *
+ * Pasa por el outbox como el resto de escrituras, así que se puede corregir
+ * dentro del supermercado sin cobertura. No se recategoriza al cambiar el
+ * nombre: si alguien lo movió de pasillo a mano, reescribirlo aquí desharía
+ * esa decisión.
+ */
+export async function updateItem(item: ListItem, edits: ItemEdits): Promise<ListItem> {
+  const row: ListItem = {
+    ...item,
+    name: edits.name?.trim() || item.name,
+    qty: edits.qty === undefined ? item.qty : edits.qty,
+    unit: edits.unit === undefined ? item.unit : edits.unit,
+    updated_at: new Date().toISOString(),
+  };
+
+  await queueRowMutation("list_items", row);
+  return row;
+}
+
+/** Deshace un borrado. El producto sigue en la tabla con `deleted_at`, así que
+ *  basta con limpiarlo: conserva su id, su orden y quién lo añadió. */
+export async function restoreItem(item: ListItem): Promise<ListItem> {
+  const row: ListItem = {
+    ...item,
+    deleted_at: null,
+    updated_at: new Date().toISOString(),
+  };
+
+  await queueRowMutation("list_items", row);
+  return row;
+}
+
 export async function deleteItem(item: ListItem): Promise<void> {
   const row: ListItem = {
     ...item,
