@@ -43,6 +43,13 @@ export default defineConfig({
       NEXT_PUBLIC_SUPABASE_ANON_KEY:
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "clave-de-ejemplo-para-e2e",
       NEXT_PUBLIC_SITE_URL: "http://localhost:3111",
+      // Panel de administración. La contraseña de estas pruebas es
+      // `contrasena-de-pruebas-e2e`, y esto es su hash: aquí no hay nada que
+      // proteger —es un servidor local sin datos— y tenerlo fijo permite
+      // probar el acceso de verdad, que es justo lo que hay que probar.
+      ADMIN_EMAIL: "admin@ejemplo.com",
+      ADMIN_PASSWORD_HASH:
+        "scrypt$32768$8$1$febe35bc3340bedf003e2c0798f33905$30a2c908729e9c6206ddfbeae7f28124bbb5c1668c04a060b57d6f49ec8189a7",
     },
   },
 });

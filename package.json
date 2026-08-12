@@ -14,7 +14,8 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "db:types": "supabase gen types typescript --project-id \"$SUPABASE_PROJECT_REF\" --schema public > src/lib/supabase/types.generated.ts",
-    "db:check": "node scripts/db-check.mjs"
+    "db:check": "node scripts/db-check.mjs",
+    "admin:hash": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/admin-hash.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

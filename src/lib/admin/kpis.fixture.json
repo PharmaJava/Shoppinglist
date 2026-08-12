@@ -1,0 +1,360 @@
+{
+  "generado_en": "2026-08-12T22:26:48Z",
+  "dias": 30,
+  "usuarios": {
+    "total": 40,
+    "anonimos": 30,
+    "nuevos_7d": 6,
+    "nuevos_30d": 29,
+    "nuevos_hoy": 0,
+    "registrados": 10,
+    "nuevos_7d_previos": 7
+  },
+  "listas": {
+    "total": 80,
+    "activas": 70,
+    "nuevas_7d": 12,
+    "archivadas": 10,
+    "nuevas_30d": 58,
+    "nuevas_hoy": 0,
+    "tocadas_7d": 25,
+    "tocadas_24h": 2,
+    "nuevas_7d_previos": 14
+  },
+  "productos": {
+    "total": 480,
+    "borrados": 0,
+    "marcados": 180,
+    "nuevos_7d": 112,
+    "con_precio": 209,
+    "nuevos_30d": 480,
+    "nuevos_hoy": 9,
+    "con_cantidad": 237,
+    "sin_categoria": 143
+  },
+  "colaboracion": {
+    "reparto": {
+      "dos": 24,
+      "una": 56,
+      "tres": 0,
+      "cuatro_mas": 0
+    },
+    "max_miembros": 2,
+    "media_miembros": 1.3,
+    "listas_compartidas": 24,
+    "listas_con_miembros": 80
+  },
+  "invitaciones": {
+    "total": 44,
+    "canjes": 24,
+    "usadas": 24,
+    "tasa_uso": 54.5,
+    "caducadas": 0,
+    "revocadas": 4
+  },
+  "norte": {
+    "activados": 40,
+    "activacion": 100.0,
+    "activos_7d": 40,
+    "adherencia": 100.0,
+    "activos_24h": 40,
+    "activos_30d": 40,
+    "viralidad_k": 0.3,
+    "colaboracion": 30.0,
+    "retencion_d7": 100.0
+  },
+  "dinero": {
+    "presupuesto_medio": 5000,
+    "precios_recordados": 19,
+    "valor_cestas_cents": 110497,
+    "precio_medio_producto": 359,
+    "listas_con_presupuesto": 30
+  },
+  "perfiles": {
+    "en": 0,
+    "es": 40,
+    "free": 40,
+    "total": 40,
+    "premium": 0,
+    "con_nombre": 0
+  },
+  "push": {
+    "en": 0,
+    "es": 8,
+    "usuarios": 8,
+    "suscripciones": 8
+  },
+  "catalogo": {
+    "categorias": 16,
+    "historial_filas": 19,
+    "productos_catalogo": 443,
+    "usuarios_con_historial": 19
+  },
+  "series": [
+    {
+      "dia": "2026-07-14",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 0
+    },
+    {
+      "dia": "2026-07-15",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 0
+    },
+    {
+      "dia": "2026-07-16",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 0
+    },
+    {
+      "dia": "2026-07-17",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 0
+    },
+    {
+      "dia": "2026-07-18",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 8
+    },
+    {
+      "dia": "2026-07-19",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 16
+    },
+    {
+      "dia": "2026-07-20",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 28
+    },
+    {
+      "dia": "2026-07-21",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 21
+    },
+    {
+      "dia": "2026-07-22",
+      "listas": 2,
+      "activos": 0,
+      "usuarios": 1,
+      "productos": 24
+    },
+    {
+      "dia": "2026-07-23",
+      "listas": 2,
+      "activos": 2,
+      "usuarios": 1,
+      "productos": 20
+    },
+    {
+      "dia": "2026-07-24",
+      "listas": 2,
+      "activos": 4,
+      "usuarios": 1,
+      "productos": 22
+    },
+    {
+      "dia": "2026-07-25",
+      "listas": 2,
+      "activos": 6,
+      "usuarios": 1,
+      "productos": 22
+    },
+    {
+      "dia": "2026-07-26",
+      "listas": 2,
+      "activos": 1,
+      "usuarios": 1,
+      "productos": 11
+    },
+    {
+      "dia": "2026-07-27",
+      "listas": 2,
+      "activos": 4,
+      "usuarios": 1,
+      "productos": 17
+    },
+    {
+      "dia": "2026-07-28",
+      "listas": 2,
+      "activos": 3,
+      "usuarios": 1,
+      "productos": 23
+    },
+    {
+      "dia": "2026-07-29",
+      "listas": 2,
+      "activos": 2,
+      "usuarios": 1,
+      "productos": 20
+    },
+    {
+      "dia": "2026-07-30",
+      "listas": 2,
+      "activos": 6,
+      "usuarios": 1,
+      "productos": 25
+    },
+    {
+      "dia": "2026-07-31",
+      "listas": 2,
+      "activos": 4,
+      "usuarios": 1,
+      "productos": 19
+    },
+    {
+      "dia": "2026-08-01",
+      "listas": 2,
+      "activos": 4,
+      "usuarios": 1,
+      "productos": 16
+    },
+    {
+      "dia": "2026-08-02",
+      "listas": 2,
+      "activos": 6,
+      "usuarios": 1,
+      "productos": 17
+    },
+    {
+      "dia": "2026-08-03",
+      "listas": 2,
+      "activos": 2,
+      "usuarios": 1,
+      "productos": 16
+    },
+    {
+      "dia": "2026-08-04",
+      "listas": 2,
+      "activos": 6,
+      "usuarios": 1,
+      "productos": 18
+    },
+    {
+      "dia": "2026-08-05",
+      "listas": 2,
+      "activos": 3,
+      "usuarios": 1,
+      "productos": 25
+    },
+    {
+      "dia": "2026-08-06",
+      "listas": 2,
+      "activos": 5,
+      "usuarios": 1,
+      "productos": 14
+    },
+    {
+      "dia": "2026-08-07",
+      "listas": 2,
+      "activos": 2,
+      "usuarios": 1,
+      "productos": 12
+    },
+    {
+      "dia": "2026-08-08",
+      "listas": 2,
+      "activos": 3,
+      "usuarios": 1,
+      "productos": 21
+    },
+    {
+      "dia": "2026-08-09",
+      "listas": 2,
+      "activos": 4,
+      "usuarios": 1,
+      "productos": 10
+    },
+    {
+      "dia": "2026-08-10",
+      "listas": 2,
+      "activos": 4,
+      "usuarios": 1,
+      "productos": 19
+    },
+    {
+      "dia": "2026-08-11",
+      "listas": 2,
+      "activos": 5,
+      "usuarios": 1,
+      "productos": 27
+    },
+    {
+      "dia": "2026-08-12",
+      "listas": 0,
+      "activos": 40,
+      "usuarios": 0,
+      "productos": 9
+    }
+  ],
+  "tops": {
+    "productos": [
+      {
+        "veces": 76,
+        "nombre": "tomates"
+      },
+      {
+        "veces": 72,
+        "nombre": "queso"
+      },
+      {
+        "veces": 70,
+        "nombre": "pan"
+      },
+      {
+        "veces": 67,
+        "nombre": "huevos"
+      },
+      {
+        "veces": 59,
+        "nombre": "aceite de oliva"
+      },
+      {
+        "veces": 57,
+        "nombre": "pollo"
+      },
+      {
+        "veces": 40,
+        "nombre": "leche"
+      },
+      {
+        "veces": 39,
+        "nombre": "agua"
+      }
+    ],
+    "categorias": [
+      {
+        "veces": 337,
+        "nombre": "Fruta y verdura"
+      },
+      {
+        "veces": 143,
+        "nombre": "Sin categoría"
+      }
+    ],
+    "tamano_listas": {
+      "media": 6.0,
+      "vacias": 0,
+      "mediana": 6,
+      "de_1_a_4": 0,
+      "de_30_mas": 0,
+      "de_5_a_14": 80,
+      "de_15_a_29": 0
+    }
+  }
+}

@@ -9,7 +9,10 @@ const intlMiddleware = createIntlMiddleware(routing);
 // pasar por la negociación/redirección de next-intl. `/auth` incluida: la URL
 // de redirección está registrada en Supabase y debe resolver tal cual, sin que
 // un redirect a `/es/auth/...` invalide el enlace del correo.
-const APP_ROUTE = /^\/(l|i|share-target|auth)(\/|$)/;
+// `/vegeta` es el panel de administración: está sólo en español y su cookie de
+// sesión tiene `path=/vegeta`, así que un redirect a `/es/vegeta` la dejaría
+// fuera de alcance y no habría forma de entrar.
+const APP_ROUTE = /^\/(l|i|share-target|auth|vegeta)(\/|$)/;
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
