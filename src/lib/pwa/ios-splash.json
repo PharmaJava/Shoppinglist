@@ -1,0 +1,23 @@
+{
+  "comentario": "Tamaños de pantalla de iOS en puntos + densidad. Safari sólo usa la imagen de arranque cuya media query encaja exactamente, así que la lista es literal, no aproximada. Un dispositivo que no esté aquí arranca en blanco, como antes: añadir modelos es seguro, quitarlos no rompe nada tampoco.",
+  "dispositivos": [
+    { "ancho": 320, "alto": 568, "dpr": 2, "modelo": "iPhone SE (1.ª)" },
+    { "ancho": 375, "alto": 667, "dpr": 2, "modelo": "iPhone 8 · SE (2.ª y 3.ª)" },
+    { "ancho": 414, "alto": 736, "dpr": 3, "modelo": "iPhone 8 Plus" },
+    { "ancho": 375, "alto": 812, "dpr": 3, "modelo": "iPhone X · XS · 11 Pro · 12/13 mini" },
+    { "ancho": 414, "alto": 896, "dpr": 2, "modelo": "iPhone XR · 11" },
+    { "ancho": 414, "alto": 896, "dpr": 3, "modelo": "iPhone XS Max · 11 Pro Max" },
+    { "ancho": 390, "alto": 844, "dpr": 3, "modelo": "iPhone 12 · 13 · 14" },
+    { "ancho": 428, "alto": 926, "dpr": 3, "modelo": "iPhone 12/13 Pro Max · 14 Plus" },
+    { "ancho": 393, "alto": 852, "dpr": 3, "modelo": "iPhone 14 Pro · 15 · 16" },
+    { "ancho": 430, "alto": 932, "dpr": 3, "modelo": "iPhone 14 Pro Max · 15 Pro Max · 16 Plus" },
+    { "ancho": 402, "alto": 874, "dpr": 3, "modelo": "iPhone 16 Pro" },
+    { "ancho": 440, "alto": 956, "dpr": 3, "modelo": "iPhone 16 Pro Max" },
+    { "ancho": 768, "alto": 1024, "dpr": 2, "modelo": "iPad 9,7\"" },
+    { "ancho": 810, "alto": 1080, "dpr": 2, "modelo": "iPad 10,2\"" },
+    { "ancho": 820, "alto": 1180, "dpr": 2, "modelo": "iPad Air 10,9\"" },
+    { "ancho": 834, "alto": 1112, "dpr": 2, "modelo": "iPad Pro 10,5\"" },
+    { "ancho": 834, "alto": 1194, "dpr": 2, "modelo": "iPad Pro 11\"" },
+    { "ancho": 1024, "alto": 1366, "dpr": 2, "modelo": "iPad Pro 12,9\"" }
+  ]
+}

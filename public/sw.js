@@ -9,7 +9,7 @@
  *
  * Subir VERSION invalida todas las cachés antiguas en el próximo `activate`.
  */
-const VERSION = "v2";
+const VERSION = "v3";
 const SHELL_CACHE = `listasupermercado-shell-${VERSION}`;
 const RUNTIME_CACHE = `listasupermercado-runtime-${VERSION}`;
 const OFFLINE_URL = "/offline.html";
@@ -18,6 +18,7 @@ const PRECACHE_URLS = [
   OFFLINE_URL,
   "/icons/icon-192.png",
   "/icons/icon-512.png",
+  "/icons/icon-maskable-192.png",
   "/icons/icon-maskable-512.png",
 ];
 

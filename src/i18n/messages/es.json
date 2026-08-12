@@ -302,7 +302,14 @@
     "installTitle": "Instala ListaSupermercado",
     "installBody": "Ábrela como una app, sin navegador, incluso sin conexión.",
     "installCta": "Instalar",
-    "installDismiss": "Ahora no"
+    "installDismiss": "Ahora no",
+    "iosCta": "Cómo se hace",
+    "iosTitle": "Instalar en iPhone o iPad",
+    "iosStep1": "Toca el botón de compartir del navegador:",
+    "iosStep2": "Baja y elige «Añadir a pantalla de inicio».",
+    "iosStep3": "Confirma con «Añadir». Ya la tienes junto a tus apps.",
+    "iosNote": "En iPhone y iPad la instalación la hace el navegador, no la web: no hay forma de hacerlo por ti con un botón.",
+    "iosClose": "Entendido"
   },
   "myLists": {
     "metaTitle": "Mis listas",

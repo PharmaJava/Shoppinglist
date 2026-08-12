@@ -66,12 +66,29 @@
 
 html {
   color-scheme: light dark;
+  /* Safari en iOS agranda la tipografía por su cuenta al girar el móvil a
+     horizontal si no se le dice que no. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   background: var(--surface);
   color: var(--on-surface);
   font-family: var(--font-sans);
+}
+
+/*
+ * Instalada en la pantalla de inicio no hay barra de navegador que absorba los
+ * gestos, así que el rebote de arrastrar hacia abajo se lleva la página entera
+ * y parece que la app se ha roto. Dentro de la pestaña normal no se toca: ahí
+ * ese gesto es «recargar» y la gente lo espera.
+ */
+@media (display-mode: standalone), (display-mode: minimal-ui) {
+  html,
+  body {
+    overscroll-behavior-y: contain;
+  }
 }
 
 /*
