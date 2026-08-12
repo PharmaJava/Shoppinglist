@@ -51,7 +51,7 @@ const profile: ProfileRow = {
   created_at: "2026-07-01T00:00:00.000Z",
 };
 
-const base = { userId: yo, email: "ana@example.com", profile, history: [] };
+const base = { userId: yo, email: "ana@example.com", profile, history: [], templates: [] };
 
 describe("buildExport", () => {
   it("mete cada producto bajo su lista, en el orden de la lista", () => {
@@ -115,5 +115,39 @@ describe("buildExport", () => {
 
     expect(data.account.displayName).toBeNull();
     expect(data.account.email).toBeNull();
+  });
+});
+
+describe("buildExport · plantillas y moneda", () => {
+  const plantilla = {
+    title: "Semanal de casa",
+    createdAt: "2026-08-02T00:00:00.000Z",
+    items: [{ name: "Leche", qty: 2, unit: "L", category: "dairy" }],
+  };
+
+  // Se añadieron en la migración 0008. Una exportación que no las incluya
+  // deja de ser «todo lo que guardamos de ti» en cuanto alguien guarde una.
+  it("las plantillas propias salen en la exportación", () => {
+    const data = buildExport({ ...base, lists: [], items: [], templates: [plantilla] });
+
+    expect(data.templates).toEqual([plantilla]);
+  });
+
+  it("la moneda del perfil también sale", () => {
+    const data = buildExport({ ...base, lists: [], items: [] });
+
+    expect(data.account.currency).toBe("EUR");
+  });
+
+  // El número de formato es lo único que le dice a quien lea un archivo viejo
+  // —o a un importador futuro— qué campos puede esperar.
+  it("el formato sube a 2 al cambiar la forma", () => {
+    expect(buildExport({ ...base, lists: [], items: [] }).format).toBe(2);
+  });
+
+  it("sin perfil, la moneda es null y no revienta", () => {
+    const data = buildExport({ ...base, profile: null, lists: [], items: [] });
+
+    expect(data.account.currency).toBeNull();
   });
 });

@@ -339,7 +339,8 @@
     "archive": "Archive",
     "unarchive": "Restore",
     "archivedSection": "Archived ({count})",
-    "actionError": "That didn't work. Try again."
+    "actionError": "That didn't work. Try again.",
+    "myTemplatesLink": "My templates →"
   },
   "legal": {
     "updated": "Last reviewed: {date}",
@@ -403,5 +404,42 @@
     "contactBody": "If something is broken, if a feature is missing, or if you want to propose something, reach out to Antonio on LinkedIn. Everything gets read, even if replies sometimes take a while.",
     "linkedin": "Message {name} on LinkedIn",
     "cta": "Create a list now"
+  },
+  "templatesMine": {
+    "metaTitle": "My templates",
+    "title": "My templates",
+    "intro": "Lists you save so you never type them again. The weekly shop, the beach one, the birthday one.",
+    "loading": "Loading…",
+    "emptyTitle": "No templates yet",
+    "emptyBody": "Open a list, tap “Share” and choose “Save as template”. Then you can repeat it whenever you like.",
+    "emptyCta": "Go to my lists",
+    "itemCount": "{count, plural, =0 {no items} one {1 item} other {# items}}",
+    "use": "Use",
+    "using": "Creating…",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this template? Lists you already made from it stay as they are.",
+    "cancel": "Cancel",
+    "close": "Close",
+    "nameLabel": "Template name",
+    "save": "Save",
+    "saving": "Saving…",
+    "saveShort": "Template",
+    "saveTitle": "Save as template",
+    "saveBody": "{count, plural, =0 {This list is empty} one {1 item will be saved} other {# items will be saved}}. Prices and ticks aren't saved.",
+    "saved": "Template saved",
+    "savedBody": "It's in “My templates”, ready to repeat.",
+    "publicHint": "Looking for the ready-made ones?",
+    "publicLink": "Browse public templates"
+  },
+  "preferences": {
+    "title": "Language and currency",
+    "body": "How you want the app to look and which currency your shopping is in.",
+    "languageLabel": "Language",
+    "languageEs": "Español",
+    "languageEn": "English",
+    "currencyLabel": "Currency",
+    "currencyHint": "Applies to new lists. The ones you already have keep theirs, so prices you typed don't get converted.",
+    "saved": "Saved"
   }
 }

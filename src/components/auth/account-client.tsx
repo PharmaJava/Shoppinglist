@@ -19,6 +19,7 @@ import {
 import { downloadExport, exportMyData } from "@/features/auth/export-data";
 import { useSession } from "@/features/auth/use-session";
 import { Link } from "@/i18n/navigation";
+import { PreferencesPanel } from "./preferences-panel";
 
 /** Mínimo propio, por encima del de Supabase (6): 8 es el suelo razonable hoy
  *  y comprobarlo antes evita un viaje de red para un error evitable. */
@@ -114,6 +115,7 @@ function RegisteredPanel({ email }: { email: string }) {
       </button>
 
       <DisplayNameForm />
+      <PreferencesPanel />
       <DataExport />
       <DangerZone />
     </div>
@@ -424,6 +426,11 @@ function AuthPanel({ isGuest, callbackNext }: AuthPanelProps) {
       ) : (
         <PasswordForm isGuest={isGuest} callbackNext={callbackNext} />
       )}
+
+      {/* Un invitado tiene perfil desde su primera lista y puede comprar en
+          pesos igual que cualquiera: las preferencias son de quien usa la app,
+          no de quien se registra. Sin sesión no hay perfil que guardar. */}
+      {isGuest && <PreferencesPanel />}
     </div>
   );
 }

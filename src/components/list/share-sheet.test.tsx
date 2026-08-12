@@ -27,6 +27,12 @@ vi.mock("@/features/list/use-list", () => ({
 
 vi.mock("@/features/list/use-categories", () => ({ useCategories: () => ({ data: [] }) }));
 
+// Guardar como plantilla toca el cliente de Supabase al importarse, igual que
+// el interruptor de avisos. Aquí sólo se comprueba que el botón está.
+vi.mock("@/features/templates/api", () => ({
+  saveListAsTemplate: vi.fn(async () => "plantilla-1"),
+}));
+
 // El interruptor de avisos toca el cliente de Supabase al importarse; aquí no
 // se prueba, sólo que no estorbe.
 vi.mock("@/features/push/subscribe", () => ({
@@ -85,6 +91,18 @@ describe("ShareSheet", () => {
 
     await waitFor(() =>
       expect(screen.getByRole("alert")).toHaveTextContent(messages.list.shareOnlyOwner),
+    );
+  });
+
+  // Guardar como plantilla vive aquí y no en la cabecera; si alguien la mueve
+  // sin querer, esto lo dice.
+  it("ofrece guardar la lista como plantilla", async () => {
+    renderSheet();
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: messages.templatesMine.saveShort }),
+      ).toBeInTheDocument(),
     );
   });
 });
