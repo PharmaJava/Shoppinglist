@@ -187,7 +187,10 @@
     "memberTransfer": "Make owner",
     "memberTransferConfirm": "Yes, transfer",
     "memberTransferWarning": "Transferring makes you an editor: you'll no longer be able to manage access.",
-    "memberError": "That didn't work. Try again."
+    "memberError": "That didn't work. Try again.",
+    "shareError": "Couldn't prepare the sharing link.",
+    "shareOnlyOwner": "Only whoever created the list can invite others. Ask them to share the link.",
+    "retry": "Try again"
   },
   "invite": {
     "joining": "Joining the list…",
