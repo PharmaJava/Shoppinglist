@@ -46,6 +46,9 @@ export function MyListsClient() {
           {t("title")}
         </h1>
         <p className="text-on-surface-muted">{t("subtitle")}</p>
+        <Link href="/mis-plantillas" className="text-sm font-medium text-brand underline">
+          {t("myTemplatesLink")}
+        </Link>
       </header>
 
       {/* A un invitado le importa saber que esto no sobrevive a cambiar de

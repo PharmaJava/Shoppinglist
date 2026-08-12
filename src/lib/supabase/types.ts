@@ -177,17 +177,20 @@ export interface Database {
       list_templates: {
         Row: {
           id: string;
-          slug: string;
+          // Nulo en las plantillas de una persona: sólo las públicas tienen
+          // URL, y por tanto slug (migración 0008).
+          slug: string | null;
           locale: Locale;
           title: string;
           description: string | null;
           owner_id: string | null;
           is_public: boolean;
           use_count: number;
+          created_at: string;
+          updated_at: string;
         };
         Relationships: [];
         Insert: Partial<Database["public"]["Tables"]["list_templates"]["Row"]> & {
-          slug: string;
           locale: Locale;
           title: string;
         };
@@ -203,7 +206,18 @@ export interface Database {
           category_id: string | null;
           sort_order: number;
         };
-        Relationships: [];
+        // La única relación declarada del archivo, y hace falta: sin ella
+        // PostgREST no sabe unir `list_templates` con sus productos y el
+        // `select("… template_items(count)")` no compila.
+        Relationships: [
+          {
+            foreignKeyName: "template_items_template_id_fkey";
+            columns: ["template_id"];
+            isOneToOne: false;
+            referencedRelation: "list_templates";
+            referencedColumns: ["id"];
+          },
+        ];
         Insert: Partial<Database["public"]["Tables"]["template_items"]["Row"]> & {
           template_id: string;
           name: string;
@@ -260,6 +274,10 @@ export interface Database {
       record_product_price: {
         Args: { p_normalized: string; p_name: string; p_price_cents: number };
         Returns: undefined;
+      };
+      save_list_as_template: {
+        Args: { p_list: string; p_title: string };
+        Returns: string;
       };
     };
   };

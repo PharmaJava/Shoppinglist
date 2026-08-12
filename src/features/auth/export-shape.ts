@@ -18,17 +18,29 @@ export interface ExportedList {
   }>;
 }
 
+export interface ExportedTemplate {
+  title: string;
+  createdAt: string;
+  items: Array<{ name: string; qty: number | null; unit: string | null; category: string | null }>;
+}
+
 export interface ExportedData {
   exportedAt: string;
-  format: 1;
+  /**
+   * Sube a 2 al añadir plantillas y moneda. El número está para que quien
+   * lea un archivo antiguo —o un importador futuro— sepa qué esperar.
+   */
+  format: 2;
   account: {
     id: string;
     email: string | null;
     displayName: string | null;
     locale: string | null;
+    currency: string | null;
     createdAt: string | null;
   };
   lists: ExportedList[];
+  templates: ExportedTemplate[];
   productHistory: Array<{ name: string; timesAdded: number; lastAdded: string }>;
 }
 
@@ -39,6 +51,7 @@ interface BuildInput {
   lists: ListRow[];
   items: ListItemRow[];
   history: ProductHistoryRow[];
+  templates: ExportedTemplate[];
 }
 
 /**
@@ -59,6 +72,7 @@ export function buildExport({
   lists,
   items,
   history,
+  templates,
 }: BuildInput): ExportedData {
   const byList = new Map<string, ListItemRow[]>();
   for (const item of items) {
@@ -67,12 +81,13 @@ export function buildExport({
 
   return {
     exportedAt: new Date().toISOString(),
-    format: 1,
+    format: 2,
     account: {
       id: userId,
       email,
       displayName: profile?.display_name ?? null,
       locale: profile?.locale ?? null,
+      currency: profile?.currency ?? null,
       createdAt: profile?.created_at ?? null,
     },
     lists: lists.map((list) => ({
@@ -95,6 +110,7 @@ export function buildExport({
           createdAt: item.created_at,
         })),
     })),
+    templates,
     productHistory: history.map((row) => ({
       name: row.name,
       timesAdded: row.times_added,

@@ -339,7 +339,8 @@
     "archive": "Archivar",
     "unarchive": "Recuperar",
     "archivedSection": "Archivadas ({count})",
-    "actionError": "No se pudo completar. Inténtalo de nuevo."
+    "actionError": "No se pudo completar. Inténtalo de nuevo.",
+    "myTemplatesLink": "Mis plantillas →"
   },
   "legal": {
     "updated": "Última revisión: {date}",
@@ -403,5 +404,42 @@
     "contactBody": "Si algo no funciona, si echas de menos una función o si quieres proponer algo, escribe a Antonio por LinkedIn. Se lee todo, aunque a veces se tarde en contestar.",
     "linkedin": "Escribir a {name} por LinkedIn",
     "cta": "Crear una lista ahora"
+  },
+  "templatesMine": {
+    "metaTitle": "Mis plantillas",
+    "title": "Mis plantillas",
+    "intro": "Listas que guardas para no volver a escribirlas. La compra semanal, la de la playa, la del cumpleaños.",
+    "loading": "Cargando…",
+    "emptyTitle": "Todavía no tienes plantillas",
+    "emptyBody": "Abre una lista, toca «Compartir» y elige «Guardar como plantilla». Podrás repetirla cuando quieras.",
+    "emptyCta": "Ir a mis listas",
+    "itemCount": "{count, plural, =0 {sin productos} one {1 producto} other {# productos}}",
+    "use": "Usar",
+    "using": "Creando…",
+    "rename": "Renombrar",
+    "delete": "Borrar",
+    "deleteConfirm": "¿Borrar esta plantilla? Las listas que ya creaste con ella no se tocan.",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "nameLabel": "Nombre de la plantilla",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "saveShort": "Plantilla",
+    "saveTitle": "Guardar como plantilla",
+    "saveBody": "{count, plural, =0 {Esta lista está vacía} one {Se guardará 1 producto} other {Se guardarán # productos}}. Los precios y lo marcado no se guardan.",
+    "saved": "Plantilla guardada",
+    "savedBody": "La tienes en «Mis plantillas», lista para repetirla.",
+    "publicHint": "¿Buscas las plantillas del catálogo?",
+    "publicLink": "Ver plantillas públicas"
+  },
+  "preferences": {
+    "title": "Idioma y moneda",
+    "body": "Cómo quieres ver la app y en qué moneda cuentas la compra.",
+    "languageLabel": "Idioma",
+    "languageEs": "Español",
+    "languageEn": "English",
+    "currencyLabel": "Moneda",
+    "currencyHint": "Se aplica a las listas nuevas. Las que ya tienes se quedan con la suya, para no convertir precios que ya escribiste.",
+    "saved": "Guardado"
   }
 }

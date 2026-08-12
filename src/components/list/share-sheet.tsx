@@ -11,6 +11,7 @@ import { SITE_URL } from "@/lib/seo/site";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { MembersPanel } from "./members-panel";
 import { PushToggle } from "./push-toggle";
+import { SaveTemplateSheet } from "./save-template-sheet";
 
 /**
  * Dirección del enlace de invitación.
@@ -29,6 +30,7 @@ function inviteUrl(token: string): string {
 
 export function ShareSheet({ listId, onClose }: { listId: string; onClose: () => void }) {
   const t = useTranslations("list");
+  const tPlantillas = useTranslations("templatesMine");
   const locale = useLocale() as Locale;
   const [url, setUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -37,6 +39,7 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
   const [inviteRole, setInviteRole] = useState<ListRole>("editor");
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [retries, setRetries] = useState(0);
+  const [saveTemplateOpen, setSaveTemplateOpen] = useState(false);
 
   // Ambas ya están en caché: es la misma consulta que pinta la lista de fondo.
   const { data } = useList(listId);
@@ -216,23 +219,44 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
 
         {/* Sacar la lista de la aplicación, no invitar a nadie: por eso van
             separadas del bloque de arriba. */}
-        <div className="mt-4 flex gap-2 border-border border-t pt-4">
+        <div className="mt-4 grid grid-cols-3 gap-2 border-border border-t pt-4">
           <button
             type="button"
             onClick={handleCopyText}
             disabled={!data || !categories}
-            className="flex h-tap flex-1 items-center justify-center rounded-xl border border-border px-3 text-sm font-medium text-on-surface disabled:opacity-50"
+            className="flex h-tap items-center justify-center rounded-xl border border-border px-2 text-center text-sm font-medium text-on-surface disabled:opacity-50"
           >
             {textCopied ? t("shareCopied") : t("shareAsText")}
           </button>
           <button
             type="button"
             onClick={handlePrint}
-            className="flex h-tap flex-1 items-center justify-center rounded-xl border border-border px-3 text-sm font-medium text-on-surface"
+            className="flex h-tap items-center justify-center rounded-xl border border-border px-2 text-center text-sm font-medium text-on-surface"
           >
             {t("print")}
           </button>
+          {/* Guardar como plantilla vive aquí y no en la cabecera: la cabecera
+              a 390 px ya va justa con el título, el modo supermercado y
+              «Compartir», y esto es lo mismo que copiar o imprimir —llevarse la
+              lista a otro sitio—, no una acción del día a día. */}
+          <button
+            type="button"
+            onClick={() => setSaveTemplateOpen(true)}
+            disabled={!data || data.items.length === 0}
+            className="flex h-tap items-center justify-center rounded-xl border border-border px-2 text-center text-sm font-medium text-on-surface disabled:opacity-50"
+          >
+            {tPlantillas("saveShort")}
+          </button>
         </div>
+
+        {saveTemplateOpen && data && (
+          <SaveTemplateSheet
+            listId={listId}
+            listTitle={data.list.title}
+            itemCount={data.items.length}
+            onClose={() => setSaveTemplateOpen(false)}
+          />
+        )}
 
         {members.length > 0 && (
           <MembersPanel listId={listId} members={members} onChanged={loadMembers} />
