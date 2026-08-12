@@ -2,9 +2,9 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { ListItemRow, ListRow } from "@/lib/supabase/types";
+import type { ListItemRow } from "@/lib/supabase/types";
 import { fetchListWithItems } from "./api";
+import { subscribeToList } from "./realtime";
 import type { ListWithItems } from "./types";
 
 function sortItems(items: ListItemRow[]): ListItemRow[] {
@@ -33,33 +33,21 @@ export function useList(listId: string) {
   useEffect(() => {
     if (!listId) return;
 
-    const supabase = getSupabaseBrowserClient();
-    const channel = supabase
-      .channel(`list:${listId}`)
-      .on<ListItemRow>(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "list_items", filter: `list_id=eq.${listId}` },
-        (payload) => {
-          const incoming = (payload.new ?? payload.old) as ListItemRow | undefined;
-          if (!incoming) return;
-
-          queryClient.setQueryData<ListWithItems>(queryKey, (current) => {
-            if (!current) return current;
-            return { ...current, items: upsertItem(current.items, incoming) };
-          });
-        },
-      )
-      .on<ListRow>(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "lists", filter: `id=eq.${listId}` },
-        (payload) => {
-          if (!payload.new) return;
-          queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
-            current ? { ...current, list: payload.new as ListRow } : current,
-          );
-        },
-      )
-      .subscribe();
+    // El canal es de la lista y no de este componente: varios sitios pueden
+    // mirar la misma lista a la vez —la vista y la hoja de compartir— y
+    // supabase-js no admite dos suscripciones al mismo topic (ver ./realtime).
+    const unsubscribe = subscribeToList(listId, {
+      onItem: (incoming) => {
+        queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
+          current ? { ...current, items: upsertItem(current.items, incoming) } : current,
+        );
+      },
+      onList: (list) => {
+        queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
+          current ? { ...current, list } : current,
+        );
+      },
+    });
 
     const resync = () => {
       queryClient.invalidateQueries({ queryKey });
@@ -71,7 +59,7 @@ export function useList(listId: string) {
     window.addEventListener("online", resync);
 
     return () => {
-      supabase.removeChannel(channel);
+      unsubscribe();
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("online", resync);
     };
