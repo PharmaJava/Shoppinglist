@@ -27,8 +27,8 @@ Copia la línea que imprime en Vercel → Settings → Environment Variables (Pr
 `.env.local` para desarrollo. Después, **redespliega**: las variables de entorno se leen al
 arrancar.
 
-Falta un paso más: aplicar la migración `supabase/migrations/0007_admin_kpis.sql` en el editor SQL
-de Supabase. Sin ella el panel deja entrar pero avisa de que la función no existe. `pnpm db:check`
+Falta un paso más: aplicar las migraciones `0007_admin_kpis.sql` y `0009_admin_kpis_definer.sql`
+en el editor SQL de Supabase. Sin ella el panel deja entrar pero avisa de que la función no existe. `pnpm db:check`
 imprime una consulta que dice qué migraciones faltan.
 
 ### Cambiar la contraseña
@@ -69,11 +69,25 @@ llama `/vegeta` y no `/admin` por comodidad, no por seguridad.
 Una única función de Postgres, `public.admin_kpis(dias)`, devuelve el panel entero en un `jsonb`.
 Podrían ser veinte consultas desde el servidor, pero serían veinte viajes a Supabase por cada carga.
 
-La función es **`SECURITY INVOKER`** y sólo se le concede a `service_role`. Es a propósito: con
-`SECURITY DEFINER`, un `GRANT` de más en el futuro convertiría esta función en una fuga de los
-datos de todo el producto. Siendo invoker, a quien la llame sin privilegios le sigue aplicando RLS
-y no ve nada. Está comprobado en local: aun concediendo `EXECUTE` a `authenticated` a mano, la
-llamada falla.
+La función es **`SECURITY DEFINER`** y sólo se le concede a `service_role`. Además comprueba el rol
+del JWT y se niega a responder a quien no sea `service_role`, así que un `grant execute` accidental
+a `authenticated` —basta un `grant execute on all functions in schema public`— sigue sin abrir
+nada. Comprobado: con `EXECUTE` concedido a mano, la llamada falla igual.
+
+### Por qué DEFINER, después de haber elegido INVOKER
+
+Nació como `SECURITY INVOKER` a propósito, para que ningún `GRANT` futuro pudiera convertirla en
+una fuga. La premisa era falsa: **`service_role` no puede leer `auth.users`**. Esa tabla pertenece
+a `supabase_auth_admin`, y la clave de servicio llega a los usuarios por la Admin API, no por SQL.
+Siendo INVOKER, la función se ejecutaba con los permisos de quien llamaba y el panel respondía
+`permission denied for table users`.
+
+Se había verificado en local contra un PostgreSQL 16 y pasó **porque el stub de pruebas le había
+concedido ese permiso a `service_role` "para parecerse a Supabase"**. Se parecía en todo menos en
+lo que importaba. Si se vuelve a montar un Postgres para probar migraciones, `service_role` no debe
+tener `select` sobre `auth.users`: con ese permiso, la prueba deja de probar nada.
+
+Lo arregla la migración `0009_admin_kpis_definer.sql`.
 
 La clave de servicio se lee en `src/lib/admin/kpis.ts`, que es servidor puro. Es la única forma de
 contar las listas de todo el mundo: con la clave pública, RLS sólo dejaría ver las del

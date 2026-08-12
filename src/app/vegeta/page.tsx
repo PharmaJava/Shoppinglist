@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Dashboard } from "@/components/admin/dashboard";
 import { adminConfigurado, haySesionAdmin } from "@/lib/admin/auth";
+import { pistaDelError } from "@/lib/admin/diagnostico";
 import { obtenerKpis } from "@/lib/admin/kpis";
 import { salirAction } from "./actions";
 import { LoginForm } from "./login-form";
@@ -113,13 +114,28 @@ export default async function VegetaPage({
       {resultado.ok ? (
         <Dashboard kpis={resultado.kpis} />
       ) : (
-        <div className="flex flex-col gap-2 rounded-card border border-accent/40 bg-accent/5 p-5">
+        <div className="flex flex-col gap-3 rounded-card border border-accent/40 bg-accent/5 p-5">
           <h2 className="font-semibold text-on-surface">No se han podido leer las métricas</h2>
-          <p className="text-sm text-on-surface-muted">
-            {resultado.motivo === "sin_configurar"
-              ? "Falta SUPABASE_SERVICE_ROLE_KEY en el servidor: sin ella no se pueden contar las listas de todo el mundo, sólo las propias."
-              : `Supabase ha respondido: ${resultado.detalle}. Si dice que la función no existe, falta aplicar la migración 0007_admin_kpis.sql.`}
-          </p>
+
+          {resultado.motivo === "sin_configurar" ? (
+            <p className="text-sm text-on-surface-muted">
+              Falta SUPABASE_SERVICE_ROLE_KEY en el servidor: sin ella no se pueden contar las
+              listas de todo el mundo, sólo las propias.
+            </p>
+          ) : (
+            <>
+              {/* Primero qué hacer, y debajo lo que ha dicho Postgres. Al
+                  revés se lee el mensaje técnico y se cierra la página. */}
+              {pistaDelError(resultado.detalle ?? "") && (
+                <p className="text-sm font-medium text-on-surface">
+                  {pistaDelError(resultado.detalle ?? "")}
+                </p>
+              )}
+              <p className="break-words font-mono text-xs text-on-surface-muted">
+                {resultado.detalle}
+              </p>
+            </>
+          )}
         </div>
       )}
     </Marco>
