@@ -7,9 +7,25 @@ import { fetchListMembers, getOrCreateActiveInvite } from "@/features/list/api";
 import { listToText } from "@/features/list/to-text";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
+import { SITE_URL } from "@/lib/seo/site";
 import type { ListRole, Locale } from "@/lib/supabase/types";
 import { MembersPanel } from "./members-panel";
 import { PushToggle } from "./push-toggle";
+
+/**
+ * Dirección del enlace de invitación.
+ *
+ * Manda el dominio canónico. Se intentó armarlo con el origen del navegador
+ * para que una previsualización compartiera enlaces de sí misma, y es un mal
+ * negocio: basta con abrir la aplicación desde `*.vercel.app`, desde `www.` o
+ * desde cualquier alias para repartir enlaces a un dominio que quizá no
+ * resuelve para quien los recibe. El origen sólo se usa cuando no hay dominio
+ * configurado, que es el caso de desarrollo.
+ */
+function inviteUrl(token: string): string {
+  const base = SITE_URL.includes("localhost") ? window.location.origin : SITE_URL;
+  return `${base}/i/${token}`;
+}
 
 export function ShareSheet({ listId, onClose }: { listId: string; onClose: () => void }) {
   const t = useTranslations("list");
@@ -19,10 +35,17 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
   const [textCopied, setTextCopied] = useState(false);
   const [members, setMembers] = useState<ListMember[]>([]);
   const [inviteRole, setInviteRole] = useState<ListRole>("editor");
+  const [inviteError, setInviteError] = useState<string | null>(null);
+  const [retries, setRetries] = useState(0);
 
   // Ambas ya están en caché: es la misma consulta que pinta la lista de fondo.
   const { data } = useList(listId);
   const { data: categories } = useCategories();
+
+  // `undefined` mientras no se sepa: sólo se afirma que alguien no es
+  // propietario cuando los miembros han llegado de verdad.
+  const iAmOwner =
+    members.length === 0 ? undefined : members.some((m) => m.isMe && m.role === "owner");
 
   const loadMembers = useCallback(() => {
     // Los miembros no bloquean el compartir: si fallan, la hoja sigue siendo
@@ -37,17 +60,23 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
     // El enlace se pide cada vez que cambia el rol: el de lectura y el de
     // edición son dos invitaciones distintas, no la misma con una etiqueta.
     setUrl(null);
-    getOrCreateActiveInvite(listId, inviteRole).then((token) => {
-      // El enlace se arma con el origen real del navegador y no con
-      // `SITE_URL`: así el que se comparte desde una previsualización apunta a
-      // esa previsualización, y no manda a nadie a producción por error.
-      if (!cancelled) setUrl(`${window.location.origin}/i/${token}`);
-    });
+    setInviteError(null);
+
+    getOrCreateActiveInvite(listId, inviteRole)
+      .then((token) => {
+        if (!cancelled) setUrl(inviteUrl(token));
+      })
+      .catch((err: unknown) => {
+        // Sin este `catch`, un fallo dejaba los botones en gris para siempre y
+        // sin una sola pista: indistinguible de «está cargando». Quien lo
+        // sufría sólo podía decir «al compartir falla».
+        if (!cancelled) setInviteError(err instanceof Error ? err.message : String(err));
+      });
 
     return () => {
       cancelled = true;
     };
-  }, [listId, inviteRole]);
+  }, [listId, inviteRole, retries]);
 
   useEffect(loadMembers, [loadMembers]);
 
@@ -135,6 +164,24 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
             </button>
           ))}
         </fieldset>
+
+        {inviteError && (
+          <div className="mb-3 flex flex-col items-start gap-2 rounded-card bg-red-50 p-3">
+            <p role="alert" className="text-red-700 text-sm">
+              {iAmOwner === false ? t("shareOnlyOwner") : t("shareError")}
+            </p>
+            {iAmOwner !== false && (
+              <button
+                type="button"
+                onClick={() => setRetries((count) => count + 1)}
+                className="font-semibold text-red-700 text-sm underline"
+              >
+                {t("retry")}
+              </button>
+            )}
+            <p className="text-red-600/80 text-xs">{inviteError}</p>
+          </div>
+        )}
 
         <div className="flex flex-col gap-2">
           <button

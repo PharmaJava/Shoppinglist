@@ -283,7 +283,10 @@
     "memberTransfer": "Hacer propietario",
     "memberTransferConfirm": "Sí, traspasar",
     "memberTransferWarning": "Al traspasar dejas de ser propietario: pasas a editor y ya no podrás gestionar los permisos.",
-    "memberError": "No se pudo hacer el cambio. Inténtalo de nuevo."
+    "memberError": "No se pudo hacer el cambio. Inténtalo de nuevo.",
+    "shareError": "No se pudo preparar el enlace para compartir.",
+    "shareOnlyOwner": "Sólo quien creó la lista puede invitar a más gente. Pídele a esa persona que comparta el enlace.",
+    "retry": "Reintentar"
   },
   "invite": {
     "joining": "Uniéndote a la lista…",
