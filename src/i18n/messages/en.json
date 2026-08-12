@@ -206,7 +206,14 @@
     "installTitle": "Install ListaSupermercado",
     "installBody": "Open it like an app, no browser, even offline.",
     "installCta": "Install",
-    "installDismiss": "Not now"
+    "installDismiss": "Not now",
+    "iosCta": "Show me how",
+    "iosTitle": "Install on iPhone or iPad",
+    "iosStep1": "Tap your browser's share button:",
+    "iosStep2": "Scroll down and choose “Add to Home Screen”.",
+    "iosStep3": "Confirm with “Add”. It now sits with your apps.",
+    "iosNote": "On iPhone and iPad the browser handles installing, not the website: there is no button we can press for you.",
+    "iosClose": "Got it"
   },
   "blogPage": {
     "hubTitle": "Blog",
