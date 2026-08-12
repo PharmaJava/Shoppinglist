@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { createListFromInput } from "@/features/list/api";
+import { valueAfterPaste } from "@/features/list/paste";
 import type { Locale } from "@/lib/supabase/types";
 
 export function QuickCreateForm() {
@@ -32,6 +33,25 @@ export function QuickCreateForm() {
     }
   }
 
+  /**
+   * Un `<input>` de una línea se come los saltos al pegar y deja «Agua
+   * Gazpacho Chocolate» todo junto. Se convierten en comas, que es lo que el
+   * campo sabe enseñar y el parser sabe separar.
+   */
+  function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
+    const field = event.currentTarget;
+    const next = valueAfterPaste(
+      value,
+      field.selectionStart ?? value.length,
+      field.selectionEnd ?? value.length,
+      event.clipboardData.getData("text"),
+    );
+
+    if (next === null) return;
+    event.preventDefault();
+    setValue(next);
+  }
+
   return (
     <div className="flex w-full max-w-md flex-col gap-2">
       {/* `flex-1` sólo a partir de `sm`: en columna, su `flex-basis: 0%` cae
@@ -41,6 +61,7 @@ export function QuickCreateForm() {
         <input
           value={value}
           onChange={(event) => setValue(event.target.value)}
+          onPaste={handlePaste}
           placeholder={t("quickAddPlaceholder")}
           autoComplete="off"
           className="h-tap w-full rounded-full border border-border bg-surface px-5 sm:flex-1 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"

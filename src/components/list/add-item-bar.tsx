@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { parseVoiceTranscript } from "@/features/list/parse-voice";
+import { valueAfterPaste } from "@/features/list/paste";
 import { useAddParsedItems } from "@/features/list/use-list-mutations";
 import { useSuggestions } from "@/features/list/use-suggestions";
 import type { Locale } from "@/lib/supabase/types";
@@ -34,6 +35,25 @@ export function AddItemBar({ listId, existingNormalized }: AddItemBarProps) {
     addItems.mutate(parsed.length > 0 ? parsed : [{ name: text, qty: null, unit: null }]);
     setValue("");
     inputRef.current?.focus();
+  }
+
+  /**
+   * Un `<input>` de una línea se come los saltos al pegar y deja «Agua
+   * Gazpacho Chocolate» todo junto. Se convierten en comas, que es lo que el
+   * campo sabe enseñar y el parser sabe separar.
+   */
+  function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
+    const field = event.currentTarget;
+    const next = valueAfterPaste(
+      value,
+      field.selectionStart ?? value.length,
+      field.selectionEnd ?? value.length,
+      event.clipboardData.getData("text"),
+    );
+
+    if (next === null) return;
+    event.preventDefault();
+    setValue(next);
   }
 
   function addSuggestion(name: string) {
@@ -83,6 +103,7 @@ export function AddItemBar({ listId, existingNormalized }: AddItemBarProps) {
             ref={inputRef}
             value={value}
             onChange={(event) => setValue(event.target.value)}
+            onPaste={handlePaste}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder={t("addPlaceholder")}

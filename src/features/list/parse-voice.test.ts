@@ -106,3 +106,107 @@ describe("parseVoiceTranscript — inglés", () => {
     expect(result).toEqual([{ name: "Apples", qty: 3, unit: null }]);
   });
 });
+
+describe("listas pegadas de otro sitio", () => {
+  // El caso real que lo motivó: una lista escrita en las notas del móvil, un
+  // producto por línea, sin una sola coma. Antes entraba como un único
+  // producto llamado "agua gazpacho chocolate galletas…".
+  const pegado = `Agua
+ Gazpacho
+ Chocolate 
+Galletas
+Chuches
+Helado
+Servilletas 
+Pollo
+Queso
+Fuet
+Patatas
+Agua
+Gazpacho 
+Cerveza
+ Pasta
+ Quinoa
+Tomates 
+Lechuga 
+Tortitas
+ Aceite oliva
+Huevos 24
+Gazpacho
+ Queso feta
+ Hamburguesa
+Queso
+Bacon
+Patatas normales
+ Patatas fritas
+Servilletas
+Pan hamburguesa
+ Papel higienico`;
+
+  it("saca un producto por línea", () => {
+    const result = parseVoiceTranscript(pegado, "es");
+
+    expect(result.length).toBeGreaterThan(20);
+    expect(result.map((item) => item.name)).toContain("Chuches");
+  });
+
+  it("respeta los nombres de varias palabras", () => {
+    const names = parseVoiceTranscript(pegado, "es").map((item) => item.name);
+
+    expect(names).toContain("Aceite oliva");
+    expect(names).toContain("Queso feta");
+    expect(names).toContain("Pan hamburguesa");
+    expect(names).toContain("Papel higienico");
+  });
+
+  it("lee la cantidad escrita al final de la línea", () => {
+    const huevos = parseVoiceTranscript(pegado, "es").find((item) => item.name === "Huevos");
+
+    expect(huevos).toEqual({ name: "Huevos", qty: 24, unit: null });
+  });
+
+  // Tres líneas iguales no son tres gazpachos: son un gazpacho apuntado tres
+  // veces. Quien quiera dos escribe «gazpacho x2».
+  it("no repite lo que aparece varias veces", () => {
+    const names = parseVoiceTranscript(pegado, "es").map((item) => item.name);
+
+    expect(names.filter((name) => name === "Gazpacho")).toHaveLength(1);
+    expect(names.filter((name) => name === "Agua")).toHaveLength(1);
+    expect(names.filter((name) => name === "Servilletas")).toHaveLength(1);
+  });
+
+  it("pero no confunde lo que sólo se parece", () => {
+    const names = parseVoiceTranscript(pegado, "es").map((item) => item.name);
+
+    expect(names).toContain("Patatas");
+    expect(names).toContain("Patatas normales");
+    expect(names).toContain("Patatas fritas");
+  });
+
+  it("al repetir, hereda la cantidad de la línea que la lleva", () => {
+    const result = parseVoiceTranscript("Agua\nPan\nAgua 6", "es");
+
+    expect(result).toEqual([
+      { name: "Agua", qty: 6, unit: null },
+      { name: "Pan", qty: null, unit: null },
+    ]);
+  });
+
+  it("dentro de una línea siguen valiendo las comas y la conjunción", () => {
+    const result = parseVoiceTranscript("Pan, leche y huevos\nTomates", "es");
+
+    expect(result.map((item) => item.name)).toEqual(["Pan", "Leche", "Huevos", "Tomates"]);
+  });
+
+  it("quita los guiones y viñetas con los que se pegan las listas", () => {
+    const result = parseVoiceTranscript("- Pan\n• Leche\n* Huevos\n– Aceite", "es");
+
+    expect(result.map((item) => item.name)).toEqual(["Pan", "Leche", "Huevos", "Aceite"]);
+  });
+
+  it("aguanta líneas vacías y saltos de Windows", () => {
+    const result = parseVoiceTranscript("Pan\r\n\r\n   \r\nLeche", "es");
+
+    expect(result.map((item) => item.name)).toEqual(["Pan", "Leche"]);
+  });
+});

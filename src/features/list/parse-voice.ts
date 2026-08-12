@@ -97,13 +97,22 @@ const UNIT_WORDS: Record<Locale, string[]> = {
   ],
 };
 
+/** Viñetas con las que la gente pega listas desde notas o desde un chat. */
+const BULLET = /^[\s\u00a0]*[-–—*•·+]+\s*/;
+
 /**
- * Convierte texto libre en una lista de productos, venga dictado o escrito.
+ * Convierte texto libre en una lista de productos, venga dictado, escrito o
+ * pegado de otro sitio.
  *
- * Heurística deliberadamente simple (docs/00-PLAN.md §7.2): separa por comas y
- * conjunción, y reconoce la cantidad escrita como la escribe la gente —al
- * principio al dictar ("dos litros de leche"), al final al teclear ("carne
- * picada 500 g", "tomates x3").
+ * Heurística deliberadamente simple (docs/00-PLAN.md §7.2): separa por saltos
+ * de línea y por comas y conjunción, y reconoce la cantidad escrita como la
+ * escribe la gente —al principio al dictar ("dos litros de leche"), al final
+ * al teclear ("carne picada 500 g", "tomates x3", "huevos 24").
+ *
+ * El salto de línea manda sobre todo lo demás: una lista pegada desde las
+ * notas del móvil viene con un producto por línea y sin una sola coma, y hasta
+ * ahora entraba entera como un único producto llamado "agua gazpacho
+ * chocolate galletas…".
  */
 export function parseVoiceTranscript(transcript: string, locale: Locale): ParsedVoiceItem[] {
   const segments = transcript
@@ -113,11 +122,45 @@ export function parseVoiceTranscript(transcript: string, locale: Locale): Parsed
     // punto antes de separar. Se hace por sustitución y no con un lookbehind
     // en el separador porque Safari no los soporta hasta la 16.4.
     .replace(/(\d),(\d)/g, "$1.$2")
-    .split(SEPARATORS[locale])
-    .map((segment) => segment.trim())
+    // Primero las líneas; dentro de cada una siguen valiendo comas y
+    // conjunciones, para que «pan y leche» en una sola línea se parta igual.
+    .split(/\r?\n/)
+    .flatMap((line) => line.split(SEPARATORS[locale]))
+    .map((segment) => segment.replace(BULLET, "").trim())
     .filter(Boolean);
 
-  return segments.map((segment) => parseSegment(segment, locale));
+  return dedupe(segments.map((segment) => parseSegment(segment, locale)));
+}
+
+/**
+ * Quita los repetidos de una misma tanda.
+ *
+ * Una lista pegada casi siempre trae duplicados —se apunta «gazpacho» el lunes
+ * y otra vez el jueves— y tres líneas iguales en la lista de la compra no
+ * significan tres gazpachos: significan que hay que comprar gazpacho. Quien
+ * quiera dos escribe «gazpacho x2», que el parser ya entiende.
+ *
+ * Se conserva la primera aparición, pero hereda la cantidad de cualquiera de
+ * las repetidas: al pegar «agua» y más abajo «agua 6», lo que se quería decir
+ * era seis.
+ */
+function dedupe(items: ParsedVoiceItem[]): ParsedVoiceItem[] {
+  const byName = new Map<string, ParsedVoiceItem>();
+
+  for (const item of items) {
+    const key = item.name.toLowerCase();
+    const seen = byName.get(key);
+
+    if (!seen) {
+      byName.set(key, item);
+      continue;
+    }
+    if (seen.qty === null && item.qty !== null) {
+      byName.set(key, { ...seen, qty: item.qty, unit: item.unit });
+    }
+  }
+
+  return [...byName.values()];
 }
 
 interface Amount {
