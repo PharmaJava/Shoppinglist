@@ -109,3 +109,33 @@ describe("AddItemBar", () => {
     ]);
   });
 });
+
+describe("AddItemBar · pegar una lista", () => {
+  // El caso real: una lista escrita en las notas del móvil, un producto por
+  // línea. Un `<input>` se come los saltos, así que se convierten en comas.
+  it("una lista de varias líneas se convierte en productos separados", async () => {
+    renderBar();
+    const input = screen.getByPlaceholderText(messages.list.addPlaceholder);
+
+    input.focus();
+    await userEvent.paste("Agua\n Gazpacho \nHuevos 24\nAgua");
+    await userEvent.click(screen.getByRole("button", { name: messages.list.add }));
+
+    await waitFor(() => expect(addParsedItems).toHaveBeenCalled());
+    expect(addParsedItems.mock.calls[0]?.[0]).toEqual([
+      { name: "Agua", qty: null, unit: null },
+      { name: "Gazpacho", qty: null, unit: null },
+      { name: "Huevos", qty: 24, unit: null },
+    ]);
+  });
+
+  it("pegar una sola línea sigue funcionando como siempre", async () => {
+    renderBar();
+    const input = screen.getByPlaceholderText(messages.list.addPlaceholder);
+
+    input.focus();
+    await userEvent.paste("Pan de molde");
+
+    expect(input).toHaveValue("Pan de molde");
+  });
+});
