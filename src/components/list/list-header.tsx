@@ -14,14 +14,12 @@ export function ListHeader({
   checked,
   total,
   supermarketMode,
-  onToggleSupermarketMode,
 }: {
   listId: string;
   list: List;
   checked: number;
   total: number;
   supermarketMode: boolean;
-  onToggleSupermarketMode: () => void;
 }) {
   const t = useTranslations("list");
   const queryClient = useQueryClient();
@@ -60,16 +58,9 @@ export function ListHeader({
         )}
       </div>
 
-      <button
-        type="button"
-        onClick={onToggleSupermarketMode}
-        aria-pressed={supermarketMode}
-        aria-label={supermarketMode ? t("exitSupermarketMode") : t("supermarketMode")}
-        className="flex size-tap shrink-0 items-center justify-center rounded-full border border-border text-xl print:hidden"
-      >
-        {supermarketMode ? "✕" : "🛒"}
-      </button>
-
+      {/* El modo compra se empieza y se termina en la barra de abajo, no aquí:
+          un 🛒 suelto en la cabecera no lo encontraba nadie, y la ✕ para salir
+          no decía que sirviera para terminar la compra. */}
       {!supermarketMode && (
         <button
           type="button"

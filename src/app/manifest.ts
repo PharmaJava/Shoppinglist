@@ -8,7 +8,14 @@ import type { MetadataRoute } from "next";
  */
 const APP_ID = "/";
 
-export default function manifest(): MetadataRoute.Manifest {
+/**
+ * `handle_links` es un miembro estándar del manifest que el tipo de Next
+ * todavía no lista. Se declara aquí en vez de castear el objeto entero: así
+ * el resto del manifest sigue comprobándose contra el tipo de Next.
+ */
+type Manifest = MetadataRoute.Manifest & { handle_links?: "auto" | "preferred" | "not-preferred" };
+
+export default function manifest(): Manifest {
   return {
     id: APP_ID,
     name: "ListaSupermercado — lista de la compra compartida",
@@ -33,6 +40,20 @@ export default function manifest(): MetadataRoute.Manifest {
     // Un toque en una notificación reutiliza la ventana que ya esté abierta en
     // vez de apilar copias de la misma lista.
     launch_handler: { client_mode: ["navigate-existing", "auto"] },
+    /**
+     * Pide que los enlaces del sitio los abra la app instalada y no el
+     * navegador.
+     *
+     * `preferred` y no `auto`: `auto` deja la decisión al navegador, que en la
+     * práctica es «no». Y no `not-preferred`, que sería pedir lo contrario.
+     *
+     * Lo que esto **no** hace, para que conste: en iPhone y iPad no existe
+     * forma de que una web instalada capture enlaces —eso son Universal Links,
+     * y exigen una app nativa firmada—, y un enlace abierto dentro de WhatsApp
+     * se queda en el navegador de WhatsApp haga lo que haga el manifest. Ver
+     * docs/08-PWA.md §7.
+     */
+    handle_links: "preferred",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },

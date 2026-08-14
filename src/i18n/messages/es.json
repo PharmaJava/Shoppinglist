@@ -238,8 +238,6 @@
     "loading": "Cargando tu lista…",
     "voiceAdd": "Añadir por voz",
     "voiceListening": "Escuchando…",
-    "supermarketMode": "Modo supermercado",
-    "exitSupermarketMode": "Salir del modo supermercado",
     "memberYou": "Tú",
     "memberUnnamed": "Alguien más",
     "memberOwner": "· propietario",
@@ -441,5 +439,20 @@
     "currencyLabel": "Moneda",
     "currencyHint": "Se aplica a las listas nuevas. Las que ya tienes se quedan con la suya, para no convertir precios que ya escribiste.",
     "saved": "Guardado"
+  },
+  "shopping": {
+    "start": "Empezar la compra",
+    "progress": "{checked} de {total} en el carro",
+    "screenOn": "La pantalla no se apagará",
+    "screenOff": "La pantalla puede apagarse",
+    "screenUnsupported": "Este navegador apaga la pantalla igualmente",
+    "finish": "Finalizar",
+    "finishTitle": "Compra terminada",
+    "stillPending": "{count, plural, one {Queda 1 sin marcar} other {Quedan # sin marcar}}",
+    "keepAsIs": "Dejar la lista como está",
+    "clearChecked": "{count, plural, one {Quitar el producto comprado} other {Quitar los # comprados}}",
+    "archive": "Archivar la lista",
+    "keepShopping": "Seguir comprando",
+    "close": "Cerrar"
   }
 }
