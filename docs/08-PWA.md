@@ -107,7 +107,39 @@ tienen la app siguen sirviendo los viejos desde su caché.
 
 ---
 
-## 6. Lo que **no** se toca
+## 7. Abrir los enlaces en la app instalada
+
+Lo pide el manifest con `handle_links: "preferred"`, y el `scope` es `/`, así que **cualquier**
+enlace del sitio entra. Lo que pasa después depende de la plataforma, y no es lo mismo en las tres:
+
+| Dónde | Qué ocurre |
+|---|---|
+| **Android**, app instalada, enlace desde el navegador o de otra app | Android ofrece abrirlo con la app, o lo abre directamente si está puesto |
+| **Android**, enlace **dentro de WhatsApp** | Se queda en el navegador interno de WhatsApp. **No lo controlamos** |
+| **iPhone / iPad** | La app instalada **no puede** capturar enlaces. Punto |
+| Escritorio (Chrome, Edge) | Abre en la app instalada |
+
+Tres cosas que conviene tener claras, porque parecen fallos y no lo son:
+
+**En Android hay que activarlo una vez.** Ajustes → Aplicaciones → ListaSupermercado → *Abrir
+enlaces compatibles* (o *Abrir de forma predeterminada*) → activar el dominio. Android 12 en
+adelante lo deja apagado por defecto para todas las apps, nativas incluidas. El manifest pide el
+permiso; concederlo es del sistema.
+
+**En WhatsApp, casi nunca.** WhatsApp abre los enlaces en su propio navegador incrustado, que no
+es Chrome y no consulta a Android. Se puede desactivar en WhatsApp (Ajustes → Chats → *Usar
+navegador interno*), pero es una decisión de quien recibe el enlace, no nuestra. Como
+ListaSupermercado funciona igual desde el navegador —la lista se abre y se edita sin instalar
+nada—, esto degrada bien: se ve la lista, sólo que en una pestaña.
+
+**En iOS no hay forma.** Capturar enlaces en Apple son *Universal Links*, y exigen una app nativa
+firmada con su `apple-app-site-association`. Una web instalada en la pantalla de inicio no puede
+hacerlo, y no hay truco que lo consiga. Si algún día importa lo suficiente, la vía es empaquetar
+con Capacitor (Fase 4 del backlog), no otra cosa en el manifest.
+
+---
+
+## 8. Lo que **no** se toca
 
 - **`id` del manifest**. Es la identidad de la app para el navegador. Cambiarlo convierte la app ya
   instalada en otra distinta: quien la tuviera se queda con la vieja y se le ofrece instalar la

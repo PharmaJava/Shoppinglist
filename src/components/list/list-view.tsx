@@ -1,18 +1,22 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { setListArchived } from "@/features/list/api";
 import { normalizeProductName } from "@/features/list/categorize";
+import { empezarCompra, hayCompraEnCurso, terminarCompra } from "@/features/list/shopping-session";
 import type { ListItem } from "@/features/list/types";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
-import { useRestoreItem } from "@/features/list/use-list-mutations";
+import { useDeleteItem, useRestoreItem } from "@/features/list/use-list-mutations";
 import { useWakeLock } from "@/features/list/use-wake-lock";
 import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
 import { BudgetBar } from "./budget-bar";
+import { type AccionFinal, FinishSheet } from "./finish-sheet";
 import { ItemRow } from "./item-row";
 import { ListHeader } from "./list-header";
+import { ShoppingBar } from "./shopping-bar";
 import { SyncStatusBanner } from "./sync-status-banner";
 
 interface Group {
@@ -28,10 +32,30 @@ export function ListView({ listId }: { listId: string }) {
   const { data, isLoading, isError } = useList(listId);
   const { data: categories } = useCategories();
   const [supermarketMode, setSupermarketMode] = useState(false);
+  const [finishOpen, setFinishOpen] = useState(false);
   const [justDeleted, setJustDeleted] = useState<ListItem | null>(null);
   const restore = useRestoreItem(listId);
+  const borrar = useDeleteItem(listId);
 
-  useWakeLock(supermarketMode);
+  const pantalla = useWakeLock(supermarketMode);
+
+  // La compra sobrevive a que se apague la pantalla y la página se recargue:
+  // se guarda fuera de React (ver `shopping-session`). Sin esto, volver al
+  // móvil dentro del súper sacaba del modo compra sin haberlo pedido.
+  useEffect(() => {
+    setSupermarketMode(hayCompraEnCurso(listId));
+  }, [listId]);
+
+  const empezar = useCallback(() => {
+    empezarCompra(listId);
+    setSupermarketMode(true);
+  }, [listId]);
+
+  const cerrarCompra = useCallback(() => {
+    terminarCompra();
+    setSupermarketMode(false);
+    setFinishOpen(false);
+  }, []);
 
   // El aviso se retira solo: un borrado tiene ventana para arrepentirse, no
   // una barra permanente ocupando pantalla dentro del supermercado.
@@ -104,7 +128,6 @@ export function ListView({ listId }: { listId: string }) {
         checked={checked.length}
         total={total}
         supermarketMode={supermarketMode}
-        onToggleSupermarketMode={() => setSupermarketMode((current) => !current)}
       />
       <SyncStatusBanner />
       <BudgetBar listId={listId} list={data.list} items={data.items} />
@@ -173,7 +196,36 @@ export function ListView({ listId }: { listId: string }) {
         </div>
       )}
 
+      <ShoppingBar
+        activa={supermarketMode}
+        pendientes={pending.length}
+        marcados={checked.length}
+        pantalla={pantalla}
+        onEmpezar={empezar}
+        onFinalizar={() => setFinishOpen(true)}
+      />
+
       <AddItemBar listId={listId} existingNormalized={existingNormalized} />
+
+      {finishOpen && (
+        <FinishSheet
+          list={data.list}
+          pendientes={pending}
+          marcados={checked}
+          onCerrar={() => setFinishOpen(false)}
+          onConfirmar={async (accion: AccionFinal) => {
+            // Vaciar es un borrado lógico normal: cada producto conserva su
+            // «deshacer» y se sincroniza por el outbox como cualquier otro.
+            if (accion === "vaciar") {
+              for (const item of checked) borrar.mutate(item);
+            }
+            if (accion === "archivar") {
+              await setListArchived(data.list, true).catch(() => {});
+            }
+            cerrarCompra();
+          }}
+        />
+      )}
     </div>
   );
 }

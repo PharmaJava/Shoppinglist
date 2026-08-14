@@ -1,45 +1,85 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-/** Mantiene la pantalla encendida mientras `active` es true (modo supermercado). */
-export function useWakeLock(active: boolean) {
+export type WakeLockState = "no-soportado" | "encendida" | "apagada";
+
+/**
+ * Mantiene la pantalla encendida mientras `active` sea true.
+ *
+ * Dos cosas que no son evidentes y que costaron una queja:
+ *
+ * 1. El navegador **retira** el bloqueo en cuanto la pestaña deja de estar
+ *    visible, y no lo devuelve solo. Hay que volver a pedirlo al volver, o la
+ *    pantalla se apaga a los treinta segundos de haber salido y vuelto.
+ * 2. Pedirlo dos veces a la vez deja un `sentinel` huérfano que nadie libera.
+ *    De ahí el `pidiendo`.
+ *
+ * Devuelve en qué estado está para poder decirlo en pantalla: prometer que la
+ * pantalla se queda encendida y que se apague es peor que no prometer nada.
+ */
+export function useWakeLock(active: boolean): WakeLockState {
   const sentinelRef = useRef<WakeLockSentinel | null>(null);
+  const pidiendoRef = useRef(false);
+  const [encendida, setEncendida] = useState(false);
+
+  const soportado = typeof navigator !== "undefined" && "wakeLock" in navigator;
 
   useEffect(() => {
-    if (!active || typeof navigator === "undefined" || !("wakeLock" in navigator)) return;
+    if (!active || !soportado) {
+      setEncendida(false);
+      return;
+    }
 
-    let cancelled = false;
+    let cancelado = false;
 
-    async function requestLock() {
+    async function pedir() {
+      if (pidiendoRef.current || sentinelRef.current) return;
+      pidiendoRef.current = true;
+
       try {
         const sentinel = await navigator.wakeLock.request("screen");
-        if (cancelled) {
-          sentinel.release();
+        if (cancelado) {
+          void sentinel.release();
           return;
         }
         sentinelRef.current = sentinel;
+        setEncendida(true);
+
+        // El propio navegador avisa cuando lo suelta (pestaña oculta, batería
+        // baja). Sin esto, `sentinelRef` se quedaría apuntando a un bloqueo
+        // muerto y `pedir()` no volvería a intentarlo nunca.
+        sentinel.addEventListener("release", () => {
+          sentinelRef.current = null;
+          setEncendida(false);
+        });
       } catch {
-        // Rechazado por el navegador (pestaña en segundo plano, ahorro de
-        // batería…): no es un error del que recuperarse, simplemente no se
-        // mantiene la pantalla encendida esta vez.
+        // Rechazado: no es un error del que recuperarse, simplemente esta vez
+        // la pantalla no se queda encendida. Se dice en la interfaz.
+        setEncendida(false);
+      } finally {
+        pidiendoRef.current = false;
       }
     }
 
-    void requestLock();
+    void pedir();
 
-    // El wake lock se libera solo al ocultar la pestaña; hay que
-    // reponerlo al volver si el modo supermercado sigue activo.
-    function handleVisibilityChange() {
-      if (document.visibilityState === "visible") void requestLock();
+    function alVolver() {
+      if (document.visibilityState === "visible") void pedir();
     }
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("visibilitychange", alVolver);
+    window.addEventListener("focus", alVolver);
 
     return () => {
-      cancelled = true;
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      sentinelRef.current?.release().catch(() => {});
+      cancelado = true;
+      document.removeEventListener("visibilitychange", alVolver);
+      window.removeEventListener("focus", alVolver);
+      void sentinelRef.current?.release().catch(() => {});
       sentinelRef.current = null;
+      setEncendida(false);
     };
-  }, [active]);
+  }, [active, soportado]);
+
+  if (!soportado) return "no-soportado";
+  return encendida ? "encendida" : "apagada";
 }

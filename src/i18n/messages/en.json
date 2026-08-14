@@ -142,8 +142,6 @@
     "loading": "Loading your list…",
     "voiceAdd": "Add by voice",
     "voiceListening": "Listening…",
-    "supermarketMode": "Store mode",
-    "exitSupermarketMode": "Exit store mode",
     "memberYou": "You",
     "memberUnnamed": "Someone else",
     "memberOwner": "· owner",
@@ -441,5 +439,20 @@
     "currencyLabel": "Currency",
     "currencyHint": "Applies to new lists. The ones you already have keep theirs, so prices you typed don't get converted.",
     "saved": "Saved"
+  },
+  "shopping": {
+    "start": "Start shopping",
+    "progress": "{checked} of {total} in the trolley",
+    "screenOn": "The screen will stay on",
+    "screenOff": "The screen may turn off",
+    "screenUnsupported": "This browser turns the screen off anyway",
+    "finish": "Finish",
+    "finishTitle": "Shopping done",
+    "stillPending": "{count, plural, one {1 item still unticked} other {# items still unticked}}",
+    "keepAsIs": "Leave the list as it is",
+    "clearChecked": "{count, plural, one {Remove the item you bought} other {Remove the # you bought}}",
+    "archive": "Archive the list",
+    "keepShopping": "Keep shopping",
+    "close": "Close"
   }
 }
