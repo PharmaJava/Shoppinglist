@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { PremiumGate } from "@/components/billing/premium-gate";
 import { MyTemplatesClient } from "@/components/templates/my-templates-client";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
@@ -33,6 +34,7 @@ export default async function MyTemplatesPage({ params }: Props) {
   if (!hasLocale(routing.locales, locale)) notFound();
 
   const t = await getTranslations({ locale, namespace: "templatesMine" });
+  const tRecurrentes = await getTranslations({ locale, namespace: "recurring" });
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-12 sm:px-6">
@@ -42,6 +44,19 @@ export default async function MyTemplatesPage({ params }: Props) {
       </div>
 
       <MyTemplatesClient />
+
+      {/* La puerta de entrada a las listas automáticas: es aquí donde se está
+          mirando lo que se repite. Con la Fase 3 apagada `PremiumGate` no
+          devuelve nada, así que este enlace no existe. */}
+      <PremiumGate
+        titulo={tRecurrentes("gateTitle")}
+        descripcion={tRecurrentes("gateBody")}
+        cta={tRecurrentes("gateCta")}
+      >
+        <Link href="/listas-automaticas" className="font-medium text-brand underline">
+          {tRecurrentes("newTitle")}
+        </Link>
+      </PremiumGate>
 
       <p className="text-sm text-on-surface-muted">
         {t("publicHint")}{" "}

@@ -10,6 +10,8 @@
 export type ListRole = "owner" | "editor" | "viewer";
 export type Locale = "es" | "en";
 export type Plan = "free" | "premium";
+/** Cada cuánto se crea sola una lista recurrente (migración 0012). */
+export type Cadence = "weekly" | "biweekly" | "monthly";
 
 export interface Database {
   public: {
@@ -196,6 +198,44 @@ export interface Database {
         };
         Update: Partial<Database["public"]["Tables"]["pantry_items"]["Row"]>;
       };
+      recurring_lists: {
+        Row: {
+          id: string;
+          owner_id: string;
+          template_id: string;
+          title: string;
+          cadence: Cadence;
+          /** ISO: 1 = lunes … 7 = domingo. Nulo en las mensuales. */
+          weekday: number | null;
+          /** 1–28. Nulo en las semanales y quincenales. Ver la migración 0012. */
+          day_of_month: number | null;
+          /** Fecha sin hora. La pone el servidor, siempre. */
+          next_run_on: string;
+          last_run_on: string | null;
+          last_list_id: string | null;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        // Hace falta para el `select("… list_templates(title)")` de la
+        // pantalla: sin la relación declarada, PostgREST no sabe unirlas.
+        Relationships: [
+          {
+            foreignKeyName: "recurring_lists_template_id_fkey";
+            columns: ["template_id"];
+            isOneToOne: false;
+            referencedRelation: "list_templates";
+            referencedColumns: ["id"];
+          },
+        ];
+        Insert: Partial<Database["public"]["Tables"]["recurring_lists"]["Row"]> & {
+          owner_id: string;
+          template_id: string;
+          title: string;
+          cadence: Cadence;
+        };
+        Update: Partial<Database["public"]["Tables"]["recurring_lists"]["Row"]>;
+      };
       list_templates: {
         Row: {
           id: string;
@@ -281,6 +321,20 @@ export interface Database {
         Args: { p_list: string; p_actor: string | null };
         Returns: Array<{ endpoint: string; p256dh: string; auth: string; locale: string }>;
       };
+      push_targets_for_user: {
+        Args: { p_user: string };
+        Returns: Array<{ endpoint: string; p256dh: string; auth: string; locale: string }>;
+      };
+      /** Sólo desde el servidor con la clave de servicio. Ver la migración 0012. */
+      run_due_recurring_lists: {
+        Args: Record<string, never>;
+        Returns: Array<{
+          recurring_id: string;
+          list_id: string;
+          owner_id: string;
+          title: string;
+        }>;
+      };
       set_member_role: {
         Args: { p_list: string; p_user: string; p_role: ListRole };
         Returns: undefined;
@@ -309,6 +363,11 @@ export interface Database {
       is_premium: {
         Args: Record<string, never>;
         Returns: boolean;
+      };
+      run_recurring_list: {
+        Args: { p_recurring: string };
+        /** El id de la lista recién creada. */
+        Returns: string;
       };
     };
   };

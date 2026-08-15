@@ -69,6 +69,7 @@ mirar antes de volver al súper.
 ## 6. Lo que **no** hace todavía
 
 **No manda avisos push cuando algo va a caducar.** Haría falta una tarea programada que repase las
-despensas cada día, y eso es la misma infraestructura que piden las listas recurrentes (F3-3): se
-resuelve una vez, ahí, y luego se conecta aquí. Mientras tanto el aviso está en la pantalla, no en
-el bolsillo.
+despensas cada día. Esa tarea **ya existe** desde las listas automáticas (F3-3): corre cada
+madrugada, tiene la clave de servicio y sabe firmar VAPID — ver `docs/13-RECURRENTES.md` §4. Lo que
+queda es una función que devuelva a quién avisar y de qué, y colgarla de la misma pasada. Mientras
+tanto el aviso está en la pantalla, no en el bolsillo.
