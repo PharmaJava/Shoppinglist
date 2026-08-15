@@ -12,6 +12,7 @@ import {
   type ListSummary,
   setListArchived,
 } from "@/features/list/api";
+import { estadoFinal, horasRestantes } from "@/features/list/auto-finish";
 import { normalizeProductName } from "@/features/list/categorize";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/lib/supabase/types";
@@ -141,6 +142,7 @@ export function MyListsClient() {
 
 function ListCard({ summary }: { summary: ListSummary }) {
   const t = useTranslations("myLists");
+  const tFin = useTranslations("autoFinish");
   const format = useFormatter();
   const locale = useLocale() as Locale;
   const router = useRouter();
@@ -190,6 +192,10 @@ function ListCard({ summary }: { summary: ListSummary }) {
 
         <span className="text-xs text-on-surface-muted">
           {t("updated", { date: format.relativeTime(new Date(list.updated_at)) })}
+          {/* La cuenta atrás también aquí: el panel es donde se ve cuál de las
+              listas se cierra hoy, y da tiempo a hacer algo al respecto. */}
+          {estadoFinal(list, new Date()) === "pronto" &&
+            ` · ${tFin("cardSoon", { hours: horasRestantes(list, new Date()) })}`}
         </span>
       </a>
 

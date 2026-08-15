@@ -25,6 +25,7 @@ va marcando productos mientras compra.
 | [`docs/14-RECETAS.md`](docs/14-RECETAS.md) | De una receta pegada a la lista (premium): qué reconoce y por qué no lleva IA |
 | [`docs/15-CODIGOS.md`](docs/15-CODIGOS.md) | Escanear códigos de barras (premium): la cámara, Open Food Facts y el dígito de control |
 | [`docs/16-STRIPE.md`](docs/16-STRIPE.md) | Cobrar con Stripe: quién da premium, la firma del webhook y qué falta para encenderlo |
+| [`docs/17-CADUCIDAD.md`](docs/17-CADUCIDAD.md) | El plazo de las listas hechas sin cuenta: 24 h para darlas por hechas, una semana para borrarlas |
 | [`e2e/README.md`](e2e/README.md) | Qué cubren los tests end-to-end y qué falta |
 | [`supabase/README.md`](supabase/README.md) | Cómo aplicar migraciones y cómo saber cuáles faltan (`pnpm db:check`) |
 

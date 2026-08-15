@@ -13,6 +13,7 @@ import { useWakeLock } from "@/features/list/use-wake-lock";
 import { stockUpFromList } from "@/features/pantry/api";
 import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
+import { AutoFinishBanner } from "./auto-finish-banner";
 import { BudgetBar } from "./budget-bar";
 import { type AccionFinal, FinishSheet } from "./finish-sheet";
 import { ItemRow } from "./item-row";
@@ -131,6 +132,7 @@ export function ListView({ listId }: { listId: string }) {
         supermarketMode={supermarketMode}
       />
       <SyncStatusBanner />
+      <AutoFinishBanner listId={listId} list={data.list} />
       <BudgetBar listId={listId} list={data.list} items={data.items} />
 
       <div className="flex-1 overflow-y-auto pb-4 print:h-auto print:overflow-visible">
