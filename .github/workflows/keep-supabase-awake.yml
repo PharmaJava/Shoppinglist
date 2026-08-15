@@ -56,10 +56,30 @@ jobs:
 
           echo "HTTP ${code}"
           cat /tmp/respuesta.json
+          echo
 
-          if [ "${code}" != "200" ]; then
-            echo "::error title=Supabase no respondió 200::Ha devuelto ${code}. O el proyecto ya está pausado —hay que reactivarlo a mano desde el panel de Supabase— o la clave anónima ha cambiado y hay que actualizar el secreto."
+          # El identificador del proyecto sale de la URL. No es un secreto —va
+          # en el paquete que descarga cualquier navegador, dentro de
+          # NEXT_PUBLIC_SUPABASE_URL— y es justo lo que hace falta ver para
+          # saber de un vistazo si el secreto apunta al proyecto que toca.
+          proyecto=$(printf '%s' "${SUPABASE_URL}" | sed -E 's#^https?://([^./]+).*#\1#')
+
+          if [ "${code}" = "200" ]; then
+            echo "::notice title=Supabase sigue despierto::El proyecto ${proyecto} respondió 200. Siguiente comprobación en dos días."
+            exit 0
+          fi
+
+          # Cada fallo tiene un arreglo distinto, y decir «no ha devuelto 200»
+          # obliga a abrir el log y a adivinar cuál de los tres es.
+          if [ "${code}" = "401" ] || [ "${code}" = "403" ]; then
+            echo "::error title=La clave anónima ya no vale::El proyecto ${proyecto} ha rechazado la clave (${code}). Copia la publicable de Supabase (Project Settings → API) al secreto SUPABASE_ANON_KEY."
             exit 1
           fi
 
-          echo "::notice title=Supabase sigue despierto::Respondió 200. Siguiente comprobación en dos días."
+          if grep -q "PGRST205" /tmp/respuesta.json; then
+            echo "::error title=Ese proyecto no tiene las tablas de la app::El proyecto ${proyecto} ha respondido, pero su API no encuentra 'public.categories'. Casi siempre significa que SUPABASE_URL y SUPABASE_ANON_KEY son de OTRO proyecto de Supabase: compara ${proyecto} con el identificador de NEXT_PUBLIC_SUPABASE_URL en Vercel y, si no coinciden, corrige los dos secretos. Si sí coinciden, es que faltan migraciones por aplicar (pnpm db:check) o que la caché de esquema de PostgREST se quedó atrás: Project Settings → API → Restart server. Ojo: mientras el secreto apunte a otro sitio, el proyecto de verdad se sigue durmiendo."
+            exit 1
+          fi
+
+          echo "::error title=Supabase no respondió 200::El proyecto ${proyecto} ha devuelto ${code}. O ya está pausado —hay que reactivarlo a mano desde el panel de Supabase— o su API está caída."
+          exit 1
