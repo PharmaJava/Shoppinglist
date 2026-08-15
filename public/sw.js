@@ -9,7 +9,9 @@
  *
  * Subir VERSION invalida todas las cachés antiguas en el próximo `activate`.
  */
-const VERSION = "v3";
+// v4: iconos nuevos. Sin subir esto, quien ya tenga la app instalada seguiría
+// viendo el carrito gris que había en caché.
+const VERSION = "v4";
 const SHELL_CACHE = `listasupermercado-shell-${VERSION}`;
 const RUNTIME_CACHE = `listasupermercado-runtime-${VERSION}`;
 const OFFLINE_URL = "/offline.html";

@@ -105,6 +105,21 @@ Si el Chromium del sistema no es el que instala Playwright: `PLAYWRIGHT_CHROMIUM
 Cambiar los iconos obliga a subir `VERSION` en `public/sw.js`; si no, los dispositivos que ya
 tienen la app siguen sirviendo los viejos desde su caché.
 
+### El icono, y por qué es como es
+
+Es el logotipo de la marca —la bolsa con el visto— en blanco sobre verde. Antes era el emoji 🛒:
+un carrito **gris**, con la rejilla calada, sobre el verde de la marca. A tamaño de icono no se
+distinguía nada, y encima no era el logotipo que usa la web.
+
+El fondo es `--color-brand-400` (`#50bb6d`), un paso más claro que el `theme_color`. En la pantalla
+de inicio, el verde de la marca se leía como casi negro; este respira. El `theme_color` sigue
+siendo el oscuro: ese pinta la barra de estado, donde va mejor.
+
+El logotipo ocupa el **64 %** en los iconos normales y el **50 %** en los *maskable*. Esa
+diferencia es la razón de ser del maskable: Android lo recorta a la forma que use el fabricante
+—círculo, cuadrado redondeado, gota— y sólo garantiza el 80 % central. Un logotipo a tamaño
+completo perdería el asa de la bolsa en medio móvil.
+
 ---
 
 ## 7. Abrir los enlaces en la app instalada
