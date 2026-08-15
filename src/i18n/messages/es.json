@@ -557,5 +557,32 @@
       "no_premium": "Convertir recetas es de Premium.",
       "generico": "No se ha podido leer la receta. Inténtalo otra vez."
     }
+  },
+  "barcode": {
+    "title": "Escanear un producto",
+    "scan": "Escanear un código de barras",
+    "gateTitle": "Escanear códigos es de Premium",
+    "gateBody": "Apunta al código de barras y el producto entra en la lista con su nombre.",
+    "gateCta": "Ver precios",
+    "useCamera": "Usar la cámara",
+    "asking": "Pidiendo permiso…",
+    "cameraLabel": "Imagen de la cámara",
+    "aim": "Apunta al código de barras del envase.",
+    "noCamera": "Este navegador no sabe leer códigos con la cámara. Safari todavía no lo hace: teclea el número que hay debajo de las rayas.",
+    "noPermission": "Sin permiso para la cámara. Puedes dárselo desde los ajustes del navegador, o teclear el número.",
+    "cameraError": "No se ha podido encender la cámara. Teclea el número que hay debajo de las rayas.",
+    "typeLabel": "O teclea el número del código",
+    "search": "Buscar",
+    "invalidCode": "Ese número no es un código de barras válido. Repásalo: son 8, 12 o 13 dígitos.",
+    "searching": "Buscando el {code}…",
+    "fromMemory": "Ya me lo enseñaste",
+    "fromOpenFoodFacts": "Según Open Food Facts",
+    "unknown": "No conozco este código. Escribe qué es y me acordaré la próxima vez.",
+    "nameLabel": "Producto",
+    "add": "Añadir",
+    "another": "Otro",
+    "added": "{name} está en la lista",
+    "done": "Terminar",
+    "close": "Cerrar"
   }
 }

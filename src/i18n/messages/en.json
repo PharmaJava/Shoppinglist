@@ -557,5 +557,32 @@
       "no_premium": "Turning recipes into lists is a Premium feature.",
       "generico": "The recipe couldn't be read. Try again."
     }
+  },
+  "barcode": {
+    "title": "Scan a product",
+    "scan": "Scan a barcode",
+    "gateTitle": "Scanning barcodes is a Premium feature",
+    "gateBody": "Point at the barcode and the product goes into the list with its name.",
+    "gateCta": "See pricing",
+    "useCamera": "Use the camera",
+    "asking": "Asking for permission…",
+    "cameraLabel": "Camera view",
+    "aim": "Point at the barcode on the package.",
+    "noCamera": "This browser can't read barcodes with the camera. Safari doesn't do it yet: type the number printed under the bars.",
+    "noPermission": "No camera permission. You can grant it in your browser settings, or type the number.",
+    "cameraError": "The camera couldn't be started. Type the number printed under the bars.",
+    "typeLabel": "Or type the barcode number",
+    "search": "Search",
+    "invalidCode": "That number isn't a valid barcode. Check it: they're 8, 12 or 13 digits.",
+    "searching": "Looking up {code}…",
+    "fromMemory": "You taught me this one",
+    "fromOpenFoodFacts": "According to Open Food Facts",
+    "unknown": "I don't know this barcode. Type what it is and I'll remember next time.",
+    "nameLabel": "Product",
+    "add": "Add",
+    "another": "Another",
+    "added": "{name} is on the list",
+    "done": "Done",
+    "close": "Close"
   }
 }
