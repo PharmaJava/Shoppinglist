@@ -454,5 +454,34 @@
     "archive": "Archive the list",
     "keepShopping": "Keep shopping",
     "close": "Close"
+  },
+  "pantry": {
+    "metaTitle": "My pantry",
+    "title": "My pantry",
+    "intro": "What you have at home and when it expires, so you neither buy it twice nor throw it away.",
+    "loading": "Loading…",
+    "add": "Add",
+    "adding": "Adding…",
+    "addLabel": "Item",
+    "addPlaceholder": "e.g. 2 litres of milk",
+    "expiresLabel": "Expires on",
+    "expiresFor": "Expiry date for {name}",
+    "remove": "Remove",
+    "removeFor": "Remove {name} from the pantry",
+    "urgent": "{count, plural, one {1 item needs looking at today} other {# items need looking at today}}",
+    "emptyTitle": "The pantry is empty",
+    "emptyBody": "Add what you have at home, or put a whole shop in when you finish one.",
+    "gateTitle": "The pantry is a Premium feature",
+    "gateBody": "Keep track of what's at home, with expiry dates, and stop buying the same jar three times.",
+    "gateCta": "See pricing",
+    "estado": {
+      "caducado": "Expired",
+      "hoy": "Expires today",
+      "pronto": "Expires this week",
+      "lejos": "In date",
+      "sin-fecha": "No expiry"
+    },
+    "stockUp": "Put what you bought in the pantry",
+    "stockedUp": "{count, plural, one {1 item added to the pantry} other {# items added to the pantry}}"
   }
 }

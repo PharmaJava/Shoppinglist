@@ -6,6 +6,15 @@ import type { List, ListItem } from "@/features/list/types";
 import messages from "@/i18n/messages/es.json";
 import { FinishSheet } from "./finish-sheet";
 
+/**
+ * `PremiumGate` acaba importando el cliente de Supabase, que exige sus
+ * variables de entorno nada más cargarse. Aquí no se prueba el plan, sólo que
+ * la hoja de finalizar hace lo suyo — mismo motivo por el que
+ * `share-sheet.test.tsx` sustituye el interruptor de avisos.
+ */
+const fetchPlan = vi.fn(async () => "free" as "free" | "premium");
+vi.mock("@/features/billing/plan", () => ({ fetchPlan: () => fetchPlan() }));
+
 const lista = { id: "l1", title: "Compra", archived_at: null } as List;
 
 function item(name: string): ListItem {
@@ -89,5 +98,15 @@ describe("FinishSheet", () => {
     await userEvent.click(screen.getByRole("button", { name: "Seguir comprando" }));
     expect(onCerrar).toHaveBeenCalled();
     expect(onConfirmar).not.toHaveBeenCalled();
+  });
+
+  /**
+   * La despensa es de la Fase 3 y va apagada: con el interruptor sin poner
+   * —que es como está en producción— el botón no puede aparecer aquí.
+   */
+  it("con la Fase 3 apagada no ofrece guardar en la despensa", () => {
+    montar();
+
+    expect(screen.queryByRole("button", { name: /despensa/i })).not.toBeInTheDocument();
   });
 });

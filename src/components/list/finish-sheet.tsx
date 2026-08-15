@@ -2,9 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { PremiumGate } from "@/components/billing/premium-gate";
 import type { List, ListItem } from "@/features/list/types";
 
-export type AccionFinal = "nada" | "vaciar" | "archivar";
+export type AccionFinal = "nada" | "vaciar" | "archivar" | "despensa";
 
 /**
  * Qué hacer con la lista al terminar la compra.
@@ -27,6 +28,7 @@ export function FinishSheet({
   onConfirmar: (accion: AccionFinal) => Promise<void> | void;
 }) {
   const t = useTranslations("shopping");
+  const tDespensa = useTranslations("pantry");
   const [ocupado, setOcupado] = useState<AccionFinal | null>(null);
 
   async function elegir(accion: AccionFinal) {
@@ -105,6 +107,27 @@ export function FinishSheet({
             >
               {t("archive")}
             </button>
+          )}
+
+          {/* Acabar la compra es el único momento en que se sabe **exactamente**
+              qué ha entrado en casa. Pedirlo luego a mano en otra pantalla es
+              pedir que nadie lo use. Con el interruptor apagado esto no se
+              pinta: `PremiumGate` no devuelve nada. */}
+          {marcados.length > 0 && (
+            <PremiumGate
+              titulo={tDespensa("gateTitle")}
+              descripcion={tDespensa("gateBody")}
+              cta={tDespensa("gateCta")}
+            >
+              <button
+                type="button"
+                onClick={() => elegir("despensa")}
+                disabled={ocupado !== null}
+                className="h-tap w-full rounded-full border border-brand font-semibold text-brand disabled:opacity-50"
+              >
+                {tDespensa("stockUp")}
+              </button>
+            </PremiumGate>
           )}
         </div>
 
