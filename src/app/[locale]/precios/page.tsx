@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { CheckoutButton } from "@/components/billing/checkout-button";
 import { JsonLd } from "@/components/content/prose";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { PREMIUM_VISIBLE } from "@/lib/flags";
 import { sectionUrl } from "@/lib/seo/urls";
+import { precioPremium, stripeConfigurado } from "@/lib/stripe/server";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -61,6 +64,18 @@ export default async function PricingPage({ params }: Props) {
 
   const t = await getTranslations({ locale, namespace: "pricing" });
   const tMeta = await getTranslations({ locale, namespace: "metadata" });
+
+  /**
+   * El precio se le pregunta a Stripe, que es donde de verdad manda. Sin
+   * claves devuelve `null` y la página sigue diciendo «sin precio todavía»,
+   * que es la verdad mientras no haya forma de pagar.
+   *
+   * Esta página es estática, así que la consulta ocurre al construirla: subir
+   * el precio en Stripe exige un redespliegue para que se vea aquí. Es lo
+   * correcto para una página de marketing —cero llamadas por visita— y está
+   * anotado en docs/16-STRIPE.md.
+   */
+  const precio = await precioPremium(locale);
 
   // Sólo se declara la oferta que existe de verdad. Marcar premium como
   // `Offer` sin precio ni disponibilidad sería declarar un producto que no se
@@ -125,8 +140,16 @@ export default async function PricingPage({ params }: Props) {
         <section className="flex flex-col gap-4 rounded-card border border-border bg-surface-muted p-6">
           <div className="flex flex-col gap-1">
             <h2 className="font-semibold text-on-surface">{t("premiumTitle")}</h2>
-            <p className="text-3xl font-bold text-on-surface-muted">{t("premiumPrice")}</p>
-            <p className="text-sm text-on-surface-muted">{t("premiumNote")}</p>
+            <p className="text-3xl font-bold text-on-surface-muted">
+              {precio
+                ? precio.intervalo === "year"
+                  ? t("perYear", { precio: precio.importe })
+                  : t("perMonth", { precio: precio.importe })
+                : t("premiumPrice")}
+            </p>
+            <p className="text-sm text-on-surface-muted">
+              {precio ? t("premiumNoteLive") : t("premiumNote")}
+            </p>
           </div>
 
           <h3 className="font-semibold text-on-surface text-sm">{t("plannedTitle")}</h3>
@@ -138,6 +161,12 @@ export default async function PricingPage({ params }: Props) {
               </li>
             ))}
           </ul>
+
+          {/* Sólo hay botón si de verdad se puede pagar: con la Fase 3
+              apagada o sin las claves de Stripe, esto no devuelve nada. */}
+          <div className="mt-auto">
+            <CheckoutButton disponible={PREMIUM_VISIBLE && stripeConfigurado()} />
+          </div>
         </section>
       </div>
 
