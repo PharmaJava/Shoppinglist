@@ -49,13 +49,26 @@ export async function GET(request: NextRequest) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  /**
+   * Y de paso, la limpieza: dar por terminadas las listas de invitado a las
+   * que se les ha pasado el día (migración 0015). Va después de crear las
+   * recurrentes y aparte: que falle una no puede impedir la otra, porque son
+   * dos trabajos distintos que comparten pasada.
+   */
+  const { data: terminadas } = await supabase.rpc("finish_stale_guest_lists", {});
+
   if (!creadas || creadas.length === 0) {
-    return NextResponse.json({ created: 0, sent: 0 });
+    return NextResponse.json({ created: 0, sent: 0, finished: terminadas ?? 0 });
   }
 
   const enviados = await avisar(supabase, creadas);
 
-  return NextResponse.json({ created: creadas.length, sent: enviados });
+  return NextResponse.json({
+    created: creadas.length,
+    sent: enviados,
+    finished: terminadas ?? 0,
+  });
 }
 
 type Supabase = ReturnType<typeof createClient<Database>>;

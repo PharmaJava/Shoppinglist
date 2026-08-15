@@ -204,7 +204,7 @@
     "feature6Title": "Modo supermercado",
     "feature6Body": "Pantalla siempre encendida y elementos grandes, para marcar con una mano en el carro.",
     "faq1Q": "¿De verdad no hace falta registrarse?",
-    "faq1A": "De verdad. Escribes tu primer producto, se crea la lista y ya puedes compartirla. Sin correo, sin contraseña y sin instalar nada: se abre en el navegador.",
+    "faq1A": "De verdad. Escribes tu primer producto, se crea la lista y ya puedes compartirla. Sin correo, sin contraseña y sin instalar nada: se abre en el navegador. Eso sí, una lista hecha sin cuenta se da por terminada al día siguiente —tiempo de sobra para la compra—; se puede volver a abrir de un toque, y creando la cuenta deja de caducar.",
     "faq2Q": "¿Cómo comparto la lista con mi familia?",
     "faq2A": "Con un enlace. Pulsa compartir, mándalo por WhatsApp o como quieras, y quien lo abra puede ver, añadir y marcar productos al momento desde su móvil.",
     "faq3Q": "¿Qué pasa si en el supermercado no tengo cobertura?",
@@ -584,5 +584,13 @@
     "added": "{name} está en la lista",
     "done": "Terminar",
     "close": "Cerrar"
+  },
+  "autoFinish": {
+    "soon": "{hours, plural, one {Esta lista se dará por terminada en 1 hora} other {Esta lista se dará por terminada en # horas}}",
+    "keepIt": "Crea una cuenta y se queda",
+    "finished": "Esta lista se ha dado por terminada: ha pasado un día desde que la creaste.",
+    "reopen": "Volver a abrirla",
+    "reopening": "Abriendo…",
+    "cardSoon": "{hours, plural, one {Se termina en 1 h} other {Se termina en # h}}"
   }
 }

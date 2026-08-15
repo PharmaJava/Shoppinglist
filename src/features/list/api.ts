@@ -261,6 +261,21 @@ export async function setListArchived(list: List, archived: boolean): Promise<Li
 }
 
 /**
+ * Vuelve a abrir una lista que se dio por terminada sola, con otras 24 horas.
+ *
+ * Va por RPC y no por el outbox como el resto: `auto_finish_at` no se puede
+ * escribir desde el cliente (migración 0015), así que la fecha nueva la pone
+ * la base de datos. Eso significa que reabrir necesita red — es una acción
+ * deliberada y puntual, no algo que se haga dentro del súper sin cobertura.
+ */
+export async function reopenList(listId: string): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase.rpc("reopen_list", { p_list: listId });
+
+  if (error) throw new Error(error.message);
+}
+
+/**
  * Copia una lista con todos sus productos sin marcar: «volver a comprar».
  *
  * Conserva cantidad, unidad y categoría —incluidas las que se movieron de

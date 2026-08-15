@@ -24,6 +24,7 @@ const list: List = {
   currency: "EUR",
   budget_cents: null,
   archived_at: null,
+  auto_finish_at: null,
   created_at: "2026-08-01T00:00:00.000Z",
   updated_at: "2026-08-10T00:00:00.000Z",
 };

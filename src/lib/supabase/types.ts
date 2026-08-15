@@ -51,6 +51,12 @@ export interface Database {
           currency: string;
           budget_cents: number | null;
           archived_at: string | null;
+          /**
+           * Cuándo se da por terminada sola. Sólo la tienen las listas de
+           * quien no ha creado cuenta; la escribe la base de datos y el
+           * cliente no puede tocarla (migración 0015).
+           */
+          auto_finish_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -381,6 +387,16 @@ export interface Database {
       is_premium: {
         Args: Record<string, never>;
         Returns: boolean;
+      };
+      /** Devuelve la nueva fecha de fin, o nula si la lista no caduca. */
+      reopen_list: {
+        Args: { p_list: string };
+        Returns: string | null;
+      };
+      /** Cuántas listas de invitado se han dado por terminadas. Sólo el servidor. */
+      finish_stale_guest_lists: {
+        Args: Record<string, never>;
+        Returns: number;
       };
       /** No devuelve nada: o pasa, o lanza. Ver la migración 0010. */
       require_premium: {

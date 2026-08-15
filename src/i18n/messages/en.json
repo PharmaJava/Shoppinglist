@@ -108,7 +108,7 @@
     "feature6Title": "Store mode",
     "feature6Body": "Screen stays on, targets get big — check things off one-handed at the cart.",
     "faq1Q": "Do I really not need an account?",
-    "faq1A": "Really. Type your first item, the list is created, and you can share it right away. No email, no password, nothing to install — it opens in the browser.",
+    "faq1A": "Really. Type your first item, the list is created, and you can share it right away. No email, no password, nothing to install — it opens in the browser. One thing: a list made without an account is wrapped up the next day — plenty of time for the shop —; you can open it again in one tap, and creating an account stops it expiring.",
     "faq2Q": "How do I share the list with my family?",
     "faq2A": "With a link. Tap share, send it however you like, and whoever opens it can view, add and check off items from their phone immediately.",
     "faq3Q": "What if I lose signal inside the store?",
@@ -584,5 +584,13 @@
     "added": "{name} is on the list",
     "done": "Done",
     "close": "Close"
+  },
+  "autoFinish": {
+    "soon": "{hours, plural, one {This list will be wrapped up in 1 hour} other {This list will be wrapped up in # hours}}",
+    "keepIt": "Create an account and it stays",
+    "finished": "This list has been wrapped up: it's been a day since you created it.",
+    "reopen": "Open it again",
+    "reopening": "Opening…",
+    "cardSoon": "{hours, plural, one {Wraps up in 1 h} other {Wraps up in # h}}"
   }
 }

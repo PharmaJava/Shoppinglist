@@ -24,6 +24,7 @@ va marcando productos mientras compra.
 | [`docs/13-RECURRENTES.md`](docs/13-RECURRENTES.md) | Listas automáticas (premium) y la tarea programada diaria |
 | [`docs/14-RECETAS.md`](docs/14-RECETAS.md) | De una receta pegada a la lista (premium): qué reconoce y por qué no lleva IA |
 | [`docs/15-CODIGOS.md`](docs/15-CODIGOS.md) | Escanear códigos de barras (premium): la cámara, Open Food Facts y el dígito de control |
+| [`docs/17-CADUCIDAD.md`](docs/17-CADUCIDAD.md) | Por qué las listas de invitado se dan por terminadas a las 24 horas, y qué las salva |
 | [`e2e/README.md`](e2e/README.md) | Qué cubren los tests end-to-end y qué falta |
 | [`supabase/README.md`](supabase/README.md) | Cómo aplicar migraciones y cómo saber cuáles faltan (`pnpm db:check`) |
 
