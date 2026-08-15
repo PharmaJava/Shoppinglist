@@ -8,6 +8,11 @@ name: Mantener despierto Supabase
 #   SUPABASE_URL          https://xxxxxxxx.supabase.co
 #   SUPABASE_ANON_KEY     la clave publicable (la misma que usa el navegador)
 #
+# Son los mismos valores que NEXT_PUBLIC_SUPABASE_URL y
+# NEXT_PUBLIC_SUPABASE_ANON_KEY en Vercel. Mientras falten, esta tarea falla a
+# propósito cada dos días: dar por bueno un proyecto que se va a pausar sería
+# peor que el correo.
+#
 # Ojo: GitHub desactiva las tareas programadas de un repositorio sin actividad
 # durante 60 días, y avisa por correo antes de hacerlo. Si el proyecto entra en
 # reposo, basta con volver a activarla desde la pestaña Actions.
@@ -31,10 +36,12 @@ jobs:
         run: |
           set -euo pipefail
 
+          # `::error::` y no un `echo`: lo que sale por ahí es lo que GitHub
+          # manda en el correo y enseña como anotación del run. Con un `echo`
+          # el aviso llegaba diciendo «Process completed with exit code 1», que
+          # no dice qué hay que hacer y obliga a abrir el log para enterarse.
           if [ -z "${SUPABASE_URL}" ] || [ -z "${SUPABASE_ANON_KEY}" ]; then
-            echo "Faltan los secretos SUPABASE_URL o SUPABASE_ANON_KEY."
-            echo "Sin ellos esta tarea no sirve para nada, así que falla a propósito"
-            echo "en vez de dar por bueno un proyecto que se va a pausar igualmente."
+            echo "::error title=Faltan los secretos del repositorio::Añade SUPABASE_URL y SUPABASE_ANON_KEY en Settings → Secrets and variables → Actions. Los valores son los mismos que NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en Vercel. Sin ellos esta tarea no puede hacer nada y el proyecto de Supabase se pausará a la semana."
             exit 1
           fi
 
@@ -51,6 +58,8 @@ jobs:
           cat /tmp/respuesta.json
 
           if [ "${code}" != "200" ]; then
-            echo "::error::Supabase no respondió 200. El proyecto puede estar pausado o las claves ya no valen."
+            echo "::error title=Supabase no respondió 200::Ha devuelto ${code}. O el proyecto ya está pausado —hay que reactivarlo a mano desde el panel de Supabase— o la clave anónima ha cambiado y hay que actualizar el secreto."
             exit 1
           fi
+
+          echo "::notice title=Supabase sigue despierto::Respondió 200. Siguiente comprobación en dos días."
