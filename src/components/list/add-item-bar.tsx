@@ -7,6 +7,7 @@ import { valueAfterPaste } from "@/features/list/paste";
 import { useAddParsedItems } from "@/features/list/use-list-mutations";
 import { useSuggestions } from "@/features/list/use-suggestions";
 import type { Locale } from "@/lib/supabase/types";
+import { ScanAddButton } from "./scan-add-button";
 import { VoiceAddButton } from "./voice-add-button";
 
 interface AddItemBarProps {
@@ -111,6 +112,7 @@ export function AddItemBar({ listId, existingNormalized }: AddItemBarProps) {
             autoComplete="off"
             className="h-tap flex-1 rounded-full border border-border bg-surface px-4 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
           />
+          <ScanAddButton listId={listId} />
           <VoiceAddButton listId={listId} />
           <button
             type="submit"

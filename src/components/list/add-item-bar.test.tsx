@@ -27,6 +27,17 @@ vi.mock("@/features/list/history", () => ({
   recordProductsAdded: vi.fn(),
 }));
 
+/**
+ * El botón de escanear pregunta el plan, y ese módulo arrastra el cliente de
+ * Supabase, que exige sus variables de entorno nada más cargarse. Aquí no se
+ * prueba el plan —eso es de `scan-add-button`—, sólo la barra de añadir.
+ */
+vi.mock("@/features/billing/plan", () => ({ fetchPlan: async () => "free" }));
+vi.mock("@/features/barcode/api", () => ({
+  reconocerCodigo: vi.fn(),
+  recordarCodigo: vi.fn(),
+}));
+
 vi.mock("@/features/list/catalog", () => ({
   loadProductCatalog: async () => [
     { name: "Lechuga", normalized: "lechuga", categoryId: "produce" },

@@ -198,6 +198,24 @@ export interface Database {
         };
         Update: Partial<Database["public"]["Tables"]["pantry_items"]["Row"]>;
       };
+      user_barcodes: {
+        Row: {
+          user_id: string;
+          /** GTIN de 8 a 14 dígitos, como texto: los ceros de la izquierda cuentan. */
+          code: string;
+          name: string;
+          category_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Relationships: [];
+        Insert: Partial<Database["public"]["Tables"]["user_barcodes"]["Row"]> & {
+          user_id: string;
+          code: string;
+          name: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_barcodes"]["Row"]>;
+      };
       recurring_lists: {
         Row: {
           id: string;
