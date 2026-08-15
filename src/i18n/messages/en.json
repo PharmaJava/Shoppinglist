@@ -370,7 +370,10 @@
     "planned1": "Price history and what you spend per month",
     "planned2": "Weekly meal plan that builds the list for you",
     "planned3": "Per-store lists and supermarket comparison",
-    "included6": "Price per item and a budget for the list"
+    "included6": "Price per item and a budget for the list",
+    "perMonth": "{precio}/month",
+    "perYear": "{precio}/year",
+    "premiumNoteLive": "Cancel whenever you like, from your account, in one click."
   },
   "notFound": {
     "metaTitle": "Page not found",
@@ -584,6 +587,14 @@
     "added": "{name} is on the list",
     "done": "Done",
     "close": "Close"
+  },
+  "billing": {
+    "subscribe": "Go Premium",
+    "going": "Opening…",
+    "manage": "Manage subscription",
+    "manageHint": "Change your card, see your invoices or cancel. Opens the Stripe portal.",
+    "alreadyPremium": "You're already Premium: manage your subscription in your account",
+    "error": "The payment page couldn't be opened. Try again in a moment."
   },
   "autoFinish": {
     "soon": "{hours, plural, one {This list will be wrapped up in 1 hour} other {This list will be wrapped up in # hours}}",

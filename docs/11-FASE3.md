@@ -60,7 +60,7 @@ pared.
 | | Estado |
 |---|---|
 | **F3-2 · Feature gating** | Hecho. Interruptor, `is_premium()`, `require_premium()`, `<PremiumGate>` |
-| **F3-1 · Stripe** | Falta. Necesita cuenta de Stripe y sus claves |
+| **F3-1 · Stripe** | Escrito y apagado. Falta la cuenta de Stripe y probarlo de verdad. `docs/16-STRIPE.md` |
 | **F3-3 · Listas recurrentes** | Hecho. `docs/13-RECURRENTES.md` |
 | **F3-4 · Presupuesto y precios** | Ya estaba, y **se queda gratis**: es parte de la lista |
 | **F3-5 · Despensa** | Hecho. `docs/12-DESPENSA.md` |
@@ -73,6 +73,11 @@ la gente ya usa gratis es la forma más rápida de que se vayan.
 
 ## 5. Antes de encender
 
-- Que haya forma de pagar (F3-1), o la pared lleva a una página que no vende nada.
-- Que `/precios` diga un precio. Hoy dice «Sin precio todavía», que es la verdad.
-- Avisar antes de cobrar: lo promete la FAQ de la landing y la página de precios.
+Ya está todo escrito. Lo que queda no es código:
+
+- **Crear la cuenta de Stripe** y su producto con precio, poner las tres variables y registrar el
+  webhook: los pasos están en `docs/16-STRIPE.md` §6.
+- **Probar un pago de principio a fin en modo prueba**, y una baja. Nada de esto ha visto Stripe
+  todavía.
+- Con eso, `/precios` dirá el precio solo: lo lee de Stripe.
+- **Avisar antes de cobrar**: lo promete la FAQ de la landing y la página de precios.

@@ -388,6 +388,24 @@ export interface Database {
         Args: Record<string, never>;
         Returns: boolean;
       };
+      /** Sólo desde el servidor con la clave de servicio. Ver la migración 0014. */
+      apply_subscription: {
+        Args: {
+          p_event: string;
+          p_event_type: string;
+          p_user: string;
+          p_customer: string | null;
+          p_subscription: string | null;
+          p_status: string;
+          p_period_end: string | null;
+        };
+        /** `false` si el aviso ya estaba procesado. */
+        Returns: boolean;
+      };
+      user_for_stripe_customer: {
+        Args: { p_customer: string };
+        Returns: string | null;
+      };
       /** Devuelve la nueva fecha de fin, o nula si la lista no caduca. */
       reopen_list: {
         Args: { p_list: string };

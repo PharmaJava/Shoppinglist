@@ -370,7 +370,10 @@
     "planned1": "Historial de precios y cuánto te gastas al mes",
     "planned2": "Menú semanal que genera la lista solo",
     "planned3": "Listas por tienda y comparación entre supermercados",
-    "included6": "Precio por producto y presupuesto de la lista"
+    "included6": "Precio por producto y presupuesto de la lista",
+    "perMonth": "{precio}/mes",
+    "perYear": "{precio}/año",
+    "premiumNoteLive": "Cancelas cuando quieras, desde tu cuenta y en un clic."
   },
   "notFound": {
     "metaTitle": "Página no encontrada",
@@ -584,6 +587,14 @@
     "added": "{name} está en la lista",
     "done": "Terminar",
     "close": "Cerrar"
+  },
+  "billing": {
+    "subscribe": "Hacerse Premium",
+    "going": "Abriendo…",
+    "manage": "Gestionar la suscripción",
+    "manageHint": "Cambiar de tarjeta, ver las facturas o darse de baja. Se abre el portal de Stripe.",
+    "alreadyPremium": "Ya eres Premium: gestiona tu suscripción en tu cuenta",
+    "error": "No se ha podido abrir el pago. Inténtalo otra vez en un momento."
   },
   "autoFinish": {
     "soon": "{hours, plural, one {Esta lista se dará por terminada en 1 hora} other {Esta lista se dará por terminada en # horas}}",

@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { ManageSubscriptionButton } from "@/components/billing/manage-subscription-button";
 import {
   deleteAccount,
   fetchDisplayName,
@@ -116,6 +117,9 @@ function RegisteredPanel({ email }: { email: string }) {
 
       <DisplayNameForm />
       <PreferencesPanel />
+      {/* Sólo se pinta para quien paga, y con la Fase 3 apagada ni pregunta
+          el plan. Ver src/components/billing/manage-subscription-button.tsx. */}
+      <ManageSubscriptionButton />
       <DataExport />
       <DangerZone />
     </div>
