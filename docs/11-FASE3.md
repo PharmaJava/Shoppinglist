@@ -64,7 +64,7 @@ pared.
 | **F3-3 · Listas recurrentes** | Hecho. `docs/13-RECURRENTES.md` |
 | **F3-4 · Presupuesto y precios** | Ya estaba, y **se queda gratis**: es parte de la lista |
 | **F3-5 · Despensa** | Hecho. `docs/12-DESPENSA.md` |
-| **F3-6 · Receta → lista** | Falta |
+| **F3-6 · Receta → lista** | Hecho (heurística). `docs/14-RECETAS.md` |
 | **F3-7 · Códigos de barras** | Falta |
 | **F3-8 · Exportación e impresión** | Ya estaba, y se queda gratis |
 
