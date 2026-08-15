@@ -529,5 +529,33 @@
     "delete": "Borrar",
     "deleteConfirm": "¿Dejar de crear esta lista? Las listas que ya se crearon se quedan como están.",
     "cancel": "Cancelar"
+  },
+  "recipes": {
+    "metaTitle": "De una receta a la lista",
+    "title": "De una receta a la lista",
+    "intro": "Pega la receta y sal con la compra hecha, sin ir apuntando ingrediente a ingrediente.",
+    "gateTitle": "Convertir recetas es de Premium",
+    "gateBody": "Pega la receta de donde sea y quédate con los ingredientes, ya ordenados por pasillos.",
+    "gateCta": "Ver precios",
+    "pasteLabel": "La receta",
+    "pastePlaceholder": "Pega aquí la receta entera: título, ingredientes y pasos. Ya me encargo de separar lo que se compra.",
+    "read": "Leer la receta",
+    "reading": "Leyendo…",
+    "found": "{count, plural, =0 {No he encontrado ingredientes} one {1 ingrediente} other {# ingredientes}}",
+    "nothingFound": "No he sabido ver ingredientes ahí. Suele pasar cuando la receta viene sin la lista de ingredientes o toda seguida en un párrafo.",
+    "uncheckHint": "Desmarca lo que ya tengas en casa. La sal y el aceite salen en casi todas.",
+    "servingsLabel": "La receta es para {original}. ¿Para cuántos la quieres?",
+    "servingsAria": "Número de comensales",
+    "nameLabel": "Nombre de la lista",
+    "defaultTitle": "Compra de la receta",
+    "create": "{count, plural, one {Crear la lista con 1 producto} other {Crear la lista con # productos}}",
+    "creating": "Creando…",
+    "error": {
+      "vacio": "No hay nada que leer.",
+      "demasiado_largo": "Eso es más largo que una receta. Pega sólo la receta.",
+      "sin_sesion": "Hay que tener sesión para hacer esto.",
+      "no_premium": "Convertir recetas es de Premium.",
+      "generico": "No se ha podido leer la receta. Inténtalo otra vez."
+    }
   }
 }

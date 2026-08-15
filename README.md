@@ -22,6 +22,7 @@ va marcando productos mientras compra.
 | [`docs/11-FASE3.md`](docs/11-FASE3.md) | Cómo se construye la fase de pago a oscuras: el interruptor y qué protege |
 | [`docs/12-DESPENSA.md`](docs/12-DESPENSA.md) | La despensa (premium): qué hay en casa y cuándo caduca |
 | [`docs/13-RECURRENTES.md`](docs/13-RECURRENTES.md) | Listas automáticas (premium) y la tarea programada diaria |
+| [`docs/14-RECETAS.md`](docs/14-RECETAS.md) | De una receta pegada a la lista (premium): qué reconoce y por qué no lleva IA |
 | [`e2e/README.md`](e2e/README.md) | Qué cubren los tests end-to-end y qué falta |
 | [`supabase/README.md`](supabase/README.md) | Cómo aplicar migraciones y cómo saber cuáles faltan (`pnpm db:check`) |
 

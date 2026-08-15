@@ -529,5 +529,33 @@
     "delete": "Delete",
     "deleteConfirm": "Stop creating this list? Lists already created stay as they are.",
     "cancel": "Cancel"
+  },
+  "recipes": {
+    "metaTitle": "From a recipe to a list",
+    "title": "From a recipe to a list",
+    "intro": "Paste the recipe and walk out with the shopping done, instead of copying it item by item.",
+    "gateTitle": "Turning recipes into lists is a Premium feature",
+    "gateBody": "Paste a recipe from anywhere and keep the ingredients, already sorted by aisle.",
+    "gateCta": "See pricing",
+    "pasteLabel": "The recipe",
+    "pastePlaceholder": "Paste the whole recipe here: title, ingredients and steps. I'll pick out what you have to buy.",
+    "read": "Read the recipe",
+    "reading": "Reading…",
+    "found": "{count, plural, =0 {No ingredients found} one {1 ingredient} other {# ingredients}}",
+    "nothingFound": "I couldn't spot any ingredients there. That usually happens when the recipe has no ingredient list, or it's all written out in a paragraph.",
+    "uncheckHint": "Untick whatever you already have. Salt and oil turn up in nearly every recipe.",
+    "servingsLabel": "The recipe serves {original}. How many are you cooking for?",
+    "servingsAria": "Number of servings",
+    "nameLabel": "List name",
+    "defaultTitle": "Recipe shopping",
+    "create": "{count, plural, one {Create the list with 1 item} other {Create the list with # items}}",
+    "creating": "Creating…",
+    "error": {
+      "vacio": "There's nothing to read.",
+      "demasiado_largo": "That's longer than a recipe. Paste just the recipe.",
+      "sin_sesion": "You need to be signed in to do this.",
+      "no_premium": "Turning recipes into lists is a Premium feature.",
+      "generico": "The recipe couldn't be read. Try again."
+    }
   }
 }

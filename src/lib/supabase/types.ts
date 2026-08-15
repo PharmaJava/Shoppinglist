@@ -364,6 +364,11 @@ export interface Database {
         Args: Record<string, never>;
         Returns: boolean;
       };
+      /** No devuelve nada: o pasa, o lanza. Ver la migración 0010. */
+      require_premium: {
+        Args: Record<string, never>;
+        Returns: undefined;
+      };
       run_recurring_list: {
         Args: { p_recurring: string };
         /** El id de la lista recién creada. */
