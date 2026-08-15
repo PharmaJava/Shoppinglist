@@ -16,6 +16,12 @@ va marcando productos mientras compra.
 | [`docs/05-AUTH.md`](docs/05-AUTH.md) | Login por email, conversión de invitado a cuenta y configuración de Supabase |
 | [`docs/06-PRECIOS.md`](docs/06-PRECIOS.md) | Por qué no integramos el catálogo de un supermercado y qué hacemos en su lugar |
 | [`docs/07-PUSH.md`](docs/07-PUSH.md) | Notificaciones push: claves VAPID, webhook de Supabase y qué no cubren |
+| [`docs/08-PWA.md`](docs/08-PWA.md) | Instalación en iOS y Android: manifest, iconos, pantallas de arranque, enlaces |
+| [`docs/09-ADMIN.md`](docs/09-ADMIN.md) | Panel `/vegeta`: acceso, KPIs y por qué la contraseña no vive en el frontend |
+| [`docs/10-PLANTILLAS-Y-PREFERENCIAS.md`](docs/10-PLANTILLAS-Y-PREFERENCIAS.md) | Plantillas propias, idioma y moneda del perfil |
+| [`docs/11-FASE3.md`](docs/11-FASE3.md) | Cómo se construye la fase de pago a oscuras: el interruptor y qué protege |
+| [`docs/12-DESPENSA.md`](docs/12-DESPENSA.md) | La despensa (premium): qué hay en casa y cuándo caduca |
+| [`docs/13-RECURRENTES.md`](docs/13-RECURRENTES.md) | Listas automáticas (premium) y la tarea programada diaria |
 | [`e2e/README.md`](e2e/README.md) | Qué cubren los tests end-to-end y qué falta |
 | [`supabase/README.md`](supabase/README.md) | Cómo aplicar migraciones y cómo saber cuáles faltan (`pnpm db:check`) |
 
