@@ -10,6 +10,7 @@ import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
 import { useDeleteItem, useRestoreItem } from "@/features/list/use-list-mutations";
 import { useWakeLock } from "@/features/list/use-wake-lock";
+import { stockUpFromList } from "@/features/pantry/api";
 import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
 import { BudgetBar } from "./budget-bar";
@@ -221,6 +222,11 @@ export function ListView({ listId }: { listId: string }) {
             }
             if (accion === "archivar") {
               await setListArchived(data.list, true).catch(() => {});
+            }
+            // La despensa la resuelve el servidor de una vez: suma lo que ya
+            // estaba en vez de duplicar líneas (ver la migración 0011).
+            if (accion === "despensa") {
+              await stockUpFromList(listId).catch(() => {});
             }
             cerrarCompra();
           }}

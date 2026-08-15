@@ -174,6 +174,28 @@ export interface Database {
         };
         Update: Partial<Database["public"]["Tables"]["push_subscriptions"]["Row"]>;
       };
+      pantry_items: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          normalized: string;
+          qty: number | null;
+          unit: string | null;
+          category_id: string | null;
+          /** Fecha sin hora (`date` en Postgres): «2026-08-20». */
+          expires_on: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Relationships: [];
+        Insert: Partial<Database["public"]["Tables"]["pantry_items"]["Row"]> & {
+          user_id: string;
+          name: string;
+          normalized: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["pantry_items"]["Row"]>;
+      };
       list_templates: {
         Row: {
           id: string;
@@ -278,6 +300,15 @@ export interface Database {
       save_list_as_template: {
         Args: { p_list: string; p_title: string };
         Returns: string;
+      };
+      stock_up_from_list: {
+        Args: { p_list: string };
+        /** Cuántos productos han entrado en la despensa. */
+        Returns: number;
+      };
+      is_premium: {
+        Args: Record<string, never>;
+        Returns: boolean;
       };
     };
   };

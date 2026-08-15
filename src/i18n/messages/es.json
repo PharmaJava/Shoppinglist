@@ -454,5 +454,34 @@
     "archive": "Archivar la lista",
     "keepShopping": "Seguir comprando",
     "close": "Cerrar"
+  },
+  "pantry": {
+    "metaTitle": "Mi despensa",
+    "title": "Mi despensa",
+    "intro": "Lo que tienes en casa y cuándo caduca, para no comprarlo dos veces ni tirarlo.",
+    "loading": "Cargando…",
+    "add": "Añadir",
+    "adding": "Añadiendo…",
+    "addLabel": "Producto",
+    "addPlaceholder": "Ej. 2 litros de leche",
+    "expiresLabel": "Caduca el",
+    "expiresFor": "Fecha de caducidad de {name}",
+    "remove": "Quitar",
+    "removeFor": "Quitar {name} de la despensa",
+    "urgent": "{count, plural, one {Hay 1 producto que mirar hoy} other {Hay # productos que mirar hoy}}",
+    "emptyTitle": "La despensa está vacía",
+    "emptyBody": "Añade lo que tengas en casa, o mételo de golpe al terminar una compra.",
+    "gateTitle": "La despensa es de Premium",
+    "gateBody": "Apunta lo que tienes en casa, con su caducidad, y deja de comprar el mismo bote tres veces.",
+    "gateCta": "Ver precios",
+    "estado": {
+      "caducado": "Caducado",
+      "hoy": "Caduca hoy",
+      "pronto": "Caduca esta semana",
+      "lejos": "En fecha",
+      "sin-fecha": "Sin caducidad"
+    },
+    "stockUp": "Guardar lo comprado en la despensa",
+    "stockedUp": "{count, plural, one {1 producto guardado en la despensa} other {# productos guardados en la despensa}}"
   }
 }
