@@ -588,7 +588,7 @@
   "autoFinish": {
     "soon": "{hours, plural, one {This list will be wrapped up in 1 hour} other {This list will be wrapped up in # hours}}",
     "keepIt": "Create an account and it stays",
-    "finished": "This list has been wrapped up: it's been a day since you created it.",
+    "finished": "This list has been wrapped up: it's been a day since you created it. If nobody touches it for a week, it will be deleted.",
     "reopen": "Open it again",
     "reopening": "Opening…",
     "cardSoon": "{hours, plural, one {Wraps up in 1 h} other {Wraps up in # h}}"

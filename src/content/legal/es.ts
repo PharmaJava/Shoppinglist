@@ -62,6 +62,7 @@ export const privacyEs: LegalDocument = {
       heading: "Cuánto tiempo los guardamos",
       paragraphs: [
         "Tus listas y tu cuenta se conservan mientras la sigas usando. Si borras la cuenta, se eliminan de inmediato junto con las listas de las que seas propietario.",
+        "Las listas hechas sin cuenta tienen un plazo: al día siguiente se dan por terminadas —se archivan, no se borran— y, si pasa una semana sin que nadie las abra ni les añada nada, se borran junto con sus productos. Se avisa en la propia lista antes de que ocurra, y basta con crear una cuenta, volver a abrirla o que alguien con cuenta esté dentro para que deje de tener plazo.",
         "Las identidades de invitado que no tengan ninguna lista asociada se depuran periódicamente, porque no aportan nada y sí ocupan.",
       ],
     },

@@ -39,6 +39,21 @@ language sql
 immutable
 as $$ select interval '24 hours'; $$;
 
+/**
+ * Y cuánto se guarda antes de borrarla del todo, contando desde la última vez
+ * que alguien la tocó.
+ *
+ * Archivar no libera un byte: la lista de un invitado que no volvió seguiría
+ * ahí para siempre, y esto es una base de datos que se paga. Una semana sin
+ * que nadie la abra ni le añada nada es señal suficiente de que esa compra ya
+ * pasó.
+ */
+create or replace function public.guest_list_retention()
+returns interval
+language sql
+immutable
+as $$ select interval '7 days'; $$;
+
 -- ────────────────────── ¿Quién es un invitado? ─────────────────────
 
 /**
@@ -243,6 +258,86 @@ end;
 $$;
 
 revoke all on function public.finish_stale_guest_lists() from public, anon, authenticated;
+
+/**
+ * Borra las listas de invitado que llevan una semana sin que nadie las toque.
+ *
+ * Esto sí borra, y por eso lleva tres condiciones a la vez:
+ *
+ * 1. **El propietario sigue sin cuenta.** Si se registró, su lista es suya
+ *    para siempre.
+ * 2. **Nadie con cuenta está dentro.** Basta un miembro registrado para que
+ *    la lista deje de ser «de un invitado» y no se toque.
+ * 3. **Una semana sin actividad**, contando la de la lista *y la de sus
+ *    productos*: `lists.updated_at` no se mueve al marcar un tomate, y sin
+ *    mirar los productos se borraría una lista que se estuvo usando ayer.
+ *
+ * Los productos, miembros e invitaciones se van con ella por las claves
+ * ajenas (`on delete cascade`, esquema base).
+ */
+create or replace function public.delete_stale_guest_lists()
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_rol     text;
+  v_cuantas integer;
+begin
+  v_rol := coalesce(
+    current_setting('request.jwt.claim.role', true),
+    nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'role'
+  );
+  if v_rol is not null and v_rol <> 'service_role' then
+    raise exception 'delete_stale_guest_lists sólo la puede llamar el servidor.';
+  end if;
+
+  with ultimo_toque as (
+    select l.id,
+           greatest(l.updated_at, coalesce(max(i.updated_at), l.updated_at)) as tocada
+    from public.lists l
+    left join public.list_items i on i.list_id = l.id
+    -- Sólo las que caducan: a las demás no se les mira ni la fecha. Es
+    -- también el filtro que deja fuera a quien se registró y a las listas
+    -- con un miembro con cuenta, porque a esas se les quitó la fecha.
+    where l.auto_finish_at is not null
+    group by l.id, l.updated_at
+  )
+  delete from public.lists l
+  using ultimo_toque u
+  where u.id = l.id
+    and u.tocada < now() - public.guest_list_retention()
+    and public.is_guest(l.owner_id)
+    and not exists (
+      select 1 from public.list_members m
+      where m.list_id = l.id and not public.is_guest(m.user_id)
+    );
+
+  get diagnostics v_cuantas = row_count;
+  return v_cuantas;
+end;
+$$;
+
+revoke all on function public.delete_stale_guest_lists() from public, anon, authenticated;
+
+-- ───────────── Las listas de invitado que ya existían ──────────────
+
+/*
+ * Sin esto, la regla sólo valdría para las listas nuevas y las de antes se
+ * quedarían ocupando sitio para siempre, que es justo lo que se quiere
+ * evitar. Se les da el mismo día de margen que a una recién creada, contando
+ * desde que se aplica la migración — nadie pierde nada sin haber tenido su
+ * aviso en pantalla.
+ */
+update public.lists l
+   set auto_finish_at = now() + public.guest_list_window()
+ where l.auto_finish_at is null
+   and public.is_guest(l.owner_id)
+   and not exists (
+     select 1 from public.list_members m
+     where m.list_id = l.id and not public.is_guest(m.user_id)
+   );
 
 insert into public.schema_migrations (version) values ('0015_auto_finish')
 on conflict (version) do nothing;

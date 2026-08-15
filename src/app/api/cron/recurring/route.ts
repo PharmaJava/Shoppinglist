@@ -51,24 +51,27 @@ export async function GET(request: NextRequest) {
   }
 
   /**
-   * Y de paso, la limpieza: dar por terminadas las listas de invitado a las
-   * que se les ha pasado el día (migración 0015). Va después de crear las
-   * recurrentes y aparte: que falle una no puede impedir la otra, porque son
-   * dos trabajos distintos que comparten pasada.
+   * Y de paso, la limpieza de las listas de invitado (migración 0015): las de
+   * ayer se dan por terminadas, y las que llevan una semana sin que nadie las
+   * toque se borran — archivar no libera un byte, y esta base de datos se
+   * paga.
+   *
+   * Va aparte de las recurrentes y sin cortar por un fallo: son trabajos
+   * distintos que comparten pasada, y que uno falle no puede dejar el otro sin
+   * hacer.
    */
   const { data: terminadas } = await supabase.rpc("finish_stale_guest_lists", {});
+  const { data: borradas } = await supabase.rpc("delete_stale_guest_lists", {});
+
+  const limpieza = { finished: terminadas ?? 0, deleted: borradas ?? 0 };
 
   if (!creadas || creadas.length === 0) {
-    return NextResponse.json({ created: 0, sent: 0, finished: terminadas ?? 0 });
+    return NextResponse.json({ created: 0, sent: 0, ...limpieza });
   }
 
   const enviados = await avisar(supabase, creadas);
 
-  return NextResponse.json({
-    created: creadas.length,
-    sent: enviados,
-    finished: terminadas ?? 0,
-  });
+  return NextResponse.json({ created: creadas.length, sent: enviados, ...limpieza });
 }
 
 type Supabase = ReturnType<typeof createClient<Database>>;

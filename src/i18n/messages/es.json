@@ -588,7 +588,7 @@
   "autoFinish": {
     "soon": "{hours, plural, one {Esta lista se dará por terminada en 1 hora} other {Esta lista se dará por terminada en # horas}}",
     "keepIt": "Crea una cuenta y se queda",
-    "finished": "Esta lista se ha dado por terminada: ha pasado un día desde que la creaste.",
+    "finished": "Esta lista se ha dado por terminada: ha pasado un día desde que la creaste. Si nadie la toca en una semana, se borrará.",
     "reopen": "Volver a abrirla",
     "reopening": "Abriendo…",
     "cardSoon": "{hours, plural, one {Se termina en 1 h} other {Se termina en # h}}"

@@ -85,7 +85,7 @@ describe("GET /api/cron/recurring", () => {
     const respuesta = await GET(peticion({ authorization: "Bearer secreto-de-pruebas" }));
 
     expect(respuesta.status).toBe(200);
-    expect(await respuesta.json()).toEqual({ created: 0, sent: 0, finished: 0 });
+    expect(await respuesta.json()).toEqual({ created: 0, sent: 0, finished: 0, deleted: 0 });
     expect(rpc).toHaveBeenCalledWith("run_due_recurring_lists", {});
   });
 
@@ -103,7 +103,7 @@ describe("GET /api/cron/recurring", () => {
 
     const respuesta = await GET(peticion({ authorization: "Bearer secreto-de-pruebas" }));
 
-    expect(await respuesta.json()).toEqual({ created: 1, sent: 0, finished: 0 });
+    expect(await respuesta.json()).toEqual({ created: 1, sent: 0, finished: 0, deleted: 0 });
     expect(sendNotification).not.toHaveBeenCalled();
   });
 
@@ -116,21 +116,21 @@ describe("GET /api/cron/recurring", () => {
             data: [{ recurring_id: "r1", list_id: "l1", owner_id: "u1", title: "Compra semanal" }],
             error: null,
           }
-        : nombre === "finish_stale_guest_lists"
-          ? { data: 0, error: null }
-          : {
+        : nombre === "push_targets_for_user"
+          ? {
               data: [
                 { endpoint: "https://push/movil", p256dh: "p", auth: "a", locale: "es" },
                 { endpoint: "https://push/portatil", p256dh: "p", auth: "a", locale: "en" },
               ],
               error: null,
-            },
+            }
+          : { data: 0, error: null },
     );
     const GET = await cargarRuta();
 
     const respuesta = await GET(peticion({ authorization: "Bearer secreto-de-pruebas" }));
 
-    expect(await respuesta.json()).toEqual({ created: 1, sent: 2, finished: 0 });
+    expect(await respuesta.json()).toEqual({ created: 1, sent: 2, finished: 0, deleted: 0 });
     expect(rpc).toHaveBeenCalledWith("push_targets_for_user", { p_user: "u1" });
   });
 
@@ -147,15 +147,17 @@ describe("GET /api/cron/recurring", () => {
    * La misma pasada hace la limpieza: dar por terminadas las listas de
    * invitado a las que se les ha pasado el día (migración 0015).
    */
-  it("de paso da por terminadas las listas de invitado vencidas", async () => {
-    rpc.mockImplementation(async (nombre: string) =>
-      nombre === "run_due_recurring_lists" ? { data: [], error: null } : { data: 3, error: null },
-    );
+  it("de paso limpia las listas de invitado: las de ayer y las de hace una semana", async () => {
+    rpc.mockImplementation(async (nombre: string) => {
+      if (nombre === "run_due_recurring_lists") return { data: [], error: null };
+      return { data: nombre === "finish_stale_guest_lists" ? 3 : 2, error: null };
+    });
     const GET = await cargarRuta();
 
     const respuesta = await GET(peticion({ authorization: "Bearer secreto-de-pruebas" }));
 
-    expect(await respuesta.json()).toEqual({ created: 0, sent: 0, finished: 3 });
+    expect(await respuesta.json()).toEqual({ created: 0, sent: 0, finished: 3, deleted: 2 });
     expect(rpc).toHaveBeenCalledWith("finish_stale_guest_lists", {});
+    expect(rpc).toHaveBeenCalledWith("delete_stale_guest_lists", {});
   });
 });

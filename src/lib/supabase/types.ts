@@ -398,6 +398,11 @@ export interface Database {
         Args: Record<string, never>;
         Returns: number;
       };
+      /** Cuántas listas de invitado inactivas se han borrado. Sólo el servidor. */
+      delete_stale_guest_lists: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
       /** No devuelve nada: o pasa, o lanza. Ver la migración 0010. */
       require_premium: {
         Args: Record<string, never>;

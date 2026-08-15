@@ -54,6 +54,7 @@ export const privacyEn: LegalDocument = {
       heading: "How long we keep it",
       paragraphs: [
         "Your lists and account are kept while you keep using them. If you delete your account, they're removed immediately, along with the lists you own.",
+        "Lists made without an account have a deadline: the next day they are wrapped up — archived, not deleted — and if a week goes by without anyone opening them or adding to them, they are deleted along with their items. You are warned in the list itself before it happens, and creating an account, opening the list again, or having someone with an account in it removes the deadline.",
         "Guest identities with no lists attached are purged periodically — they serve no purpose and still take up space.",
       ],
     },
