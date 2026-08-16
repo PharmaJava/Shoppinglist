@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/supabase/types";
+import { isKnownProduct } from "./categorize";
 
 export interface ParsedVoiceItem {
   name: string;
@@ -113,6 +114,10 @@ const BULLET = /^[\s\u00a0]*[-–—*•·+]+\s*/;
  * notas del móvil viene con un producto por línea y sin una sola coma, y hasta
  * ahora entraba entera como un único producto llamado "agua gazpacho
  * chocolate galletas…".
+ *
+ * Y cuando no hay ni comas ni saltos —"leche pan tomate", escrito de un tirón
+ * en la portada— se separa por palabras, pero sólo si todas son productos
+ * conocidos (ver `separarProductosSueltos`).
  */
 export function parseVoiceTranscript(transcript: string, locale: Locale): ParsedVoiceItem[] {
   const segments = transcript
@@ -127,9 +132,37 @@ export function parseVoiceTranscript(transcript: string, locale: Locale): Parsed
     .split(/\r?\n/)
     .flatMap((line) => line.split(SEPARATORS[locale]))
     .map((segment) => segment.replace(BULLET, "").trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .flatMap((segment) => separarProductosSueltos(segment, locale));
 
   return dedupe(segments.map((segment) => parseSegment(segment, locale)));
+}
+
+/**
+ * "leche pan tomate" son tres cosas, no una.
+ *
+ * Escribir sin comas es lo natural cuando se va rápido, y hasta ahora eso
+ * creaba un único producto llamado "Leche pan tomate". Pero separar por
+ * espacios a secas rompería "carne picada", "papel higiénico" o "queso de
+ * cabra", que son un producto con nombre de dos palabras y son igual de
+ * frecuentes.
+ *
+ * La regla que distingue un caso del otro: se parte **sólo si cada palabra,
+ * ella sola, es un producto conocido** —del diccionario o del catálogo—. En
+ * "carne picada", "picada" no lo es, así que no se toca. Equivocarse hacia
+ * este lado es lo correcto: dejar junto lo que iba separado se arregla
+ * borrando una línea; partir "carne picada" en dos deja al usuario con dos
+ * productos que no existen.
+ *
+ * Las cantidades no estorban: un número o un "de" nunca es un producto
+ * conocido, así que "dos litros de leche" ni se plantea partirse.
+ */
+function separarProductosSueltos(segment: string, locale: Locale): string[] {
+  const words = segment.split(/\s+/).filter(Boolean);
+  if (words.length < 2) return [segment];
+  if (!words.every((word) => isKnownProduct(word, locale))) return [segment];
+
+  return words;
 }
 
 /**

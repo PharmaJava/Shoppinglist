@@ -183,6 +183,21 @@ function getDictionary(locale: Locale): Record<string, string> {
   return mergedDictionaryCache[locale] ?? KEYWORDS[locale];
 }
 
+/**
+ * ¿Esta palabra, ella sola, es un producto que conocemos?
+ *
+ * Coincidencia exacta y nada de parecidos: la usa el parser para decidir si
+ * «leche pan tomate» son tres cosas o una sola con nombre largo, y ahí un
+ * «casi» convertiría «carne picada» en dos productos. Cubre el diccionario
+ * estático y el catálogo de la base de datos, cuando ya ha llegado.
+ */
+export function isKnownProduct(word: string, locale: Locale): boolean {
+  const normalized = normalizeProductName(word);
+  if (!normalized) return false;
+
+  return normalized in getDictionary(locale);
+}
+
 export function categorize(name: string, locale: Locale): string {
   const normalized = normalizeProductName(name);
   const dictionary = getDictionary(locale);
