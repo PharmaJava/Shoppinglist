@@ -29,13 +29,11 @@ function stepFor(unit: string | null): number {
 export function ItemRow({
   listId,
   item,
-  large = false,
   currency = "EUR",
   onDeleted,
 }: {
   listId: string;
   item: ListItem;
-  large?: boolean;
   currency?: string;
   onDeleted?: (item: ListItem) => void;
 }) {
@@ -94,16 +92,12 @@ export function ItemRow({
         type="button"
         onClick={handleToggle}
         aria-pressed={item.is_checked}
-        className={cn(
-          "flex min-h-tap min-w-0 flex-1 items-center gap-3 px-4 text-left",
-          large ? "py-4" : "py-2",
-        )}
+        className={cn("flex min-h-tap min-w-0 flex-1 items-center gap-3 px-4 py-2 text-left")}
       >
         <span
           aria-hidden
           className={cn(
-            "flex shrink-0 items-center justify-center rounded-full border-2",
-            large ? "size-9" : "size-6",
+            "flex size-6 shrink-0 items-center justify-center rounded-full border-2",
             item.is_checked ? "border-brand bg-brand text-brand-contrast" : "border-border",
           )}
         >
@@ -111,15 +105,12 @@ export function ItemRow({
         </span>
         <span className="flex min-w-0 flex-1 flex-col">
           <span
-            className={cn(
-              large ? "text-xl font-medium" : "text-base",
-              item.is_checked && "text-on-surface-muted line-through",
-            )}
+            className={cn("text-base", item.is_checked && "text-on-surface-muted line-through")}
           >
             {item.name}
           </span>
           {(item.qty !== null || item.price_cents !== null) && (
-            <span className={cn("text-on-surface-muted", large ? "text-base" : "text-sm")}>
+            <span className="text-sm text-on-surface-muted">
               {item.qty !== null && formatAmount(item)}
               {item.qty !== null && item.price_cents !== null && " · "}
               {item.price_cents !== null && formatMoney(item.price_cents, currency, locale)}
@@ -148,17 +139,14 @@ export function ItemRow({
         +
       </button>
 
-      {/* En modo supermercado se está comprando, no organizando: sólo estorba. */}
-      {!large && (
-        <button
-          type="button"
-          onClick={() => setEditing(true)}
-          aria-label={t("edit", { name: item.name })}
-          className="flex size-tap shrink-0 items-center justify-center text-on-surface-muted hover:text-on-surface print:hidden"
-        >
-          <PencilIcon />
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={() => setEditing(true)}
+        aria-label={t("edit", { name: item.name })}
+        className="flex size-tap shrink-0 items-center justify-center text-on-surface-muted hover:text-on-surface print:hidden"
+      >
+        <PencilIcon />
+      </button>
 
       <button
         type="button"

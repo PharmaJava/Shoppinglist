@@ -444,7 +444,6 @@
     "saved": "Guardado"
   },
   "shopping": {
-    "start": "Empezar la compra",
     "progress": "{checked} de {total} en el carro",
     "screenOn": "La pantalla no se apagará",
     "screenOff": "La pantalla puede apagarse",

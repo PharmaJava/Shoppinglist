@@ -210,11 +210,14 @@ describe("ItemRow", () => {
     expect(updateItem.mock.calls[0]?.[1]).toEqual({ qty: 0.5 });
   });
 
-  // En modo supermercado se está comprando: editar sólo estorba, borrar no.
-  it("esconde la edición en modo supermercado pero conserva el borrado", () => {
-    renderRow(<ItemRow listId="list-1" item={item} large />);
+  /**
+   * Ya no hay modo supermercado que esconda cosas: la fila es siempre la
+   * misma, con sus dos acciones a mano.
+   */
+  it("cada fila lleva su edición y su borrado", () => {
+    renderRow(<ItemRow listId="list-1" item={item} />);
 
-    expect(screen.queryByRole("button", { name: "Editar Carne picada" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Editar Carne picada" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Eliminar Carne picada" })).toBeInTheDocument();
   });
 });
