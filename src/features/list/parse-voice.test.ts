@@ -210,3 +210,68 @@ Pan hamburguesa
     expect(result.map((item) => item.name)).toEqual(["Pan", "Leche"]);
   });
 });
+
+/**
+ * Escribir sin comas es lo natural cuando se va rápido, y en la portada es
+ * lo que hace la mayoría: «leche pan tomate» de un tirón.
+ */
+describe("varios productos escritos sin comas", () => {
+  it("separa palabras que son productos conocidos", () => {
+    const result = parseVoiceTranscript("leche pan tomate", "es");
+
+    expect(result.map((item) => item.name)).toEqual(["Leche", "Pan", "Tomate"]);
+  });
+
+  it("con comas da exactamente lo mismo", () => {
+    const conComas = parseVoiceTranscript("leche, pan, tomate", "es");
+    const sinComas = parseVoiceTranscript("leche pan tomate", "es");
+
+    expect(sinComas).toEqual(conComas);
+  });
+
+  /**
+   * Lo que no puede pasar por nada del mundo: partir un producto cuyo nombre
+   * son dos palabras. Se arregla borrando una línea de más, pero dos productos
+   * inventados no se arreglan solos.
+   */
+  it.each([
+    ["carne picada", "Carne picada"],
+    ["papel higienico", "Papel higienico"],
+    ["queso de cabra", "Queso de cabra"],
+    ["leche semidesnatada", "Leche semidesnatada"],
+    ["patatas fritas", "Patatas fritas"],
+  ])("«%s» sigue siendo un solo producto", (escrito, esperado) => {
+    const result = parseVoiceTranscript(escrito, "es");
+
+    expect(result.map((item) => item.name)).toEqual([esperado]);
+  });
+
+  it("no toca lo que lleva cantidad", () => {
+    expect(parseVoiceTranscript("dos litros de leche", "es")).toEqual([
+      { name: "Leche", qty: 2, unit: "litros" },
+    ]);
+    expect(parseVoiceTranscript("pan 2", "es")).toEqual([{ name: "Pan", qty: 2, unit: null }]);
+  });
+
+  it("se mezcla con las comas sin estorbar", () => {
+    const result = parseVoiceTranscript("leche pan, carne picada, huevos queso", "es");
+
+    expect(result.map((item) => item.name)).toEqual([
+      "Leche",
+      "Pan",
+      "Carne picada",
+      "Huevos",
+      "Queso",
+    ]);
+  });
+
+  it("y también en inglés", () => {
+    const result = parseVoiceTranscript("milk bread tomatoes", "en");
+
+    expect(result.map((item) => item.name)).toEqual(["Milk", "Bread", "Tomatoes"]);
+  });
+
+  it("un producto suelto se queda como está", () => {
+    expect(parseVoiceTranscript("leche", "es")).toEqual([{ name: "Leche", qty: null, unit: null }]);
+  });
+});
