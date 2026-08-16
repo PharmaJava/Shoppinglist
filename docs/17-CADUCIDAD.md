@@ -75,6 +75,29 @@ recurrentes: que falle una no puede dejar la otra sin hacer.
 Borrar arrastra productos, miembros e invitaciones por las claves ajenas del esquema base, así que
 no quedan huérfanos.
 
+### La pasada diaria hay que encenderla
+
+Esto es lo que más fácil se pasa por alto: **la tarea programada vive en la misma ruta que las
+listas automáticas, que son de la Fase 3, pero no depende de ella.** El interruptor
+`NEXT_PUBLIC_FEATURE_PREMIUM` puede seguir apagado; la limpieza de invitados hace falta igual desde
+el primer día.
+
+| Variable | Dónde | Sin ella |
+|---|---|---|
+| `CRON_SECRET` | Vercel → Settings → Environment Variables | La ruta responde 404 y **no se borra nada, nunca** |
+| `SUPABASE_SERVICE_ROLE_KEY` | Vercel | Lo mismo: 404 antes de tocar la base de datos |
+
+El valor de `CRON_SECRET` es una cadena larga al azar que se inventa uno (`openssl rand -base64 32`)
+y no se comparte con nada más. No hay que mandarla a ningún sitio: cuando esa variable existe,
+Vercel la pone sola en la cabecera `Authorization: Bearer …` al llamar al cron, y la ruta compara.
+Es lo que impide que cualquiera dispare la pasada desde fuera. Y como las variables de entorno sólo
+entran en los despliegues nuevos, **hay que redesplegar después de añadirla**.
+
+Lo que se pierde mientras falte, dicho sin adornos: las listas de invitado se siguen dando por
+terminadas cuando alguien las abre —eso lo hace la propia pantalla—, pero **el borrado a los siete
+días no ocurre jamás**, que es justo la parte que evita pagar por guardar listas que nadie va a
+volver a mirar.
+
 ## 5. Se avisa antes, siempre
 
 Sin aviso, esto sería una pérdida por sorpresa: entras al día siguiente y tu lista está cerrada sin

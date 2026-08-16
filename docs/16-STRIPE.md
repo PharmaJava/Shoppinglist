@@ -77,10 +77,36 @@ Esa página es **estática**, así que la consulta ocurre al construirla: cambia
 exige un redespliegue para que se vea en la web. Es lo correcto para una página de marketing —cero
 llamadas por visita— pero conviene saberlo antes de preguntarse por qué no cambia.
 
+## 5 bis. Si la cuenta de Stripe ya existe y se usa para otra web
+
+Se puede, y no hace falta nada especial en el código. Lo que sí hay que tener claro es **qué es de
+cada web y qué comparten**:
+
+| | |
+|---|---|
+| Producto y precio (`price_...`) | **Propio.** Se crea uno nuevo para ListaSupermercado |
+| Endpoint de webhook y su `whsec_...` | **Propio.** Uno por URL; no se reutiliza el de la otra web |
+| Clave secreta (`sk_...`) | Compartida: es de la cuenta |
+| Marca (logo, colores), nombre en los recibos, portal de cliente, cuenta bancaria, informes e IVA | **Compartidos.** Son ajustes de cuenta, no de producto |
+
+**Un endpoint de webhook recibe todos los eventos de la cuenta**, no sólo los de su web. Es decir:
+una suscripción de la otra web hará que Stripe llame *también* a `/api/stripe/webhook` de aquí. No
+pasa nada — `leerCambio` busca al usuario por `client_reference_id`, por los metadatos y por
+`user_for_stripe_customer`, y un cliente que no es nuestro no aparece por ninguno de los tres, así
+que se responde 200 con `{"ignorado": …, "motivo": "sin_usuario"}` y no se toca ningún plan. Lo que
+conviene comprobar es **el camino contrario**: que el webhook de la otra web también ignore
+tranquilamente a un cliente que no conoce, porque va a empezar a recibir los eventos de ésta.
+
+Si lo compartido molesta —que los recibos y el Checkout lleven la marca de la otra web es lo más
+visible—, la salida no es una cuenta nueva con otro correo: Stripe permite **varias cuentas bajo el
+mismo inicio de sesión**, con su marca, su banco y sus informes aparte. Es la opción limpia si las
+dos webs son negocios distintos de cara al cliente.
+
 ## 6. Qué hay que hacer para encenderlo
 
-1. **Crear la cuenta de Stripe** y, dentro, un **producto** («ListaSupermercado Premium») con un
-   **precio recurrente mensual**. Anota el identificador del precio (`price_...`).
+1. **Crear la cuenta de Stripe** —o reutilizar una que ya se tenga, ver §5 bis— y, dentro, un
+   **producto** («ListaSupermercado Premium») con un **precio recurrente mensual**. Anota el
+   identificador del precio (`price_...`).
 2. **Variables de entorno en Vercel** (y en `.env.local` para probar):
    - `STRIPE_SECRET_KEY` — la clave secreta. Empieza por `sk_test_` mientras se prueba.
    - `STRIPE_PRICE_ID` — el `price_...` de arriba.
