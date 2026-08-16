@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { renameList } from "@/features/list/api";
 import type { List, ListWithItems } from "@/features/list/types";
+import { Link } from "@/i18n/navigation";
 import { ErrorBoundary } from "./error-boundary";
 import { ShareSheet } from "./share-sheet";
 
@@ -38,8 +39,20 @@ export function ListHeader({
   }
 
   return (
-    <header className="flex items-center gap-3 border-b border-border bg-surface-raised px-4 py-3">
-      <div className="flex flex-1 flex-col">
+    <header className="flex items-center gap-2 border-b border-border bg-surface-raised px-4 py-3">
+      {/* La lista se abre desde un enlace de WhatsApp, así que muchas veces es
+          la primera pantalla de la web y no hay «atrás» al que volver. Sin
+          esto no había forma de llegar al inicio —ni de hacerse otra lista—
+          más que borrando la URL a mano. */}
+      <Link
+        href="/"
+        aria-label={t("home")}
+        className="-ml-1 flex size-tap shrink-0 items-center justify-center rounded-full text-xl print:hidden"
+      >
+        🏠
+      </Link>
+
+      <div className="flex min-w-0 flex-1 flex-col">
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}

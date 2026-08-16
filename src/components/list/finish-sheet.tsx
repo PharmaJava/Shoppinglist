@@ -5,7 +5,7 @@ import { useState } from "react";
 import { PremiumGate } from "@/components/billing/premium-gate";
 import type { List, ListItem } from "@/features/list/types";
 
-export type AccionFinal = "nada" | "vaciar" | "archivar" | "despensa";
+export type AccionFinal = "nada" | "vaciar" | "borrar" | "archivar" | "despensa";
 
 /**
  * Qué hacer con la lista al terminar la compra.
@@ -13,28 +13,43 @@ export type AccionFinal = "nada" | "vaciar" | "archivar" | "despensa";
  * Se pregunta en vez de decidir: hay quien repite la misma lista cada semana
  * y quiere lo comprado ahí para desmarcarlo, y hay quien la da por cerrada.
  * Elegir por ellos significa equivocarse con la mitad.
+ *
+ * `puedeBorrar` es «esta lista es mía»: al dueño se le ofrece borrarla del
+ * todo —la compra se acabó, a por la siguiente—, y a quien sólo es miembro,
+ * archivarla, que es lo único que RLS le deja hacer (migración 0001).
  */
 export function FinishSheet({
   list,
   pendientes,
   marcados,
+  puedeBorrar,
   onCerrar,
   onConfirmar,
 }: {
   list: List;
   pendientes: ListItem[];
   marcados: ListItem[];
+  puedeBorrar: boolean;
   onCerrar: () => void;
   onConfirmar: (accion: AccionFinal) => Promise<void> | void;
 }) {
   const t = useTranslations("shopping");
   const tDespensa = useTranslations("pantry");
   const [ocupado, setOcupado] = useState<AccionFinal | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   async function elegir(accion: AccionFinal) {
     if (ocupado) return;
     setOcupado(accion);
-    await onConfirmar(accion);
+    setError(null);
+    try {
+      await onConfirmar(accion);
+    } catch (err) {
+      // Borrar puede fallar de verdad —sin red, o si la lista no es tuya—, y
+      // callarlo dejaría la hoja congelada como si nada hubiera pasado.
+      setError(err instanceof Error ? err.message : String(err));
+      setOcupado(null);
+    }
   }
 
   const total = pendientes.length + marcados.length;
@@ -98,15 +113,35 @@ export function FinishSheet({
             </button>
           )}
 
-          {!list.archived_at && (
-            <button
-              type="button"
-              onClick={() => elegir("archivar")}
-              disabled={ocupado !== null}
-              className="h-tap rounded-full border border-border font-medium text-on-surface disabled:opacity-50"
-            >
-              {t("archive")}
-            </button>
+          {/* La compra se acabó y la lista con ella: borrarla es lo que deja
+              el terreno libre para hacerse otra, en vez de acumular listas
+              viejas que ya no sirven. Sin confirmación aparte —el aviso va
+              debajo— porque esto ya es la segunda pantalla de una decisión. */}
+          {puedeBorrar ? (
+            <div className="flex flex-col gap-1">
+              <button
+                type="button"
+                onClick={() => elegir("borrar")}
+                disabled={ocupado !== null}
+                className="h-tap w-full rounded-full border border-red-600 font-medium text-red-600 disabled:opacity-50"
+              >
+                {ocupado === "borrar" ? t("deletingList") : t("deleteList")}
+              </button>
+              <p className="px-2 text-center text-on-surface-muted text-xs">
+                {t("deleteListHint")}
+              </p>
+            </div>
+          ) : (
+            !list.archived_at && (
+              <button
+                type="button"
+                onClick={() => elegir("archivar")}
+                disabled={ocupado !== null}
+                className="h-tap rounded-full border border-border font-medium text-on-surface disabled:opacity-50"
+              >
+                {t("archive")}
+              </button>
+            )
           )}
 
           {/* Acabar la compra es el único momento en que se sabe **exactamente**
@@ -130,6 +165,12 @@ export function FinishSheet({
             </PremiumGate>
           )}
         </div>
+
+        {error && (
+          <p role="alert" className="text-red-600 text-sm">
+            {error}
+          </p>
+        )}
 
         <button
           type="button"

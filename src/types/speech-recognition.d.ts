@@ -1,6 +1,6 @@
 /**
  * Tipos mínimos de la Web Speech API (SpeechRecognition), no incluidos en
- * lib.dom.d.ts. Sólo lo que usa src/components/list/voice-add-button.tsx.
+ * lib.dom.d.ts. Sólo lo que usa src/features/list/use-voice-input.ts.
  */
 interface SpeechRecognitionEvent extends Event {
   readonly resultIndex: number;

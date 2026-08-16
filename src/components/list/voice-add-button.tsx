@@ -21,14 +21,16 @@ export function VoiceAddButton({ listId }: { listId: string }) {
     [locale, addParsedItems],
   );
 
-  const { isSupported, isListening, start } = useVoiceInput(handleTranscript);
+  const { isSupported, isListening, toggle } = useVoiceInput(handleTranscript);
 
   if (!isSupported) return null;
 
   return (
     <button
       type="button"
-      onClick={start}
+      // El mismo botón abre y cierra. Antes sólo abría: el micrófono se
+      // quedaba escuchando y no había forma de apagarlo desde la pantalla.
+      onClick={toggle}
       aria-label={isListening ? t("voiceListening") : t("voiceAdd")}
       aria-pressed={isListening}
       className={cn(
