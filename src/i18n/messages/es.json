@@ -234,6 +234,7 @@
     "offline": "Sin conexión — tus cambios se guardarán",
     "pendingChanges": "{count} cambios pendientes",
     "otherCategory": "Otros",
+    "home": "Inicio",
     "renameList": "Renombrar lista",
     "loading": "Cargando tu lista…",
     "voiceAdd": "Añadir por voz",
@@ -454,6 +455,9 @@
     "keepAsIs": "Dejar la lista como está",
     "clearChecked": "{count, plural, one {Quitar el producto comprado} other {Quitar los # comprados}}",
     "archive": "Archivar la lista",
+    "deleteList": "Borrar la lista",
+    "deletingList": "Borrando…",
+    "deleteListHint": "Se borra para todos y no se puede deshacer. Podrás hacerte otra al momento.",
     "keepShopping": "Seguir comprando",
     "close": "Cerrar"
   },

@@ -261,6 +261,30 @@ export async function setListArchived(list: List, archived: boolean): Promise<Li
 }
 
 /**
+ * Borra la lista entera. Sus productos, miembros e invitaciones se van con
+ * ella por las claves ajenas (`on delete cascade`, migración 0001).
+ *
+ * No pasa por el outbox como el resto de cambios, y es a propósito: borrar es
+ * definitivo, y quien lo pide tiene que saber en el momento si ha ocurrido,
+ * no enterarse media hora después al recuperar cobertura. Sin red, falla y se
+ * dice.
+ *
+ * Sólo el propietario puede (`lists_delete`, migración 0001). A los demás RLS
+ * no les da error: simplemente no borra ninguna fila. Por eso se mira lo
+ * devuelto — decir «lista borrada» de una lista que sigue ahí es peor que el
+ * propio fallo.
+ */
+export async function deleteList(listId: string): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { data, error } = await supabase.from("lists").delete().eq("id", listId).select("id");
+
+  if (error) throw new Error(error.message);
+  if (!data || data.length === 0) {
+    throw new Error("Sólo quien creó la lista puede borrarla.");
+  }
+}
+
+/**
  * Vuelve a abrir una lista que se dio por terminada sola, con otras 24 horas.
  *
  * Va por RPC y no por el outbox como el resto: `auto_finish_at` no se puede

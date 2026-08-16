@@ -138,6 +138,7 @@
     "offline": "Offline — your changes will be saved",
     "pendingChanges": "{count} pending changes",
     "otherCategory": "Other",
+    "home": "Home",
     "renameList": "Rename list",
     "loading": "Loading your list…",
     "voiceAdd": "Add by voice",
@@ -454,6 +455,9 @@
     "keepAsIs": "Leave the list as it is",
     "clearChecked": "{count, plural, one {Remove the item you bought} other {Remove the # you bought}}",
     "archive": "Archive the list",
+    "deleteList": "Delete the list",
+    "deletingList": "Deleting…",
+    "deleteListHint": "It goes for everyone and can't be undone. You can start a new one right away.",
     "keepShopping": "Keep shopping",
     "close": "Close"
   },

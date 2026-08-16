@@ -1,8 +1,10 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { setListArchived } from "@/features/list/api";
+import { useCurrentUserId } from "@/features/auth/use-current-user-id";
+import { deleteList, setListArchived } from "@/features/list/api";
 import { normalizeProductName } from "@/features/list/categorize";
 import type { ListItem } from "@/features/list/types";
 import { useCategories } from "@/features/list/use-categories";
@@ -10,6 +12,7 @@ import { useList } from "@/features/list/use-list";
 import { useDeleteItem, useRestoreItem } from "@/features/list/use-list-mutations";
 import { useWakeLock } from "@/features/list/use-wake-lock";
 import { stockUpFromList } from "@/features/pantry/api";
+import { useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
 import { AutoFinishBanner } from "./auto-finish-banner";
@@ -30,8 +33,11 @@ interface Group {
 export function ListView({ listId }: { listId: string }) {
   const t = useTranslations("list");
   const locale = useLocale() as Locale;
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useList(listId);
   const { data: categories } = useCategories();
+  const usuarioId = useCurrentUserId();
   const [finishOpen, setFinishOpen] = useState(false);
   const [justDeleted, setJustDeleted] = useState<ListItem | null>(null);
   const restore = useRestoreItem(listId);
@@ -197,12 +203,26 @@ export function ListView({ listId }: { listId: string }) {
           list={data.list}
           pendientes={pending}
           marcados={checked}
+          puedeBorrar={usuarioId !== null && usuarioId === data.list.owner_id}
           onCerrar={() => setFinishOpen(false)}
           onConfirmar={async (accion: AccionFinal) => {
             // Vaciar es un borrado lógico normal: cada producto conserva su
             // «deshacer» y se sincroniza por el outbox como cualquier otro.
             if (accion === "vaciar") {
               for (const item of checked) borrar.mutate(item);
+            }
+            // Borrar se lleva la lista entera y con ella esta pantalla, así
+            // que se sale al inicio —donde se hace la siguiente— y con
+            // `replace`, para que «atrás» no devuelva a una lista que ya no
+            // existe. Si falla, se deja subir: la hoja enseña el motivo.
+            if (accion === "borrar") {
+              await deleteList(listId);
+              // Sin `removeQueries`: esta pantalla todavía está montada y
+              // borrar del caché una consulta activa la haría pedirse otra
+              // vez, a una lista que ya no existe. Se va sola al desmontar.
+              void queryClient.invalidateQueries({ queryKey: ["my-lists"] });
+              router.replace("/");
+              return;
             }
             if (accion === "archivar") {
               await setListArchived(data.list, true).catch(() => {});

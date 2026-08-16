@@ -17,6 +17,9 @@ vi.mock("@/features/billing/plan", () => ({ fetchPlan: () => fetchPlan() }));
 
 const lista = { id: "l1", title: "Compra", archived_at: null } as List;
 
+// Por defecto se monta como miembro, no como dueño: así cada prueba dice a
+// las claras cuál de los dos finales está mirando.
+
 function item(name: string): ListItem {
   return { id: name, name } as ListItem;
 }
@@ -31,6 +34,7 @@ function montar(props: Partial<React.ComponentProps<typeof FinishSheet>> = {}) {
         list={lista}
         pendientes={[item("Pan")]}
         marcados={[item("Leche"), item("Huevos")]}
+        puedeBorrar={false}
         onCerrar={onCerrar}
         onConfirmar={onConfirmar}
         {...props}
@@ -78,6 +82,54 @@ describe("FinishSheet", () => {
 
     await userEvent.click(screen.getByRole("button", { name: etiqueta }));
     expect(onConfirmar).toHaveBeenCalledWith(accion);
+  });
+
+  /**
+   * La compra se acabó y la lista con ella: al dueño se le ofrece borrarla,
+   * que es lo que deja sitio para la siguiente en vez de acumular listas
+   * viejas.
+   */
+  it("al dueño le ofrece borrarla, no archivarla", async () => {
+    const { onConfirmar } = montar({ puedeBorrar: true });
+
+    expect(screen.queryByRole("button", { name: "Archivar la lista" })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Borrar la lista" }));
+    expect(onConfirmar).toHaveBeenCalledWith("borrar");
+  });
+
+  it("y avisa de que se borra para todos", () => {
+    montar({ puedeBorrar: true });
+
+    expect(screen.getByText(/Se borra para todos/)).toBeInTheDocument();
+  });
+
+  /**
+   * Borrar una lista ajena lo impide RLS (migración 0001), así que a quien
+   * sólo es miembro no se le enseña un botón que no puede funcionar.
+   */
+  it("a quien no es el dueño no le ofrece borrar", () => {
+    montar();
+
+    expect(screen.queryByRole("button", { name: "Borrar la lista" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Archivar la lista" })).toBeInTheDocument();
+  });
+
+  /**
+   * Sin esto, un borrado fallido —sin cobertura, o de una lista que no es
+   * tuya— dejaba la hoja congelada como si estuviera trabajando.
+   */
+  it("si la acción falla lo dice y deja volver a intentarlo", async () => {
+    const onConfirmar = vi.fn(async () => {
+      throw new Error("Sólo quien creó la lista puede borrarla.");
+    });
+    montar({ puedeBorrar: true, onConfirmar });
+
+    await userEvent.click(screen.getByRole("button", { name: "Borrar la lista" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Sólo quien creó la lista puede borrarla.",
+    );
+    expect(screen.getByRole("button", { name: "Borrar la lista" })).toBeEnabled();
   });
 
   it("sin nada marcado no ofrece quitar lo comprado", () => {
