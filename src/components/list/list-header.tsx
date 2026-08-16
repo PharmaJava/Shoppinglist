@@ -13,13 +13,11 @@ export function ListHeader({
   list,
   checked,
   total,
-  supermarketMode,
 }: {
   listId: string;
   list: List;
   checked: number;
   total: number;
-  supermarketMode: boolean;
 }) {
   const t = useTranslations("list");
   const queryClient = useQueryClient();
@@ -42,34 +40,27 @@ export function ListHeader({
   return (
     <header className="flex items-center gap-3 border-b border-border bg-surface-raised px-4 py-3">
       <div className="flex flex-1 flex-col">
-        {supermarketMode ? (
-          <span className="truncate text-lg font-semibold text-on-surface">{list.title}</span>
-        ) : (
-          <input
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            onBlur={handleTitleBlur}
-            aria-label={t("renameList")}
-            className="w-full truncate bg-transparent text-lg font-semibold text-on-surface outline-none"
-          />
-        )}
+        <input
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          onBlur={handleTitleBlur}
+          aria-label={t("renameList")}
+          className="w-full truncate bg-transparent text-lg font-semibold text-on-surface outline-none"
+        />
         {total > 0 && (
           <span className="text-sm text-on-surface-muted">{t("progress", { checked, total })}</span>
         )}
       </div>
 
-      {/* El modo compra se empieza y se termina en la barra de abajo, no aquí:
-          un 🛒 suelto en la cabecera no lo encontraba nadie, y la ✕ para salir
-          no decía que sirviera para terminar la compra. */}
-      {!supermarketMode && (
-        <button
-          type="button"
-          onClick={() => setShareOpen(true)}
-          className="flex h-10 items-center gap-1.5 rounded-full bg-brand px-4 text-sm font-medium text-brand-contrast print:hidden"
-        >
-          {t("share")}
-        </button>
-      )}
+      {/* La compra se termina en la barra de abajo, no aquí. Aquí sólo está
+          lo que sirve igual antes, durante y después: compartir la lista. */}
+      <button
+        type="button"
+        onClick={() => setShareOpen(true)}
+        className="flex h-10 items-center gap-1.5 rounded-full bg-brand px-4 text-sm font-medium text-brand-contrast print:hidden"
+      >
+        {t("share")}
+      </button>
 
       {shareOpen && (
         // Un fallo dentro de la hoja no puede llevarse por delante la lista que

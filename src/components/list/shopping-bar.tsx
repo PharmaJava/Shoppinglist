@@ -6,47 +6,31 @@ import type { WakeLockState } from "@/features/list/use-wake-lock";
 /**
  * La barra de la compra, encima de la de añadir productos.
  *
- * Antes el modo compra se activaba con un 🛒 suelto en la cabecera y se salía
- * con una ✕. Nadie lo encontraba, y quien lo encontraba no sabía cómo
- * terminar: la pantalla se quedaba encendida hasta cerrar la pestaña. Ahora
- * hay un sitio donde empieza y un botón que dice «Finalizar».
+ * Ya no hay que empezar nada: **abrir la lista es estar comprando**. Antes
+ * había un botón de empezar, y era un paso de más para decir algo que la
+ * situación ya decía —quien abre la lista de la compra está comprando, no
+ * organizando—, con la trampa de que quien no lo pulsaba se quedaba sin lo
+ * único que ese modo daba: la pantalla encendida.
+ *
+ * Queda un botón, el de terminar, que es el que sí decide algo: qué hacer con
+ * la lista cuando se acaba (ver `FinishSheet`).
  */
 export function ShoppingBar({
-  activa,
   pendientes,
   marcados,
   pantalla,
-  onEmpezar,
   onFinalizar,
 }: {
-  activa: boolean;
   pendientes: number;
   marcados: number;
   pantalla: WakeLockState;
-  onEmpezar: () => void;
   onFinalizar: () => void;
 }) {
   const t = useTranslations("shopping");
   const total = pendientes + marcados;
 
-  // Sin productos no hay compra que empezar; sí la hay si ya está en marcha
-  // (alguien puede haber vaciado la lista desde otro móvil).
-  if (total === 0 && !activa) return null;
-
-  if (!activa) {
-    return (
-      <div className="border-t border-border bg-surface px-4 py-2 print:hidden">
-        <button
-          type="button"
-          onClick={onEmpezar}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-brand font-semibold text-brand"
-        >
-          <span aria-hidden>🛒</span>
-          {t("start")}
-        </button>
-      </div>
-    );
-  }
+  // Una lista vacía no es una compra: no hay nada que terminar todavía.
+  if (total === 0) return null;
 
   return (
     <div className="flex items-center gap-3 border-t border-border bg-brand/10 px-4 py-2 print:hidden">

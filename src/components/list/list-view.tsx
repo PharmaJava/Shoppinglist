@@ -4,7 +4,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { setListArchived } from "@/features/list/api";
 import { normalizeProductName } from "@/features/list/categorize";
-import { empezarCompra, hayCompraEnCurso, terminarCompra } from "@/features/list/shopping-session";
 import type { ListItem } from "@/features/list/types";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
@@ -33,31 +32,23 @@ export function ListView({ listId }: { listId: string }) {
   const locale = useLocale() as Locale;
   const { data, isLoading, isError } = useList(listId);
   const { data: categories } = useCategories();
-  const [supermarketMode, setSupermarketMode] = useState(false);
   const [finishOpen, setFinishOpen] = useState(false);
   const [justDeleted, setJustDeleted] = useState<ListItem | null>(null);
   const restore = useRestoreItem(listId);
   const borrar = useDeleteItem(listId);
 
-  const pantalla = useWakeLock(supermarketMode);
+  /**
+   * La pantalla se mantiene encendida mientras la lista esté abierta.
+   *
+   * Antes dependía de haber pulsado «empezar la compra»; sin ese botón, la
+   * regla es la situación: quien tiene la lista abierta la está usando, y en
+   * el súper con el móvil en la mano lo peor que puede pasar es que se apague
+   * cada treinta segundos. El navegador retira el permiso solo al pasar la
+   * pestaña a segundo plano, así que esto no se queda encendido de fondo.
+   */
+  const pantalla = useWakeLock(true);
 
-  // La compra sobrevive a que se apague la pantalla y la página se recargue:
-  // se guarda fuera de React (ver `shopping-session`). Sin esto, volver al
-  // móvil dentro del súper sacaba del modo compra sin haberlo pedido.
-  useEffect(() => {
-    setSupermarketMode(hayCompraEnCurso(listId));
-  }, [listId]);
-
-  const empezar = useCallback(() => {
-    empezarCompra(listId);
-    setSupermarketMode(true);
-  }, [listId]);
-
-  const cerrarCompra = useCallback(() => {
-    terminarCompra();
-    setSupermarketMode(false);
-    setFinishOpen(false);
-  }, []);
+  const cerrarCompra = useCallback(() => setFinishOpen(false), []);
 
   // El aviso se retira solo: un borrado tiene ventana para arrepentirse, no
   // una barra permanente ocupando pantalla dentro del supermercado.
@@ -124,13 +115,7 @@ export function ListView({ listId }: { listId: string }) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <ListHeader
-        listId={listId}
-        list={data.list}
-        checked={checked.length}
-        total={total}
-        supermarketMode={supermarketMode}
-      />
+      <ListHeader listId={listId} list={data.list} checked={checked.length} total={total} />
       <SyncStatusBanner />
       <AutoFinishBanner listId={listId} list={data.list} />
       <BudgetBar listId={listId} list={data.list} items={data.items} />
@@ -150,7 +135,6 @@ export function ListView({ listId }: { listId: string }) {
                   key={item.id}
                   listId={listId}
                   item={item}
-                  large={supermarketMode}
                   currency={data.list.currency}
                   onDeleted={setJustDeleted}
                 />
@@ -159,7 +143,7 @@ export function ListView({ listId }: { listId: string }) {
           </section>
         ))}
 
-        {!supermarketMode && checked.length > 0 && (
+        {checked.length > 0 && (
           <section>
             <h2 className="sticky top-0 bg-surface-muted px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-on-surface-muted">
               {t("checkedSection")}
@@ -200,11 +184,9 @@ export function ListView({ listId }: { listId: string }) {
       )}
 
       <ShoppingBar
-        activa={supermarketMode}
         pendientes={pending.length}
         marcados={checked.length}
         pantalla={pantalla}
-        onEmpezar={empezar}
         onFinalizar={() => setFinishOpen(true)}
       />
 

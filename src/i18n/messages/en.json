@@ -444,7 +444,6 @@
     "saved": "Saved"
   },
   "shopping": {
-    "start": "Start shopping",
     "progress": "{checked} of {total} in the trolley",
     "screenOn": "The screen will stay on",
     "screenOff": "The screen may turn off",
