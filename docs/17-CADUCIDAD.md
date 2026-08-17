@@ -87,8 +87,20 @@ el primer día.
 | `CRON_SECRET` | Vercel → Settings → Environment Variables | La ruta responde 404 y **no se borra nada, nunca** |
 | `SUPABASE_SERVICE_ROLE_KEY` | Vercel | Lo mismo: 404 antes de tocar la base de datos |
 
-El valor de `CRON_SECRET` es una cadena larga al azar que se inventa uno (`openssl rand -base64 32`)
-y no se comparte con nada más. No hay que mandarla a ningún sitio: cuando esa variable existe,
+El valor de `CRON_SECRET` es una cadena larga al azar que se inventa uno (`openssl rand -hex 24`) y
+no se comparte con nada más.
+
+> **Sin espacios ni salto de línea al final.** El valor acaba en una cabecera HTTP, así que Vercel lo
+> rechaza si los lleva — y no rechaza el cron: **rechaza el build entero, producción incluida**, con
+> `The CRON_SECRET environment variable contains leading or trailing whitespace`. Pasó de verdad, y
+> se cuela con una facilidad ridícula: copiar el valor de un documento o de un chat se trae el salto
+> de línea, y en el formulario de Vercel no se ve. Si el build falla por esto, el despliegue anterior
+> se queda publicado —la web sigue en pie— pero **nada de lo que se mergee llega a producción** hasta
+> que se arregle. Desde la línea de órdenes, sin salto:
+>
+> ```sh
+> printf '%s' 'EL-VALOR' | vercel env add CRON_SECRET production
+> ``` No hay que mandarla a ningún sitio: cuando esa variable existe,
 Vercel la pone sola en la cabecera `Authorization: Bearer …` al llamar al cron, y la ruta compara.
 Es lo que impide que cualquiera dispare la pasada desde fuera. Y como las variables de entorno sólo
 entran en los despliegues nuevos, **hay que redesplegar después de añadirla**.
