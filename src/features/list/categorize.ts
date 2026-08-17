@@ -168,6 +168,27 @@ const KEYWORDS: Record<Locale, Record<string, string>> = {
 const OTHER_CATEGORY = "other";
 
 /**
+ * El otro idioma, para cuando el del móvil no es el que se escribe.
+ *
+ * Caso real: una persona con el móvil en inglés escribiendo su compra en
+ * español. La interfaz sale en inglés —eso es correcto— pero los productos
+ * («sandía», «nectarina», «plátano») no estaban en ningún diccionario inglés,
+ * así que la lista entera caía en «Otros» y el orden por pasillo, que es de lo
+ * que vive esta aplicación, no hacía nada.
+ *
+ * El idioma de la interfaz sigue mandando; el otro es la segunda pasada. No
+ * hay conflicto que resolver: las seis palabras que comparten los dos
+ * diccionarios (pasta, pizza, chocolate, salmon, baguette, croissant) están en
+ * la misma categoría en ambos, y hay una prueba que lo fija.
+ */
+const OTRO_IDIOMA: Record<Locale, Locale> = { es: "en", en: "es" };
+
+/** Los dos diccionarios, el de la interfaz primero. */
+function dictionaries(locale: Locale): Record<string, string>[] {
+  return [getDictionary(locale), getDictionary(OTRO_IDIOMA[locale])];
+}
+
+/**
  * Entradas cargadas desde la tabla `products` (ver ./catalog.ts), fusionadas
  * en caliente sobre el diccionario estático. Éste último sigue siendo la
  * fuente offline-first: si la carga de red no ha terminado (o falla), la
@@ -189,27 +210,35 @@ function getDictionary(locale: Locale): Record<string, string> {
  * Coincidencia exacta y nada de parecidos: la usa el parser para decidir si
  * «leche pan tomate» son tres cosas o una sola con nombre largo, y ahí un
  * «casi» convertiría «carne picada» en dos productos. Cubre el diccionario
- * estático y el catálogo de la base de datos, cuando ya ha llegado.
+ * estático y el catálogo de la base de datos, cuando ya ha llegado, **en los
+ * dos idiomas**: quien tiene el móvil en inglés y escribe en español también
+ * escribe «leche pan tomate».
  */
 export function isKnownProduct(word: string, locale: Locale): boolean {
   const normalized = normalizeProductName(word);
   if (!normalized) return false;
 
-  return normalized in getDictionary(locale);
+  return dictionaries(locale).some((dictionary) => normalized in dictionary);
 }
 
 export function categorize(name: string, locale: Locale): string {
   const normalized = normalizeProductName(name);
-  const dictionary = getDictionary(locale);
 
-  const exact = dictionary[normalized];
-  if (exact) {
-    return exact;
+  // Primero lo exacto en los dos idiomas y sólo después los parecidos: un
+  // «contiene» del idioma de la interfaz no puede ganarle a un nombre que en
+  // el otro idioma está clavado.
+  for (const dictionary of dictionaries(locale)) {
+    const exact = dictionary[normalized];
+    if (exact) return exact;
   }
 
-  const matchKey = Object.keys(dictionary).find(
-    (keyword) => normalized.includes(keyword) || keyword.includes(normalized),
-  );
+  for (const dictionary of dictionaries(locale)) {
+    const matchKey = Object.keys(dictionary).find(
+      (keyword) => normalized.includes(keyword) || keyword.includes(normalized),
+    );
+    const found = matchKey && dictionary[matchKey];
+    if (found) return found;
+  }
 
-  return (matchKey && dictionary[matchKey]) || OTHER_CATEGORY;
+  return OTHER_CATEGORY;
 }

@@ -80,3 +80,56 @@ describe("isKnownProduct", () => {
     expect(isKnownProduct("   ", "es")).toBe(false);
   });
 });
+
+/**
+ * El caso real que lo motivó: el móvil en inglés y la compra escrita en
+ * español. La interfaz en inglés es correcta —es el idioma del teléfono— pero
+ * los productos («sandía», «nectarina», «plátano») no estaban en ningún
+ * diccionario inglés y la lista entera caía en «Otros», con lo que el orden
+ * por pasillo, que es de lo que vive esto, no hacía nada.
+ */
+describe("el idioma del móvil no decide en qué idioma se escribe", () => {
+  it("clasifica productos en español con la interfaz en inglés", () => {
+    expect(categorize("Tomate", "en")).toBe("produce");
+    expect(categorize("Plátano", "en")).toBe("produce");
+    expect(categorize("Leche", "en")).toBe("dairy");
+  });
+
+  it("y productos en inglés con la interfaz en español", () => {
+    expect(categorize("Milk", "es")).toBe("dairy");
+    expect(categorize("Chicken", "es")).toBe("meat");
+  });
+
+  it("lo que no está en ninguno de los dos sigue siendo «otros»", () => {
+    expect(categorize("xyzzy-no-existe", "en")).toBe("other");
+  });
+
+  it("también reconoce productos en el otro idioma", () => {
+    expect(isKnownProduct("tomate", "en")).toBe(true);
+    expect(isKnownProduct("milk", "es")).toBe(true);
+    expect(isKnownProduct("picada", "en")).toBe(false);
+  });
+
+  /**
+   * Las seis palabras que comparten los dos diccionarios estáticos están en la
+   * misma categoría en ambos. Si un día dejaran de estarlo, mirar los dos
+   * idiomas empezaría a dar resultados según de dónde sea el móvil, que es
+   * exactamente lo que esto viene a arreglar.
+   */
+  it("las palabras que están en los dos idiomas coinciden de categoría", () => {
+    for (const palabra of ["pasta", "pizza", "chocolate", "salmon", "baguette", "croissant"]) {
+      expect(categorize(palabra, "es")).toBe(categorize(palabra, "en"));
+    }
+  });
+
+  it("el catálogo de un idioma sirve para quien tiene la interfaz en el otro", () => {
+    // «Sandía» no está en ninguno de los dos diccionarios estáticos: llega con
+    // el catálogo de la base de datos, que ahora se carga entero.
+    expect(categorize("Sandia", "en")).toBe("other");
+
+    mergeCatalogEntries("es", { sandia: "produce", nectarina: "produce" });
+
+    expect(categorize("Sandia", "en")).toBe("produce");
+    expect(categorize("Nectarina", "en")).toBe("produce");
+  });
+});

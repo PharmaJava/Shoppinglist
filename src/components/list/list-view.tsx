@@ -12,7 +12,7 @@ import { useList } from "@/features/list/use-list";
 import { useDeleteItem, useRestoreItem } from "@/features/list/use-list-mutations";
 import { useWakeLock } from "@/features/list/use-wake-lock";
 import { stockUpFromList } from "@/features/pantry/api";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/lib/supabase/types";
 import { AddItemBar } from "./add-item-bar";
 import { AutoFinishBanner } from "./auto-finish-banner";
@@ -113,8 +113,29 @@ export function ListView({ listId }: { listId: string }) {
     return <p className="p-6 text-center text-on-surface-muted">{t("loading")}</p>;
   }
 
+  /**
+   * No se puede abrir: o el enlace está mal, o es la lista de otra persona.
+   *
+   * Antes aquí se decía «no hay nada en esta lista», y era mentira de las que
+   * hacen perder media hora: la lista existe y está llena, pero RLS no deja
+   * leerla a quien no es dueño ni miembro (`lists_select`, migración 0001). El
+   * caso corriente es alguien que copia la URL de la barra de direcciones y la
+   * manda por WhatsApp — eso no da acceso a nadie; el que lo da es el enlace
+   * del botón «Compartir», que lleva invitación.
+   */
   if (isError || !data) {
-    return <p className="p-6 text-center text-on-surface-muted">{t("empty")}</p>;
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-center">
+        <p className="font-semibold text-lg text-on-surface">{t("noAccessTitle")}</p>
+        <p className="max-w-sm text-on-surface-muted text-sm">{t("noAccessBody")}</p>
+        <Link
+          href="/"
+          className="flex h-tap items-center rounded-full bg-brand px-6 font-semibold text-brand-contrast"
+        >
+          {t("noAccessHome")}
+        </Link>
+      </div>
+    );
   }
 
   const total = pending.length + checked.length;

@@ -275,3 +275,54 @@ describe("varios productos escritos sin comas", () => {
     expect(parseVoiceTranscript("leche", "es")).toEqual([{ name: "Leche", qty: null, unit: null }]);
   });
 });
+
+/**
+ * El móvil en inglés y la compra escrita en español. La interfaz sale en
+ * inglés, que es correcto, pero lo escrito hay que entenderlo igual.
+ */
+describe("la interfaz en un idioma y lo escrito en otro", () => {
+  it("lee la cantidad escrita en español con la interfaz en inglés", () => {
+    expect(parseVoiceTranscript("dos litros de leche", "en")).toEqual([
+      { name: "Leche", qty: 2, unit: "litros" },
+    ]);
+    expect(parseVoiceTranscript("una docena de huevos", "en")).toEqual([
+      { name: "Huevos", qty: 1, unit: "docena" },
+    ]);
+    expect(parseVoiceTranscript("carne picada 500 g", "en")).toEqual([
+      { name: "Carne picada", qty: 500, unit: "g" },
+    ]);
+  });
+
+  it("y en inglés con la interfaz en español", () => {
+    expect(parseVoiceTranscript("two liters of milk", "es")).toEqual([
+      { name: "Milk", qty: 2, unit: "liters" },
+    ]);
+  });
+
+  it("separa lo escrito sin comas también en el otro idioma", () => {
+    expect(parseVoiceTranscript("leche pan tomate", "en").map((item) => item.name)).toEqual([
+      "Leche",
+      "Pan",
+      "Tomate",
+    ]);
+  });
+
+  /**
+   * Los separadores **sí** siguen siendo del idioma de la interfaz, y es
+   * deliberado: partir por «y» donde no toca inventa un producto que nadie
+   * quiere («Rojo»), mientras que no partir deja una línea larga que se lee
+   * perfectamente. Ante la duda, no partir.
+   */
+  it("no parte por «y» si la interfaz está en inglés", () => {
+    expect(parseVoiceTranscript("pimiento verde y rojo", "en").map((item) => item.name)).toEqual([
+      "Pimiento verde y rojo",
+    ]);
+  });
+
+  it("y sí lo parte si está en español, como siempre", () => {
+    expect(parseVoiceTranscript("pimiento verde y rojo", "es").map((item) => item.name)).toEqual([
+      "Pimiento verde",
+      "Rojo",
+    ]);
+  });
+});

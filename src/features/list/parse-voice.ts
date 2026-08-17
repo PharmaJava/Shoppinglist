@@ -12,6 +12,20 @@ const SEPARATORS: Record<Locale, RegExp> = {
   en: /,| and /gi,
 };
 
+/**
+ * Las cantidades se entienden en los dos idiomas, sin mirar el de la interfaz.
+ *
+ * Quien tiene el móvil en inglés y escribe la compra en español escribe «dos
+ * litros de leche», y eso tiene que dar 2 litros de leche igual que si la
+ * interfaz estuviera en español. No hay riesgo de confusión: ninguna palabra
+ * de estas listas es un producto en el otro idioma, y la comprobación es de
+ * palabra completa.
+ *
+ * Los **separadores** (más abajo) sí siguen siendo del idioma de la interfaz.
+ * Ahí la diferencia importa: partir por «y» donde no toca inventa un producto
+ * («pimiento verde y rojo» → «Rojo»), y dejar una línea sin partir sólo deja
+ * una línea larga que se lee perfectamente.
+ */
 const NUMBER_WORDS: Record<Locale, Record<string, number>> = {
   es: {
     un: 1,
@@ -98,6 +112,10 @@ const UNIT_WORDS: Record<Locale, string[]> = {
   ],
 };
 
+const TODOS_LOS_NUMEROS: Record<string, number> = { ...NUMBER_WORDS.es, ...NUMBER_WORDS.en };
+const TODAS_LAS_UNIDADES: string[] = [...UNIT_WORDS.es, ...UNIT_WORDS.en];
+const TODOS_LOS_CONECTORES: string[] = Object.values(CONNECTOR_WORDS);
+
 /** Viñetas con las que la gente pega listas desde notas o desde un chat. */
 const BULLET = /^[\s\u00a0]*[-–—*•·+]+\s*/;
 
@@ -135,7 +153,7 @@ export function parseVoiceTranscript(transcript: string, locale: Locale): Parsed
     .filter(Boolean)
     .flatMap((segment) => separarProductosSueltos(segment, locale));
 
-  return dedupe(segments.map((segment) => parseSegment(segment, locale)));
+  return dedupe(segments.map((segment) => parseSegment(segment)));
 }
 
 /**
@@ -203,7 +221,7 @@ interface Amount {
   words: number;
 }
 
-function parseSegment(segment: string, locale: Locale): ParsedVoiceItem {
+function parseSegment(segment: string): ParsedVoiceItem {
   // "tomates x3": multiplicador al final. Es unidades, nunca peso, así que no
   // lleva unidad asociada.
   const multiplier = segment.match(/[x×]\s*(\d+(?:[.,]\d+)?)\s*$/);
@@ -213,14 +231,13 @@ function parseSegment(segment: string, locale: Locale): ParsedVoiceItem {
   }
 
   const words = segment.split(/\s+/);
-  const connector = CONNECTOR_WORDS[locale];
 
   // Cantidad al principio: "dos litros de leche", "500 g de carne picada".
-  const leading = readAmount(words, 0, locale);
+  const leading = readAmount(words, 0);
   if (leading) {
     const rest = words
       .slice(leading.words)
-      .filter((word) => word !== connector)
+      .filter((word) => !TODOS_LOS_CONECTORES.includes(word))
       .join(" ")
       .trim();
     if (rest) return { name: capitalize(rest), qty: leading.qty, unit: leading.unit };
@@ -230,7 +247,7 @@ function parseSegment(segment: string, locale: Locale): ParsedVoiceItem {
   // Se recorre hacia atrás buscando un punto desde el que la cantidad llegue
   // justo hasta el final; así "2 latas de atún 400 g" no confunde las dos.
   for (let start = words.length - 1; start >= 1; start -= 1) {
-    const trailing = readAmount(words, start, locale);
+    const trailing = readAmount(words, start);
     if (trailing && start + trailing.words === words.length) {
       const rest = words.slice(0, start).join(" ").trim();
       if (rest) return { name: capitalize(rest), qty: trailing.qty, unit: trailing.unit };
@@ -241,12 +258,12 @@ function parseSegment(segment: string, locale: Locale): ParsedVoiceItem {
 }
 
 /** Lee una cantidad (y su unidad, si la lleva) empezando en `index`. */
-function readAmount(words: string[], index: number, locale: Locale): Amount | null {
+function readAmount(words: string[], index: number): Amount | null {
   const token = words[index];
   if (!token) return null;
 
-  const unitWords = UNIT_WORDS[locale];
-  const numberWords = NUMBER_WORDS[locale];
+  const unitWords = TODAS_LAS_UNIDADES;
+  const numberWords = TODOS_LOS_NUMEROS;
 
   // "500g", "1,5kg": número y unidad pegados, como se teclea de verdad.
   const glued = token.match(/^(\d+(?:[.,]\d+)?)([a-zá-ú]+)$/);
