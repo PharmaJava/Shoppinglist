@@ -20,6 +20,14 @@ const INCLUDED = [
   "included5",
   "included6",
 ] as const;
+/** Lo que premium da **hoy**, que es lo que se puede cobrar. */
+const PREMIUM = [
+  "premiumFeature1",
+  "premiumFeature2",
+  "premiumFeature3",
+  "premiumFeature4",
+] as const;
+/** Y la hoja de ruta, que es otra cosa y se dice aparte. */
 const PLANNED = ["planned1", "planned2", "planned3"] as const;
 
 export function generateStaticParams() {
@@ -76,6 +84,17 @@ export default async function PricingPage({ params }: Props) {
    * anotado en docs/16-STRIPE.md.
    */
   const precio = await precioPremium(locale);
+
+  /**
+   * ¿Se puede pagar de verdad, ahora mismo?
+   *
+   * Las tres condiciones a la vez, y no sólo el precio: con las claves de
+   * Stripe puestas pero el interruptor apagado, `precioPremium` ya devuelve un
+   * importe, y esta página enseñaba el precio y «cancelas cuando quieras» sin
+   * ningún botón con el que pagar. Un precio sin forma de comprarlo no es
+   * información, es un despiste.
+   */
+  const enVenta = PREMIUM_VISIBLE && stripeConfigurado() && precio !== null;
 
   // Sólo se declara la oferta que existe de verdad. Marcar premium como
   // `Offer` sin precio ni disponibilidad sería declarar un producto que no se
@@ -141,26 +160,50 @@ export default async function PricingPage({ params }: Props) {
           <div className="flex flex-col gap-1">
             <h2 className="font-semibold text-on-surface">{t("premiumTitle")}</h2>
             <p className="text-3xl font-bold text-on-surface-muted">
-              {precio
+              {enVenta && precio
                 ? precio.intervalo === "year"
                   ? t("perYear", { precio: precio.importe })
                   : t("perMonth", { precio: precio.importe })
                 : t("premiumPrice")}
             </p>
             <p className="text-sm text-on-surface-muted">
-              {precio ? t("premiumNoteLive") : t("premiumNote")}
+              {enVenta ? t("premiumNoteLive") : t("premiumNote")}
             </p>
           </div>
 
-          <h3 className="font-semibold text-on-surface text-sm">{t("plannedTitle")}</h3>
+          {/* En cuanto se puede pagar, esta lista tiene que ser lo que premium
+              da **hoy**. Antes enseñaba la hoja de ruta —historial de precios,
+              menú semanal, listas por tienda— y ninguna de las tres es lo que
+              se compra: cobrar por una lista de funciones que no existen no es
+              un descuido de redacción. La hoja de ruta sigue estando, debajo y
+              dicha como lo que es. */}
+          <h3 className="font-semibold text-on-surface text-sm">
+            {enVenta ? t("premiumIncludedTitle") : t("plannedTitle")}
+          </h3>
           <ul className="flex flex-col gap-2">
-            {PLANNED.map((key) => (
+            {(enVenta ? PREMIUM : PLANNED).map((key) => (
               <li key={key} className="flex gap-2 text-sm text-on-surface-muted">
-                <span aria-hidden="true">·</span>
+                <span aria-hidden="true" className={enVenta ? "text-brand" : undefined}>
+                  {enVenta ? "✓" : "·"}
+                </span>
                 {t(key)}
               </li>
             ))}
           </ul>
+
+          {enVenta && (
+            <>
+              <h3 className="font-semibold text-on-surface text-sm">{t("soonTitle")}</h3>
+              <ul className="flex flex-col gap-2">
+                {PLANNED.map((key) => (
+                  <li key={key} className="flex gap-2 text-on-surface-muted text-sm">
+                    <span aria-hidden="true">·</span>
+                    {t(key)}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
           {/* Sólo hay botón si de verdad se puede pagar: con la Fase 3
               apagada o sin las claves de Stripe, esto no devuelve nada. */}

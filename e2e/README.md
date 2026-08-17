@@ -32,6 +32,23 @@ Cuando exista ese proyecto, basta con darle a Playwright
 configuración ya los toma del entorno si están, y sólo cae en los valores de
 ejemplo cuando no. Los tests nuevos irían en `e2e/lista.spec.ts`.
 
+## Si el navegador no arranca
+
+En una máquina donde ya hay un Chromium instalado con **otra versión** que la
+que pide `@playwright/test`, el arranque falla con
+`Executable doesn't exist at …/chromium_headless_shell-XXXX/…`. No es un test
+roto: es que no hay navegador que lanzar. Se le dice cuál usar:
+
+```sh
+PLAYWRIGHT_CHROMIUM_PATH=/opt/pw-browsers/chromium pnpm e2e
+```
+
+Y ojo al leer el resultado, que engaña: las pruebas que sólo usan `request`
+—rutas de API, `robots.txt`, cabeceras— pasan igualmente, así que el resumen
+enseña un número de «passed» que parece razonable con **todas** las de
+navegador cayendo por el mismo motivo. El número bueno es el total: ahora mismo
+son 117 pruebas (dos proyectos, móvil y escritorio) más una que se salta sola.
+
 ## En el CI
 
 Se ejecutan en cada PR después de los tests unitarios, con el navegador ya

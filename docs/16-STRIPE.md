@@ -68,6 +68,31 @@ reintentarlo durante días, avisando por correo. Cortar el acceso al primer rein
 se le ha caducado la tarjeta y aún no se ha enterado. Cuando se agotan los reintentos el estado pasa
 a `unpaid` o `canceled`, y ahí sí.
 
+## 4 bis. Y la página de precios tiene que decir lo que se vende
+
+`/precios` enseñaba, bajo el título «Qué estamos preparando para premium», la **hoja de ruta**:
+historial de precios, menú semanal, listas por tienda. Ninguna de las tres es lo que premium da hoy.
+Mientras no se podía pagar, eso era correcto —era una hoja de ruta y lo decía—. En el momento en que
+hay botón de pagar, se convierte en cobrar por funciones que no existen.
+
+Así que la tarjeta de premium tiene dos caras, y la condición para pasar de una a otra es
+`enVenta = PREMIUM_VISIBLE && stripeConfigurado() && precio !== null` — las tres cosas, no sólo el
+precio:
+
+| | Sin poder pagar | En venta |
+|---|---|---|
+| Precio | «Sin precio todavía» | El de Stripe |
+| Nota | «En preparación. Cuando exista, se anunciará antes de cobrar nada» | «Cancelas cuando quieras…» |
+| Lista | La hoja de ruta, dicha como tal | **Lo que premium incluye hoy**: despensa, listas automáticas, receta → lista y escaneo de códigos. Y debajo, «Y lo próximo» con la hoja de ruta |
+
+Las tres condiciones juntas arreglan además un despiste que ya estaba pasando: con las claves de
+Stripe puestas en Vercel y el interruptor apagado, `precioPremium` ya devolvía un importe, y la
+página enseñaba el precio y «cancelas cuando quieras» **sin ningún botón con el que pagar**.
+
+Lo mismo en la FAQ de la portada: decía «más adelante habrá funciones premium», que deja de ser
+verdad el día que las hay. Ahora describe el modelo y no la disponibilidad —lo de pago es opcional y
+la lista compartida no se toca—, así que es cierto antes y después.
+
 ## 5. El precio no está en el código
 
 `/precios` se lo pregunta a Stripe (`prices.retrieve`), que es donde de verdad manda. Sin claves

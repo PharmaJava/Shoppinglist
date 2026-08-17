@@ -34,6 +34,21 @@ test.describe("Stripe (Fase 3, apagado)", () => {
     await expect(page.getByRole("button", { name: "Hacerse Premium" })).toHaveCount(0);
   });
 
+  /**
+   * Mientras no se pueda pagar, premium es una hoja de ruta y se dice así. La
+   * lista de lo que premium **incluye** sólo aparece cuando hay precio, botón
+   * e interruptor: prometer la despensa o las recetas a quien no las puede
+   * tener sería vender humo, y hacerlo al revés —cobrar enseñando la hoja de
+   * ruta— sería peor.
+   */
+  test("con el cobro apagado no promete funciones premium como si existieran", async ({ page }) => {
+    await page.goto("/es/precios");
+
+    await expect(page.getByText("Qué estamos preparando para premium")).toBeVisible();
+    await expect(page.getByText("Qué incluye premium")).toHaveCount(0);
+    await expect(page.getByText(/Despensa con caducidades/)).toHaveCount(0);
+  });
+
   test("y sigue siendo indexable, que es de lo que vive", async ({ page }) => {
     const respuesta = await page.goto("/es/precios");
 
