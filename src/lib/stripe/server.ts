@@ -68,8 +68,20 @@ export async function precioPremium(locale: Locale): Promise<PrecioPremium | nul
  * En la versión de la API que trae este SDK, `current_period_end` **ya no
  * está en la suscripción**: está en cada línea de la suscripción. Aquí sólo
  * hay una línea (un plan), así que se coge la primera.
+ *
+ * Y si no está ahí, se mira en la raíz, que es donde vivía antes. No es un
+ * cinturón por si acaso: **el endpoint de Stripe tiene su propia versión de la
+ * API**, fijada el día que se creó, y los avisos llegan serializados con ésa,
+ * no con la del SDK. Un endpoint creado antes de que el campo se moviera manda
+ * la suscripción con el campo en la raíz, y leyendo sólo las líneas se
+ * guardaría `null`: nadie se queda sin premium por eso —el plan lo decide el
+ * estado— pero la cuenta no podría decir hasta cuándo está pagada, y eso es de
+ * las cosas que quien paga mira.
  */
 export function finDePeriodo(suscripcion: Stripe.Subscription): string | null {
-  const segundos = suscripcion.items?.data?.[0]?.current_period_end;
+  const enLaLinea = suscripcion.items?.data?.[0]?.current_period_end;
+  const enLaRaiz = (suscripcion as { current_period_end?: number | null }).current_period_end;
+
+  const segundos = enLaLinea ?? enLaRaiz;
   return segundos ? new Date(segundos * 1000).toISOString() : null;
 }

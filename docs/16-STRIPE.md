@@ -44,6 +44,18 @@ El webhook responde 200 igual, porque para Stripe un repetido bien ignorado es u
 **Una transacción.** La suscripción y el plan se escriben juntos o no se escriben. Si se guardara la
 suscripción y fallara el `update` del perfil, alguien estaría pagando sin tener premium.
 
+### El endpoint tiene su propia versión de la API
+
+Y no tiene por qué ser la del SDK. La versión de un endpoint se fija el día que se crea, y los avisos
+llegan **serializados con ésa**. El de producción está en `2026-03-25.dahlia` y el SDK usa
+`2026-07-29.dahlia`.
+
+Donde se nota es en `current_period_end`, que en algún momento se movió de la suscripción a sus
+líneas. `finDePeriodo` mira primero la línea y luego la raíz, así que da igual con qué versión
+llegue. Sin ese respaldo se guardaría `null`: nadie se queda sin premium por eso —el plan lo decide
+el estado— pero la cuenta no podría decir hasta cuándo está pagada, y eso es de las cosas que quien
+paga mira.
+
 ## 3. De quién es este aviso
 
 Un evento de Stripe no siempre dice quién es la persona. Se busca por tres caminos, en orden:

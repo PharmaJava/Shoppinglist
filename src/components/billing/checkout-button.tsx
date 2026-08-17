@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { usePlan } from "@/features/billing/use-plan";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 
 /**
  * El botón de hacerse premium.
@@ -18,6 +18,7 @@ import { Link } from "@/i18n/navigation";
  */
 export function CheckoutButton({ disponible }: { disponible: boolean }) {
   const t = useTranslations("billing");
+  const router = useRouter();
   const { plan, cargando, premiumVisible } = usePlan();
   const [yendo, setYendo] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,10 +42,16 @@ export function CheckoutButton({ disponible }: { disponible: boolean }) {
       const respuesta = await fetch("/api/stripe/checkout", { method: "POST" });
       const datos = (await respuesta.json()) as { url?: string; error?: string };
 
-      // Sin sesión no hay a quién cobrarle: se manda a la cuenta a entrar, y
-      // al volver el botón ya funciona.
+      /**
+       * Sin sesión no hay a quién cobrarle: se manda a la cuenta a entrar, y
+       * al volver el botón ya funciona.
+       *
+       * Por el router de next-intl y no con la URL a mano: estaba escrito
+       * `/es/cuenta`, que a quien tiene la web en inglés lo sacaba de su idioma
+       * a mitad de un pago.
+       */
       if (respuesta.status === 401) {
-        window.location.href = "/es/cuenta";
+        router.push("/cuenta");
         return;
       }
       if (!datos.url) {
