@@ -1,0 +1,25 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "title": "Hoy", "x": 0, "y": 0, "w": 900, "h": 1500 },
+    { "file": "A_Mercado.dc.html", "title": "A · Mercado", "x": 980, "y": 0, "w": 900, "h": 1420 },
+    { "file": "B_Editorial.dc.html", "title": "B · Editorial", "x": 1960, "y": 0, "w": 900, "h": 1360 },
+    { "file": "C_Nocturno.dc.html", "title": "C · Nocturno", "x": 2940, "y": 0, "w": 900, "h": 1240 }
+  ],
+  "annotations": [
+    {
+      "id": "como-elegir",
+      "x": 0,
+      "y": -190,
+      "w": 900,
+      "text": "Cuatro tableros, de izquierda a derecha: lo que hay hoy y tres direcciones distintas.\n\nNo hace falta elegir una entera: dime cuál te tira y qué te llevarías de las otras (la tipografía de una, el modo oscuro de otra). Con eso monto la dirección definitiva y ya la llevo al código."
+    },
+    {
+      "id": "que-no-cambia",
+      "x": 2940,
+      "y": -190,
+      "w": 900,
+      "text": "Lo que no se toca en ninguna: el verde de marca, los objetivos táctiles de 56 px, el orden por pasillos y los textos reales de la web.\n\nLo que sí cambia en las tres: los emoji dejan de hacer de icono. Pasan a iconos dibujados, que se ven igual en todos los móviles y se pueden recolorear."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

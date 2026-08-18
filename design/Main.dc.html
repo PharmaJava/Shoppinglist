@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    a { color: oklch(0.54 0.16 150); } a:hover { color: oklch(0.45 0.14 150); }
+  </style>
+</helmet>
+
+<div style="width: 900px; background: oklch(1 0 0); color: oklch(0.2 0 0);">
+
+  <div style="display: flex; align-items: baseline; gap: 12px; padding: 20px 32px; background: oklch(0.96 0 0); border-bottom: 1px solid oklch(0.9 0 0);">
+    <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: oklch(0.45 0 0);">Hoy</span>
+    <span style="font-size: 14px; color: oklch(0.45 0 0);">Lo que hay en producción, recreado con los tokens reales. El punto de partida.</span>
+  </div>
+
+  <!-- HERO -->
+  <div style="background: linear-gradient(to bottom, oklch(0.63 0.17 150 / 0.1), transparent); padding: 48px 32px 40px;">
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; align-items: center;">
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 22px;">
+        <p style="margin: 0; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.025em; color: oklch(0.63 0.17 150);">Sin registro · Tiempo real · Funciona sin conexión</p>
+        <h1 style="margin: 0; font-size: 40px; line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance;">La lista de la compra que comparte toda la familia</h1>
+        <p style="margin: 0; font-size: 18px; line-height: 1.5; color: oklch(0.45 0 0);">Escribe tu primer producto y crea la lista. Compártela por WhatsApp: todos podéis añadir y marcar mientras compráis, sin instalar nada.</p>
+        <div style="display: flex; gap: 8px; width: 100%;">
+          <div style="flex-grow: 1; display: flex; align-items: center; height: 56px; padding: 0 20px; border: 1px solid oklch(0.9 0 0); border-radius: 999px; background: oklch(1 0 0); font-size: 16px; color: oklch(0.45 0 0);">Ej. leche, pan, tomates… o pega tu lista</div>
+          <div style="display: flex; align-items: center; height: 56px; padding: 0 24px; border-radius: 999px; background: oklch(0.63 0.17 150); color: oklch(1 0 0); font-size: 16px; font-weight: 600;">Crear mi lista</div>
+        </div>
+      </div>
+
+      <div style="position: relative; justify-self: center; width: 100%; max-width: 384px;">
+        <div style="position: absolute; inset: 0; transform: translate(12px, 12px); border-radius: 16px; background: oklch(0.63 0.17 150 / 0.15);"></div>
+        <div style="position: relative; display: flex; flex-direction: column; gap: 12px; border: 1px solid oklch(0.9 0 0); border-radius: 16px; background: oklch(1 0 0); padding: 20px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span style="font-weight: 700;">Compra del sábado</span>
+            <span style="border-radius: 999px; background: oklch(0.63 0.17 150 / 0.1); padding: 4px 10px; font-size: 12px; font-weight: 600; color: oklch(0.63 0.17 150);">Sincronizada · 2 móviles</span>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid oklch(0.9 0 0); padding: 10px 0;">
+              <span style="width: 20px; height: 20px; flex-shrink: 0; border: 1px solid oklch(0.9 0 0); border-radius: 6px; background: oklch(1 0 0);"></span>
+              <span style="font-size: 14px;">🥦</span>
+              <span style="flex-grow: 1; font-size: 14px;">Tomates</span>
+              <span style="font-size: 12px; color: oklch(0.45 0 0);">1 kg</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid oklch(0.9 0 0); padding: 10px 0;">
+              <span style="display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; border: 1px solid oklch(0.63 0.17 150); border-radius: 6px; background: oklch(0.63 0.17 150); color: oklch(1 0 0); font-size: 12px;">✓</span>
+              <span style="font-size: 14px;">🥛</span>
+              <span style="flex-grow: 1; font-size: 14px; color: oklch(0.45 0 0); text-decoration: line-through;">Leche</span>
+              <span style="font-size: 12px; color: oklch(0.45 0 0);">6 briks</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid oklch(0.9 0 0); padding: 10px 0;">
+              <span style="display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; border: 1px solid oklch(0.63 0.17 150); border-radius: 6px; background: oklch(0.63 0.17 150); color: oklch(1 0 0); font-size: 12px;">✓</span>
+              <span style="font-size: 14px;">🍞</span>
+              <span style="flex-grow: 1; font-size: 14px; color: oklch(0.45 0 0); text-decoration: line-through;">Pan</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid oklch(0.9 0 0); padding: 10px 0;">
+              <span style="width: 20px; height: 20px; flex-shrink: 0; border: 1px solid oklch(0.9 0 0); border-radius: 6px; background: oklch(1 0 0);"></span>
+              <span style="font-size: 14px;">🍖</span>
+              <span style="flex-grow: 1; font-size: 14px;">Pollo</span>
+              <span style="font-size: 12px; color: oklch(0.45 0 0);">700 g</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0;">
+              <span style="width: 20px; height: 20px; flex-shrink: 0; border: 1px solid oklch(0.9 0 0); border-radius: 6px; background: oklch(1 0 0);"></span>
+              <span style="font-size: 14px;">🥫</span>
+              <span style="flex-grow: 1; font-size: 14px;">Aceite de oliva</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARACTERÍSTICAS -->
+  <div style="padding: 40px 32px;">
+    <h2 style="margin: 0 0 24px; font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">Pensada para cómo se compra de verdad</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+      <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid oklch(0.9 0 0); border-radius: 14px; background: oklch(1 0 0); padding: 20px;">
+        <span style="font-size: 24px;">🔓</span>
+        <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Sin registro</h3>
+        <p style="margin: 0; font-size: 14px; line-height: 1.45; color: oklch(0.45 0 0);">Crea y comparte sin cuenta. El enlace es la invitación.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid oklch(0.9 0 0); border-radius: 14px; background: oklch(1 0 0); padding: 20px;">
+        <span style="font-size: 24px;">⚡</span>
+        <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Tiempo real</h3>
+        <p style="margin: 0; font-size: 14px; line-height: 1.45; color: oklch(0.45 0 0);">Lo que uno marca, el otro lo ve al instante. Nada se compra dos veces.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid oklch(0.9 0 0); border-radius: 14px; background: oklch(1 0 0); padding: 20px;">
+        <span style="font-size: 24px;">📶</span>
+        <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Funciona sin cobertura</h3>
+        <p style="margin: 0; font-size: 14px; line-height: 1.45; color: oklch(0.45 0 0);">Dentro del súper no siempre hay red. La lista sigue funcionando y sincroniza al salir.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANTALLA DE LA LISTA -->
+  <div style="display: flex; gap: 40px; padding: 8px 32px 48px; align-items: flex-start;">
+    <div style="width: 390px; flex-shrink: 0; border: 1px solid oklch(0.9 0 0); border-radius: 24px; overflow: hidden; background: oklch(1 0 0);">
+      <div style="display: flex; align-items: center; gap: 8px; border-bottom: 1px solid oklch(0.9 0 0); background: oklch(0.99 0 0); padding: 12px 16px;">
+        <span style="font-size: 20px;">🏠</span>
+        <div style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;">
+          <span style="font-size: 18px; font-weight: 600;">Compra del sábado</span>
+          <span style="font-size: 14px; color: oklch(0.45 0 0);">2 de 6 en el carro</span>
+        </div>
+        <div style="display: flex; align-items: center; height: 40px; padding: 0 16px; border-radius: 999px; background: oklch(0.63 0.17 150); color: oklch(1 0 0); font-size: 14px; font-weight: 500;">Compartir</div>
+      </div>
+
+      <div style="background: oklch(0.96 0 0); padding: 6px 16px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: oklch(0.45 0 0);">🥦 Fruta y verdura <span style="float: right;">2</span></div>
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px;">
+        <span style="width: 24px; height: 24px; flex-shrink: 0; border: 2px solid oklch(0.9 0 0); border-radius: 999px;"></span>
+        <div style="display: flex; flex-direction: column; flex-grow: 1;"><span style="font-size: 16px;">Tomates</span><span style="font-size: 14px; color: oklch(0.45 0 0);">1 kg</span></div>
+        <span style="width: 36px; text-align: center; font-size: 20px; color: oklch(0.45 0 0);">−</span>
+        <span style="width: 36px; text-align: center; font-size: 20px; color: oklch(0.45 0 0);">+</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px;">
+        <span style="width: 24px; height: 24px; flex-shrink: 0; border: 2px solid oklch(0.9 0 0); border-radius: 999px;"></span>
+        <div style="display: flex; flex-direction: column; flex-grow: 1;"><span style="font-size: 16px;">Plátanos</span></div>
+        <span style="width: 36px; text-align: center; font-size: 20px; color: oklch(0.45 0 0);">−</span>
+        <span style="width: 36px; text-align: center; font-size: 20px; color: oklch(0.45 0 0);">+</span>
+      </div>
+
+      <div style="background: oklch(0.96 0 0); padding: 6px 16px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: oklch(0.45 0 0);">🥛 Lácteos y huevos <span style="float: right;">1</span></div>
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px;">
+        <span style="width: 24px; height: 24px; flex-shrink: 0; border: 2px solid oklch(0.9 0 0); border-radius: 999px;"></span>
+        <div style="display: flex; flex-direction: column; flex-grow: 1;"><span style="font-size: 16px;">Leche entera</span><span style="font-size: 14px; color: oklch(0.45 0 0);">2 litros</span></div>
+        <span style="width: 36px; text-align: center; font-size: 20px; color: oklch(0.45 0 0);">−</span>
+        <span style="width: 36px; text-align: center; font-size: 20px; color: oklch(0.45 0 0);">+</span>
+      </div>
+
+      <div style="background: oklch(0.96 0 0); padding: 6px 16px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: oklch(0.45 0 0);">Comprados <span style="margin-left: 8px;">2</span></div>
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px;">
+        <span style="display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; border: 2px solid oklch(0.63 0.17 150); border-radius: 999px; background: oklch(0.63 0.17 150); color: oklch(1 0 0); font-size: 13px;">✓</span>
+        <span style="flex-grow: 1; font-size: 16px; color: oklch(0.45 0 0); text-decoration: line-through;">Pan</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; border-top: 1px solid oklch(0.9 0 0); background: oklch(0.63 0.17 150 / 0.1); padding: 8px 16px;">
+        <div style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;">
+          <span style="font-size: 14px; font-weight: 600;">2 de 6 en el carro</span>
+          <span style="font-size: 12px; color: oklch(0.45 0 0);">La pantalla no se apagará</span>
+        </div>
+        <div style="display: flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 999px; background: oklch(0.63 0.17 150); color: oklch(1 0 0); font-size: 15px; font-weight: 600;">Finalizar</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="display: flex; align-items: center; flex-grow: 1; height: 56px; padding: 0 16px; border: 1px solid oklch(0.9 0 0); border-radius: 999px; font-size: 16px; color: oklch(0.45 0 0);">Añadir producto…</div>
+          <span style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; flex-shrink: 0; border: 1px solid oklch(0.9 0 0); border-radius: 999px; font-size: 20px;">🎤</span>
+          <span style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; flex-shrink: 0; border-radius: 999px; background: oklch(0.63 0.17 150); color: oklch(1 0 0); font-size: 24px;">+</span>
+        </div>
+        <p style="margin: 0; padding: 0 8px; font-size: 12px; color: oklch(0.45 0 0);">Escribe «carne picada 500g» o «tomates x3» y se guarda la cantidad.</p>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px; padding-top: 8px;">
+      <h3 style="margin: 0; font-size: 18px; font-weight: 700;">Lo que se nota al mirarlo junto</h3>
+      <p style="margin: 0; font-size: 15px; line-height: 1.55; color: oklch(0.45 0 0); max-width: 380px;">Funciona, y eso ya está: tipografía del sistema, tarjetas con borde gris, verde de marca sólo en los botones. Lo que le falta es carácter — se parece a cualquier aplicación hecha con la configuración por defecto.</p>
+      <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; line-height: 1.5; color: oklch(0.45 0 0); max-width: 380px;">
+        <li>Los emoji hacen de iconos, en el hero y en los pasillos. Se ven distintos en cada móvil y no se pueden recolorear.</li>
+        <li>Todo pesa lo mismo: seis tarjetas iguales, tres pasos iguales. Nada dice qué mirar primero.</li>
+        <li>El gris de los bordes es el color que más aparece en pantalla.</li>
+        <li>La cabecera de pasillo es la única idea propia que tiene, y está escondida en 12 px de gris.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":900,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

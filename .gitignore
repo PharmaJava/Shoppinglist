@@ -48,3 +48,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# maquetas de diseño (skill /design)
+# Las fuentes —los .dc.html y canvas.json— sí se guardan: son de donde se
+# regenera todo. El .html que se publica lo genera la herramienta, pesa 2 MB
+# de editor y no se edita a mano nunca.
+/design/*.html
+!/design/*.dc.html
