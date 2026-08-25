@@ -37,6 +37,22 @@ Se genera un hash nuevo y se sustituye la variable. No hay nada más que hacer: 
 cookie de sesión se deriva del hash, así que al cambiarlo **todas las sesiones abiertas dejan de
 valer** sin llevar ningún registro de sesiones.
 
+### Un atajo desde /cuenta (opcional)
+
+Una cuarta variable, ésta sí `NEXT_PUBLIC_`:
+
+```bash
+NEXT_PUBLIC_ADMIN_EMAIL=tu@correo.com
+```
+
+Con ella puesta, quien entra en `/cuenta` con **esa** cuenta de Supabase ve un enlace a `/vegeta`.
+Es sólo un atajo de un clic — no mete a nadie en el panel, que sigue pidiendo `ADMIN_EMAIL` y
+`ADMIN_PASSWORD_HASH` de arriba igual que si se hubiera escrito la URL a mano. Por eso es una
+variable aparte de `ADMIN_EMAIL` y no la misma: ésta viaja al navegador a propósito —es sólo para
+decidir si se pinta el enlace—, y `ADMIN_EMAIL` no debe hacerlo nunca.
+
+Sin ponerla, `/cuenta` se queda exactamente como estaba: sin enlace y sin preguntar nada.
+
 ---
 
 ## 2. Cómo está protegido

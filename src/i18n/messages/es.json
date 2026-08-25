@@ -96,6 +96,7 @@
     "guestKeepsEverything": "No pierdes nada ni tienes que copiar nada: son las mismas listas, con el mismo enlace para quien ya las comparte contigo.",
     "registeredTitle": "Tu cuenta",
     "registeredBody": "Tus listas están guardadas en tu cuenta. Entra con este correo desde cualquier dispositivo.",
+    "adminPanel": "Panel de administración",
     "signOut": "Cerrar sesión",
     "signingOut": "Cerrando sesión…",
     "emailLabel": "Tu correo electrónico",

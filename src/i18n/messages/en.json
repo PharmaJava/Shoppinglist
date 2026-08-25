@@ -239,6 +239,7 @@
     "guestKeepsEverything": "Nothing is lost and nothing to copy over: same lists, same link for whoever already shares them with you.",
     "registeredTitle": "Your account",
     "registeredBody": "Your lists are saved to your account. Sign in with this email from any device.",
+    "adminPanel": "Admin panel",
     "signOut": "Sign out",
     "signingOut": "Signing out…",
     "emailLabel": "Your email",

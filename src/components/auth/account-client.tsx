@@ -1,5 +1,6 @@
 "use client";
 
+import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -27,6 +28,23 @@ import { PreferencesPanel } from "./preferences-panel";
 const MIN_PASSWORD_LENGTH = 8;
 
 type Method = "magic" | "password";
+
+/**
+ * ¿Es la cuenta de quien administra la web?
+ *
+ * `NEXT_PUBLIC_ADMIN_EMAIL` es aparte de `ADMIN_EMAIL` (`.env.example`): ese
+ * segundo es del servidor y decide quién entra en `/vegeta` con su
+ * contraseña — nunca llega al navegador, ni falta que hace. Éste sólo decide
+ * si se enseña el atajo, así que es público a propósito: literal para que
+ * Next lo sustituya en el build, como en `src/lib/flags.ts`.
+ *
+ * Que aparezca el atajo no mete a nadie en el panel — sigue pidiendo su
+ * contraseña, igual que si hubiera escrito la URL a mano.
+ */
+function esCuentaDelPropietario(email: string): boolean {
+  const propietario = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+  return Boolean(propietario) && email.trim().toLowerCase() === propietario?.toLowerCase();
+}
 
 interface AccountClientProps {
   /** Ruta a la que vuelve el enlace del correo, ya con prefijo de idioma. */
@@ -105,6 +123,15 @@ function RegisteredPanel({ email }: { email: string }) {
       >
         {t("myLists")}
       </Link>
+
+      {/* `/vegeta` no lleva prefijo de idioma (fuera de `[locale]`, ver
+          `src/proxy.ts`), así que es el `Link` normal de Next y no el de
+          next-intl, que intentaría traducir una ruta que no está en su mapa. */}
+      {esCuentaDelPropietario(email) && (
+        <NextLink href="/vegeta" className="text-sm font-medium text-brand underline">
+          {t("adminPanel")}
+        </NextLink>
+      )}
 
       <button
         type="button"
