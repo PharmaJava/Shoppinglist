@@ -1,9 +1,9 @@
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import type { ReactNode } from "react";
+import { CookieBanner } from "@/components/consent/cookie-banner";
+import { Measurement } from "@/components/consent/measurement";
 import { CatalogBoot } from "@/components/providers/catalog-boot";
 import { InstallPromptBanner } from "@/components/providers/install-prompt-banner";
 import { QueryProvider } from "@/components/providers/query-provider";
@@ -70,10 +70,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             <CatalogBoot />
             {children}
             <InstallPromptBanner />
+            <CookieBanner />
           </QueryProvider>
+          {/* Dentro del proveedor de idioma: la medición se monta o no según
+              lo decidido, y para leerlo hace falta estar en el árbol de
+              cliente. Ver src/components/consent/measurement.tsx. */}
+          <Measurement />
         </NextIntlClientProvider>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

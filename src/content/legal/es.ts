@@ -45,7 +45,25 @@ export const privacyEs: LegalDocument = {
         "Contraseña: sólo si eliges ese método. No la almacenamos: se guarda cifrada y de forma irreversible, y nadie —tampoco nosotros— puede leerla.",
         "Nombre visible: opcional. Si lo pones, lo verán quienes compartan lista contigo, para saber quién ha añadido o marcado cada producto.",
         "Contenido de tus listas: los productos, cantidades y notas que escribes. Son tuyos y sólo los ven quienes tengan el enlace que hayas compartido.",
-        "Datos técnicos agregados: visitas y rendimiento de las páginas, sin cookies y sin identificarte.",
+        "Datos técnicos agregados: visitas y rendimiento de las páginas, sin cookies y sin identificarte. Sólo si has dicho que sí: ver el apartado siguiente.",
+      ],
+    },
+    {
+      heading: "Qué se guarda en tu dispositivo",
+      paragraphs: ["Casi nada, y casi todo imprescindible. Esto es la lista completa:"],
+      bullets: [
+        "Tu sesión: una cookie que es, literalmente, tu cuenta. Sin ella no hay listas que sean tuyas.",
+        "Tu idioma: para enseñarte la web en el idioma en que la estabas viendo.",
+        "Tus listas, en una base de datos dentro del navegador: es lo que hace que la lista siga funcionando dentro del súper cuando no hay cobertura, y que lo que marques ahí se sincronice al salir.",
+        "Un contador de visitas: sirve para ofrecerte instalar la aplicación en la segunda visita, y para no volver a insistir si dices que no. No sale de tu móvil.",
+      ],
+    },
+    {
+      heading: "Por qué sólo se te pregunta una cosa",
+      paragraphs: [
+        "Ninguna de esas cuatro te identifica ante terceros ni sirve para publicidad, y las cuatro son necesarias para darte el servicio que has pedido. Por eso no se piden permiso: la ley no lo exige para lo estrictamente necesario, y preguntarlo igualmente sólo entrena a la gente a pulsar «aceptar» sin leer.",
+        "Lo único que sí se pregunta es la medición de la web, y por eso hay un aviso la primera vez que entras. No usa cookies ni guarda nada en tu dispositivo, pero se puede apagar de verdad: si dices que no, sus scripts no se cargan y no se manda un solo dato.",
+        "Puedes cambiar de opinión cuando quieras desde el enlace «Medición de la web» que hay al final de cualquier página. Retirar el permiso cuesta exactamente lo mismo que darlo: un clic.",
       ],
     },
     {

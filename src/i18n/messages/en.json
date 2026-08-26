@@ -484,6 +484,16 @@
     "keepShopping": "Keep shopping",
     "close": "Close"
   },
+  "consent": {
+    "title": "Site measurement",
+    "body": "This site stores on your phone only what it needs to work: your session, your language and your lists so they work without signal. Beyond that, we'd like to measure how many people visit and whether the site is slow. It uses no cookies, doesn't identify you, and you can say no.",
+    "accept": "Accept",
+    "reject": "No, thanks",
+    "more": "More details",
+    "footerOn": "Measurement: on",
+    "footerOff": "Measurement: off",
+    "footerUndecided": "Site measurement"
+  },
   "pantry": {
     "metaTitle": "My pantry",
     "title": "My pantry",
