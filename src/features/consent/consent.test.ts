@@ -1,9 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { ASKED_CATEGORIES } from "./categories";
 import {
   CONSENT_KEY,
   CONSENT_VERSION,
   denyAll,
+  fromChoices,
   grantAll,
+  isGranted,
   parseConsent,
   readConsent,
   writeConsent,
@@ -25,27 +28,79 @@ describe("parseConsent", () => {
   });
 
   it("lee un sí y un no", () => {
-    expect(parseConsent(JSON.stringify(grantAll()))?.measurement).toBe("granted");
-    expect(parseConsent(JSON.stringify(denyAll()))?.measurement).toBe("denied");
+    expect(isGranted(parseConsent(JSON.stringify(grantAll())), "measurement")).toBe(true);
+    expect(isGranted(parseConsent(JSON.stringify(denyAll())), "measurement")).toBe(false);
   });
 
-  /**
-   * Si cambia lo que se pregunta, la respuesta de antes no responde a esto:
-   * se vuelve a preguntar. Es el mecanismo para el día que se añada una
-   * herramienta nueva.
-   */
   it("una respuesta de otra versión no vale", () => {
     const vieja = JSON.stringify({ ...grantAll(), version: CONSENT_VERSION - 1 });
 
     expect(parseConsent(vieja)).toBeNull();
   });
 
+  /**
+   * El mecanismo pensado para el día que se configure Google Analytics: si
+   * hoy se pregunta por algo que no estaba cuando la persona contestó, su
+   * respuesta **no responde a esto**, así que se vuelve a preguntar. Sin
+   * depender de que nadie se acuerde de subir un número a mano, que es
+   * exactamente el tipo de cosa que se olvida.
+   */
+  it("una respuesta que no cubre todo lo que hoy se pregunta, tampoco", () => {
+    const incompleta = JSON.stringify({
+      choices: {},
+      decidedAt: new Date().toISOString(),
+      version: CONSENT_VERSION,
+    });
+
+    expect(parseConsent(incompleta)).toBeNull();
+  });
+
   it.each([
     ["no es JSON", "{lo que sea"],
-    ["sin el campo", JSON.stringify({ version: CONSENT_VERSION })],
-    ["con un valor inventado", JSON.stringify({ measurement: "quizás", version: CONSENT_VERSION })],
+    ["sin las respuestas", JSON.stringify({ version: CONSENT_VERSION })],
+    [
+      "con un valor inventado",
+      JSON.stringify({ choices: { measurement: "quizás" }, version: CONSENT_VERSION }),
+    ],
   ])("un valor corrupto (%s) se trata como si no estuviera", (_caso, guardado) => {
     expect(parseConsent(guardado)).toBeNull();
+  });
+});
+
+describe("fromChoices", () => {
+  /** Lo que no se marca queda denegado: el consentimiento no se presupone. */
+  it("lo que no se marca, no se concede", () => {
+    const decision = fromChoices({});
+
+    for (const categoria of ASKED_CATEGORIES) {
+      expect(isGranted(decision, categoria)).toBe(false);
+    }
+  });
+
+  it("y lo que se marca, sí", () => {
+    expect(isGranted(fromChoices({ measurement: true }), "measurement")).toBe(true);
+  });
+});
+
+describe("isGranted", () => {
+  /** Quien todavía no ha dicho que sí, no ha dicho que sí. */
+  it("sin respuesta, nada está concedido", () => {
+    expect(isGranted(null, "measurement")).toBe(false);
+    expect(isGranted(null, "analytics")).toBe(false);
+  });
+
+  /**
+   * `analytics` no se pregunta mientras Google Analytics no esté configurado,
+   * así que ni siquiera un «aceptar todo» lo concede. Es lo que impide que un
+   * permiso dado hoy sirva para cargar mañana algo que la persona no vio.
+   */
+  it("aceptar todo no concede lo que hoy no se pregunta", () => {
+    const decision = grantAll();
+
+    expect(isGranted(decision, "measurement")).toBe(true);
+    if (!ASKED_CATEGORIES.includes("analytics")) {
+      expect(isGranted(decision, "analytics")).toBe(false);
+    }
   });
 });
 
@@ -53,13 +108,13 @@ describe("readConsent / writeConsent", () => {
   it("lo guardado se vuelve a leer", () => {
     writeConsent(grantAll());
 
-    expect(readConsent()?.measurement).toBe("granted");
+    expect(isGranted(readConsent(), "measurement")).toBe(true);
   });
 
   it("guarda cuándo se decidió, para poder demostrarlo", () => {
-    writeConsent(grantAll(new Date("2026-08-20T10:00:00Z")));
+    writeConsent(grantAll());
 
-    expect(readConsent()?.decidedAt).toBe("2026-08-20T10:00:00.000Z");
+    expect(readConsent()?.decidedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 
   /**

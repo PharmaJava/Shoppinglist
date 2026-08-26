@@ -43,15 +43,35 @@ test.describe("Aviso de medición", () => {
   });
 
   /** Y se puede cambiar de opinión desde cualquier página, para siempre. */
-  test("el pie deja cambiar de opinión y dice en qué quedó", async ({ page }) => {
+  test("el pie dice en qué quedó y deja volver a decidir", async ({ page }) => {
     await page.goto("/es");
     await page.getByRole("button", { name: "No, gracias" }).click();
 
     const enPie = page.getByRole("button", { name: "Medición: desactivada" });
     await expect(enPie).toBeVisible();
 
+    // Reabre el aviso ya contestado, con las casillas como se dejaron.
     await enPie.click();
+    const aviso = page.getByRole("region", { name: "Medición de la web" });
+    await expect(aviso).toBeVisible();
+    await expect(aviso.getByRole("checkbox", { name: /Medición de la web/ })).not.toBeChecked();
+
+    await aviso.getByRole("button", { name: "Aceptar" }).click();
     await expect(page.getByRole("button", { name: "Medición: activada" })).toBeVisible();
+  });
+
+  /**
+   * Lo imprescindible aparece en el panel para que se sepa qué se guarda, pero
+   * no se puede desmarcar: no es una opción, es lo que hace que haya servicio.
+   */
+  test("lo imprescindible se explica pero no se puede apagar", async ({ page }) => {
+    await page.goto("/es");
+    await page.getByRole("button", { name: "No, gracias" }).click();
+    await page.getByRole("button", { name: "Medición: desactivada" }).click();
+
+    const imprescindible = page.getByRole("checkbox", { name: /Imprescindible/ });
+    await expect(imprescindible).toBeChecked();
+    await expect(imprescindible).toBeDisabled();
   });
 
   /**
