@@ -484,6 +484,26 @@
     "keepShopping": "Seguir comprando",
     "close": "Cerrar"
   },
+  "consent": {
+    "title": "Medición de la web",
+    "body": "Esta web guarda en tu móvil sólo lo imprescindible para funcionar: tu sesión, tu idioma y tus listas para que sirvan sin cobertura. Aparte de eso nos gustaría medir cuánta gente entra y si la web va lenta. No usa cookies, no te identifica y puedes decir que no.",
+    "accept": "Aceptar",
+    "reject": "No, gracias",
+    "more": "Más detalles",
+    "acceptAll": "Aceptar todo",
+    "choose": "Elegir",
+    "save": "Guardar mi elección",
+    "necessaryTitle": "Imprescindible.",
+    "necessaryBody": "Tu sesión, tu idioma y tus listas guardadas en el móvil para que sirvan sin cobertura. Sin esto no hay servicio, así que no se puede desactivar.",
+    "measurementTitle": "Medición de la web.",
+    "measurementBody": "Cuánta gente entra y si la web va lenta. No usa cookies y no te identifica.",
+    "analyticsTitle": "Google Analytics.",
+    "analyticsBody": "Estadísticas de uso más detalladas. Usa cookies propias de Google y hay que decir que sí antes de que se cargue.",
+    "footerPartial": "Medición: parcial",
+    "footerOn": "Medición: activada",
+    "footerOff": "Medición: desactivada",
+    "footerUndecided": "Medición de la web"
+  },
   "pantry": {
     "metaTitle": "Mi despensa",
     "title": "Mi despensa",

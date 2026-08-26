@@ -37,7 +37,25 @@ export const privacyEn: LegalDocument = {
         "Password: only if you choose that method. We don't store it: it's hashed irreversibly, and nobody — including us — can read it.",
         "Display name: optional. If you set one, people who share a list with you will see it, so they know who added or checked each item.",
         "Your list content: the items, quantities and notes you write. They're yours, and only people with the link you shared can see them.",
-        "Aggregate technical data: page visits and performance, with no cookies and no identification.",
+        "Aggregate technical data: page visits and performance, with no cookies and no identification. Only if you said yes — see the next section.",
+      ],
+    },
+    {
+      heading: "What gets stored on your device",
+      paragraphs: ["Almost nothing, and almost all of it essential. This is the complete list:"],
+      bullets: [
+        "Your session: a cookie that is, literally, your account. Without it no list is yours.",
+        "Your language: so the site shows up in the language you were reading it in.",
+        "Your lists, in a database inside the browser: it's what keeps the list working inside the shop when there's no signal, and syncs what you tick when you come out.",
+        "A visit counter: used to offer installing the app on your second visit, and to stop asking if you say no. It never leaves your phone.",
+      ],
+    },
+    {
+      heading: "Why only one thing is put to you",
+      paragraphs: [
+        "None of those four identify you to anyone else or serve advertising, and all four are needed to give you the service you asked for. That's why they aren't put to a vote: the law doesn't require consent for what's strictly necessary, and asking anyway only trains people to click «accept» without reading.",
+        "The one thing we do ask about is site measurement, which is why there's a notice on your first visit. It uses no cookies and stores nothing on your device, but it can genuinely be turned off: say no and its scripts never load and not a single data point is sent.",
+        "You can change your mind whenever you like from the «Site measurement» link at the bottom of any page. Withdrawing costs exactly what giving it costs: one click.",
       ],
     },
     {

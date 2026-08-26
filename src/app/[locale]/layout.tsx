@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AccountNavLink } from "@/components/auth/account-nav-link";
 import { Logo } from "@/components/brand/logo";
+import { ConsentFooterLink } from "@/components/consent/cookie-banner";
 import { LanguageSwitcher } from "@/components/marketing/language-switcher";
 import { SiteNav } from "@/components/marketing/site-nav";
 import { Link } from "@/i18n/navigation";
@@ -135,6 +136,9 @@ export default async function LocaleLayout({ children, params }: Props) {
                 <Link href="/terminos" className="text-on-surface-muted hover:text-on-surface">
                   {tFooter("terms")}
                 </Link>
+                {/* Retirar el permiso tiene que costar lo mismo que darlo, así
+                    que vive aquí para siempre y no sólo la primera visita. */}
+                <ConsentFooterLink className="text-left text-on-surface-muted hover:text-on-surface" />
               </nav>
             </div>
           </div>
