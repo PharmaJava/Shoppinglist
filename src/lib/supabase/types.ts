@@ -20,6 +20,8 @@ export interface Database {
         Row: {
           id: string;
           display_name: string | null;
+          /** Alias para entrar sin escribir el correo (migración 0016). */
+          username: string | null;
           avatar_url: string | null;
           locale: Locale;
           currency: string;
@@ -401,6 +403,16 @@ export interface Database {
         };
         /** `false` si el aviso ya estaba procesado. */
         Returns: boolean;
+      };
+      /** ¿Está libre este nombre de usuario? (migración 0016) */
+      username_available: {
+        Args: { p_username: string };
+        Returns: boolean;
+      };
+      /** Usuario → correo. **Sólo el servidor**: ver la migración 0016. */
+      email_for_username: {
+        Args: { p_username: string };
+        Returns: string | null;
       };
       user_for_stripe_customer: {
         Args: { p_customer: string };

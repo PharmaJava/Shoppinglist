@@ -45,6 +45,7 @@ function item(partial: Partial<ListItemRow> & { name: string; list_id: string })
 const profile: ProfileRow = {
   id: yo,
   display_name: "Ana",
+  username: "ana_87",
   avatar_url: null,
   locale: "es",
   currency: "EUR",
