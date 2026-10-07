@@ -58,7 +58,7 @@ function open(listId: string): Entry {
       "postgres_changes",
       { event: "*", schema: "public", table: "list_items", filter: `list_id=eq.${listId}` },
       (payload) => {
-        const incoming = (payload.new ?? payload.old) as ListItemRow | undefined;
+        const incoming = itemFromChange(payload.eventType, payload.new, payload.old);
         if (!incoming) return;
         for (const handler of handlers) handler.onItem(incoming);
       },
@@ -76,6 +76,27 @@ function open(listId: string): Entry {
   const entry: Entry = { channel, handlers };
   entries.set(listId, entry);
   return entry;
+}
+
+/**
+ * La fila que hay que aplicar a la lista, según lo que haya pasado.
+ *
+ * En un borrado físico Supabase manda `new` vacío y en `old` sólo la clave
+ * primaria. Se entrega como una baja —con `deleted_at` puesto, que es lo que
+ * entiende quien escucha— en vez de como un producto: coger `new` porque «hay
+ * algo» colaba en la lista una fila vacía.
+ */
+function itemFromChange(
+  eventType: string,
+  next: Partial<ListItemRow>,
+  previous: Partial<ListItemRow>,
+): ListItemRow | null {
+  if (eventType === "DELETE") {
+    return previous.id
+      ? ({ ...previous, deleted_at: new Date().toISOString() } as ListItemRow)
+      : null;
+  }
+  return next.id ? (next as ListItemRow) : null;
 }
 
 /** Sólo para los tests: deja el módulo como recién cargado. */

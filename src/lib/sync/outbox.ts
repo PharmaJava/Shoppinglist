@@ -11,6 +11,10 @@ export interface QueuedMutation {
   createdAt: number;
   retries: number;
   nextAttemptAt: number;
+  /** Distinto en cada encolado. Al confirmar o fallar un envío se compara con
+   *  el guardado: si no coincide, mientras tanto se encoló una versión más
+   *  nueva de la fila, y esa no se puede borrar ni penalizar. */
+  stamp?: string;
 }
 
 export function operationKey(table: OutboxTable, rowId: string): string {
@@ -40,6 +44,7 @@ export async function enqueueMutation(table: OutboxTable, row: Record<string, un
     createdAt: existing?.createdAt ?? Date.now(),
     retries: 0,
     nextAttemptAt: 0,
+    stamp: crypto.randomUUID(),
   };
 
   return new Promise<void>((resolve, reject) => {
@@ -86,20 +91,45 @@ export async function removeMutation(key: string): Promise<void> {
   });
 }
 
-export async function markMutationFailed(key: string, retries: number): Promise<void> {
+/**
+ * Quita una operación ya enviada, pero sólo si sigue siendo la que se envió.
+ *
+ * Leer y borrar van en la misma transacción: si alguien encola otra versión de
+ * la fila entre medias, la ve y la deja. Borrar a ciegas por clave perdía ese
+ * cambio — un producto marcado justo después de añadirlo no llegaba nunca.
+ */
+export async function removeMutationIfUnchanged(key: string, stamp?: string): Promise<void> {
   const db = await openOutboxDb();
-  const existing = await getOperation(key);
-  if (!existing) return;
-
-  const updated: QueuedMutation = {
-    ...existing,
-    retries,
-    nextAttemptAt: Date.now() + nextAttemptDelay(retries),
-  };
-
   return new Promise((resolve, reject) => {
     const tx = db.transaction(OPERATIONS_STORE, "readwrite");
-    tx.objectStore(OPERATIONS_STORE).put(updated);
+    const store = tx.objectStore(OPERATIONS_STORE);
+    const request = store.get(key);
+    request.onsuccess = () => {
+      const current = request.result as QueuedMutation | undefined;
+      if (current && current.stamp === stamp) store.delete(key);
+    };
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+/** Aplaza el reintento de una operación que falló, con la misma salvedad que
+ *  `removeMutationIfUnchanged`: una versión nueva no hereda el castigo. */
+export async function markMutationFailed(
+  key: string,
+  retries: number,
+  stamp?: string,
+): Promise<void> {
+  const db = await openOutboxDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(OPERATIONS_STORE, "readwrite");
+    const store = tx.objectStore(OPERATIONS_STORE);
+    const request = store.get(key);
+    request.onsuccess = () => {
+      const current = request.result as QueuedMutation | undefined;
+      if (!current || current.stamp !== stamp) return;
+      store.put({ ...current, retries, nextAttemptAt: Date.now() + nextAttemptDelay(retries) });
+    };
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });

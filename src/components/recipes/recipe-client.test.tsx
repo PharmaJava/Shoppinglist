@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -13,7 +14,10 @@ vi.mock("@/app/[locale]/recetas/actions", () => ({
   leerRecetaAction: () => leerRecetaAction(),
 }));
 
-const createListFromTemplate = vi.fn(async (..._args: unknown[]) => ({ id: "lista-nueva" }));
+const createListFromTemplate = vi.fn(async (..._args: unknown[]) => ({
+  list: { id: "lista-nueva" },
+  items: [],
+}));
 vi.mock("@/features/list/api", () => ({
   createListFromTemplate: (...args: unknown[]) => createListFromTemplate(...args),
 }));
@@ -31,11 +35,13 @@ function montar() {
   };
 
   return render(
-    <AppRouterContext.Provider value={router as unknown as AppRouterInstance}>
-      <NextIntlClientProvider locale="es" messages={messages}>
-        <RecipeClient />
-      </NextIntlClientProvider>
-    </AppRouterContext.Provider>,
+    <QueryClientProvider client={new QueryClient()}>
+      <AppRouterContext.Provider value={router as unknown as AppRouterInstance}>
+        <NextIntlClientProvider locale="es" messages={messages}>
+          <RecipeClient />
+        </NextIntlClientProvider>
+      </AppRouterContext.Provider>
+    </QueryClientProvider>,
   );
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
+import { useOpenNewList } from "@/features/list/use-open-new-list";
 import {
   createListFromMyTemplate,
   deleteTemplate,
@@ -16,7 +16,7 @@ import type { Locale } from "@/lib/supabase/types";
 export function MyTemplatesClient() {
   const t = useTranslations("templatesMine");
   const locale = useLocale() as Locale;
-  const router = useRouter();
+  const openNewList = useOpenNewList();
 
   const [templates, setTemplates] = useState<MyTemplate[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,8 +43,7 @@ export function MyTemplatesClient() {
     setOcupada(template.id);
     setError(null);
     try {
-      const list = await createListFromMyTemplate(template.id, template.title, locale);
-      router.push(`/l/${list.id}`);
+      openNewList(await createListFromMyTemplate(template.id, template.title, locale));
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       setOcupada(null);

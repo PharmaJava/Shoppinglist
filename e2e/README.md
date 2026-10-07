@@ -21,7 +21,15 @@ hubs y fichas de contenido, `hreflang` bidireccional, datos estructurados,
 sitemap, `robots.txt`, `noindex` en las listas compartidas y la hoja de
 impresión.
 
-**No cubren los flujos con lista real** —crear, tiempo real entre dos
+**Crear una lista desde la portada sí está cubierto** (`crear-lista.spec.ts`),
+con un Supabase de mentira **dentro del navegador**: `page.route` intercepta
+las peticiones a `example.supabase.co` y las contesta como PostgREST,
+guardando lo que llega. No prueba la base de datos; prueba lo que la base no
+ve: qué se manda, en qué orden y qué aparece en pantalla. Contra el código
+anterior al arreglo de octubre de 2026 esas pruebas fallan: la lista se abría
+con el primer producto y los demás no llegaban.
+
+**No cubren el resto de flujos con lista real** —tiempo real entre dos
 navegadores, offline y reenvío del outbox—, que son justo los que más valdría
 la pena automatizar. Necesitan un proyecto de Supabase de pruebas con su
 propia base: hacerlo contra producción llenaría la base real de listas de

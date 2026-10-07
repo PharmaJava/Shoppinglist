@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -11,7 +12,10 @@ import { MyTemplatesClient } from "./my-templates-client";
 const fetchMyTemplates = vi.fn<() => Promise<MyTemplate[]>>();
 const deleteTemplate = vi.fn(async (_id: string) => {});
 const renameTemplate = vi.fn(async (_id: string, _titulo: string) => {});
-const createListFromMyTemplate = vi.fn(async () => ({ id: "lista-nueva" }));
+const createListFromMyTemplate = vi.fn(async () => ({
+  list: { id: "lista-nueva" },
+  items: [],
+}));
 
 vi.mock("@/features/templates/api", () => ({
   fetchMyTemplates: () => fetchMyTemplates(),
@@ -38,11 +42,13 @@ function montar() {
   };
 
   return render(
-    <AppRouterContext.Provider value={router as unknown as AppRouterInstance}>
-      <NextIntlClientProvider locale="es" messages={messages}>
-        <MyTemplatesClient />
-      </NextIntlClientProvider>
-    </AppRouterContext.Provider>,
+    <QueryClientProvider client={new QueryClient()}>
+      <AppRouterContext.Provider value={router as unknown as AppRouterInstance}>
+        <NextIntlClientProvider locale="es" messages={messages}>
+          <MyTemplatesClient />
+        </NextIntlClientProvider>
+      </AppRouterContext.Provider>
+    </QueryClientProvider>,
   );
 }
 
