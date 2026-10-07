@@ -1,5 +1,5 @@
 import { createListFromTemplate, type TemplateListItem } from "@/features/list/api";
-import type { List } from "@/features/list/types";
+import type { ListWithItems } from "@/features/list/types";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
 import type { Locale } from "@/lib/supabase/types";
@@ -101,7 +101,7 @@ export async function createListFromMyTemplate(
   templateId: string,
   title: string,
   locale: Locale,
-): Promise<List> {
+): Promise<ListWithItems> {
   const items = await fetchTemplateItems(templateId);
   if (items.length === 0) throw new Error("Esa plantilla no tiene productos.");
 

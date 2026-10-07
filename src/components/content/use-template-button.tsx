@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { createListFromTemplate, type TemplateListItem } from "@/features/list/api";
+import { useOpenNewList } from "@/features/list/use-open-new-list";
 import type { Locale } from "@/lib/supabase/types";
 
 interface UseTemplateButtonProps {
@@ -14,7 +14,7 @@ interface UseTemplateButtonProps {
 export function UseTemplateButton({ title, items }: UseTemplateButtonProps) {
   const t = useTranslations("templatesPage");
   const locale = useLocale() as Locale;
-  const router = useRouter();
+  const openNewList = useOpenNewList();
   const [pending, setPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -24,8 +24,7 @@ export function UseTemplateButton({ title, items }: UseTemplateButtonProps) {
     setPending(true);
     setErrorMessage(null);
     try {
-      const list = await createListFromTemplate(title, items, locale);
-      router.push(`/l/${list.id}`);
+      openNewList(await createListFromTemplate(title, items, locale));
     } catch (err) {
       console.error("No se pudo crear la lista desde la plantilla:", err);
       setErrorMessage(err instanceof Error ? err.message : String(err));

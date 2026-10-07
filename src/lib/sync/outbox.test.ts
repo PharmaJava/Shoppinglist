@@ -6,6 +6,7 @@ import {
   nextAttemptDelay,
   operationKey,
   removeMutation,
+  removeMutationIfUnchanged,
 } from "./outbox";
 
 describe("operationKey", () => {
@@ -68,10 +69,35 @@ describe("outbox (IndexedDB)", () => {
 
   it("marca reintentos con backoff creciente", async () => {
     await enqueueMutation("list_items", { id: "item-1", name: "Leche" });
-    await markMutationFailed(operationKey("list_items", "item-1"), 1);
+    const [enviada] = await listPendingMutations();
+    await markMutationFailed(operationKey("list_items", "item-1"), 1, enviada?.stamp);
 
     const [op] = await listPendingMutations();
     expect(op?.retries).toBe(1);
     expect(op?.nextAttemptAt).toBeGreaterThan(Date.now());
+  });
+
+  it("no borra la versión nueva al confirmar la anterior", async () => {
+    await enqueueMutation("list_items", { id: "item-1", is_checked: false });
+    const [enviada] = await listPendingMutations();
+    await enqueueMutation("list_items", { id: "item-1", is_checked: true });
+
+    await removeMutationIfUnchanged(operationKey("list_items", "item-1"), enviada?.stamp);
+
+    const pendientes = await listPendingMutations();
+    expect(pendientes).toHaveLength(1);
+    expect(pendientes[0]?.row.is_checked).toBe(true);
+  });
+
+  it("no castiga con espera a la versión nueva por el fallo de la anterior", async () => {
+    await enqueueMutation("list_items", { id: "item-1", is_checked: false });
+    const [enviada] = await listPendingMutations();
+    await enqueueMutation("list_items", { id: "item-1", is_checked: true });
+
+    await markMutationFailed(operationKey("list_items", "item-1"), 3, enviada?.stamp);
+
+    const [op] = await listPendingMutations();
+    expect(op?.retries).toBe(0);
+    expect(op?.nextAttemptAt).toBe(0);
   });
 });

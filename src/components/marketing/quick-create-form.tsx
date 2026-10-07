@@ -1,17 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { createListFromInput } from "@/features/list/api";
 import { valueAfterPaste } from "@/features/list/paste";
+import { useOpenNewList } from "@/features/list/use-open-new-list";
 import type { Locale } from "@/lib/supabase/types";
 
 export function QuickCreateForm() {
   const t = useTranslations("landing");
   const tList = useTranslations("list");
   const locale = useLocale() as Locale;
-  const router = useRouter();
+  const openNewList = useOpenNewList();
   const [value, setValue] = useState("");
   const [pending, setPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -24,8 +24,7 @@ export function QuickCreateForm() {
     setPending(true);
     setErrorMessage(null);
     try {
-      const list = await createListFromInput(name, locale, tList("untitled"));
-      router.push(`/l/${list.id}`);
+      openNewList(await createListFromInput(name, locale, tList("untitled")));
     } catch (err) {
       console.error("No se pudo crear la lista:", err);
       setErrorMessage(err instanceof Error ? err.message : String(err));

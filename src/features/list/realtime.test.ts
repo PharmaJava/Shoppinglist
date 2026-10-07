@@ -149,12 +149,40 @@ describe("subscribeToList", () => {
     expect([...canales.keys()]).toEqual(["list:l1", "list:l2"]);
   });
 
-  it("un borrado también se propaga: llega en `old`", () => {
+  it("un alta llega con la fila entera en `new`", () => {
     const handlers = { onItem: vi.fn(), onList: vi.fn() };
     subscribeToList("l1", handlers);
 
-    canales.get("list:l1")?.emit({ old: item }, 0);
+    canales.get("list:l1")?.emit({ eventType: "INSERT", new: item, old: {} }, 0);
 
     expect(handlers.onItem).toHaveBeenCalledWith(item);
+  });
+
+  /**
+   * Con la forma que manda Supabase de verdad: en un borrado `new` es `{}`
+   * —vacío, no ausente— y `old` sólo trae la clave primaria. Se cogía `new`
+   * por ser «algo», y a la lista de quien la tenía abierta se le colaba un
+   * producto sin id ni nombre. Pasa cuando el dueño borra una lista que otra
+   * persona está mirando.
+   */
+  it("un borrado físico se entrega como baja, no como un producto vacío", () => {
+    const handlers = { onItem: vi.fn(), onList: vi.fn() };
+    subscribeToList("l1", handlers);
+
+    canales.get("list:l1")?.emit({ eventType: "DELETE", new: {}, old: { id: "i1" } }, 0);
+
+    expect(handlers.onItem).toHaveBeenCalledTimes(1);
+    const entregado = handlers.onItem.mock.calls[0]?.[0] as ListItemRow;
+    expect(entregado.id).toBe("i1");
+    expect(entregado.deleted_at).toBeTruthy();
+  });
+
+  it("un aviso sin fila reconocible no llega a la lista", () => {
+    const handlers = { onItem: vi.fn(), onList: vi.fn() };
+    subscribeToList("l1", handlers);
+
+    canales.get("list:l1")?.emit({ eventType: "DELETE", new: {}, old: {} }, 0);
+
+    expect(handlers.onItem).not.toHaveBeenCalled();
   });
 });

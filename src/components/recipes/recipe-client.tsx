@@ -1,11 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { leerRecetaAction, type MotivoRechazo } from "@/app/[locale]/recetas/actions";
 import { createListFromTemplate } from "@/features/list/api";
 import { categorize } from "@/features/list/categorize";
+import { useOpenNewList } from "@/features/list/use-open-new-list";
 import {
   escalarIngredientes,
   type ParsedRecipe,
@@ -16,7 +16,7 @@ import type { Locale } from "@/lib/supabase/types";
 export function RecipeClient() {
   const t = useTranslations("recipes");
   const locale = useLocale() as Locale;
-  const router = useRouter();
+  const openNewList = useOpenNewList();
 
   const [texto, setTexto] = useState("");
   const [receta, setReceta] = useState<ParsedRecipe | null>(null);
@@ -87,7 +87,7 @@ export function RecipeClient() {
     setCreando(true);
     setError(null);
     try {
-      const lista = await createListFromTemplate(
+      const creada = await createListFromTemplate(
         titulo.trim() || t("defaultTitle"),
         elegidos.map((ingrediente) => ({
           name: ingrediente.name,
@@ -100,7 +100,7 @@ export function RecipeClient() {
         })),
         locale,
       );
-      router.push(`/l/${lista.id}`);
+      openNewList(creada);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       setCreando(false);

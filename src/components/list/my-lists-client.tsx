@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { useSession } from "@/features/auth/use-session";
@@ -14,6 +13,7 @@ import {
 } from "@/features/list/api";
 import { estadoFinal, horasRestantes } from "@/features/list/auto-finish";
 import { normalizeProductName } from "@/features/list/categorize";
+import { useOpenNewList } from "@/features/list/use-open-new-list";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/lib/supabase/types";
 
@@ -145,7 +145,7 @@ function ListCard({ summary }: { summary: ListSummary }) {
   const tFin = useTranslations("autoFinish");
   const format = useFormatter();
   const locale = useLocale() as Locale;
-  const router = useRouter();
+  const openNewList = useOpenNewList();
   const queryClient = useQueryClient();
   const { list, totalItems, checkedItems } = summary;
   const percent = totalItems === 0 ? 0 : Math.round((checkedItems / totalItems) * 100);
@@ -158,10 +158,7 @@ function ListCard({ summary }: { summary: ListSummary }) {
 
   const duplicate = useMutation({
     mutationFn: () => duplicateList(list.id, t("copyTitle", { title: list.title }), locale),
-    onSuccess: async (copy) => {
-      await queryClient.invalidateQueries({ queryKey: ["my-lists"] });
-      router.push(`/l/${copy.id}`);
-    },
+    onSuccess: openNewList,
   });
 
   const busy = archive.isPending || duplicate.isPending;
@@ -231,8 +228,7 @@ function ListCard({ summary }: { summary: ListSummary }) {
 function NewListForm() {
   const t = useTranslations("myLists");
   const locale = useLocale() as Locale;
-  const router = useRouter();
-  const queryClient = useQueryClient();
+  const openNewList = useOpenNewList();
 
   const [title, setTitle] = useState("");
   const [pending, setPending] = useState(false);
@@ -246,11 +242,7 @@ function NewListForm() {
     setPending(true);
     setErrorMessage(null);
     try {
-      const list = await createList(value);
-      // La caché queda obsoleta en cuanto se crea; invalidar aquí evita que al
-      // volver atrás desde la lista nueva aparezca la relación sin ella.
-      await queryClient.invalidateQueries({ queryKey: ["my-lists"] });
-      router.push(`/l/${list.id}`);
+      openNewList({ list: await createList(value), items: [] });
     } catch (err) {
       console.error("No se pudo crear la lista:", err);
       setErrorMessage(err instanceof Error ? err.message : String(err));

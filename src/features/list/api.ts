@@ -8,7 +8,7 @@ import { categorize } from "./categorize";
 import { recordProductPrice, recordProductsAdded } from "./history";
 import { type ParsedVoiceItem, parseVoiceTranscript } from "./parse-voice";
 import { keyAtEnd } from "./sort-key";
-import type { Category, List, ListItem } from "./types";
+import type { Category, List, ListItem, ListWithItems } from "./types";
 
 /**
  * Crea una lista vacía (el propietario se añade solo, vía trigger). Requiere
@@ -29,21 +29,23 @@ export async function createList(title: string): Promise<List> {
   return data;
 }
 
-/**
- * Añade un producto. Se encola en el outbox (IndexedDB): funciona sin red y
- * se sincroniza sola al recuperar conexión (ver src/lib/sync).
- */
-export async function addItem(
+interface ItemExtras {
+  qty?: number | null;
+  unit?: string | null;
+  categoryId?: string | null;
+}
+
+function buildItem(
   listId: string,
   name: string,
   locale: Locale,
   lastSortKey: string | null,
-  extra?: { qty?: number | null; unit?: string | null; categoryId?: string | null },
-): Promise<ListItem> {
-  const userId = await getCurrentUserId();
+  userId: string | null,
+  extra?: ItemExtras,
+): ListItem {
   const now = new Date().toISOString();
 
-  const row: ListItem = {
+  return {
     id: crypto.randomUUID(),
     list_id: listId,
     name: name.trim(),
@@ -64,7 +66,41 @@ export async function addItem(
     updated_at: now,
     deleted_at: null,
   };
+}
 
+/** Las filas de varios productos seguidos, con claves de orden consecutivas
+ *  para que conserven el orden en que llegan. */
+function buildItems(
+  listId: string,
+  entries: Array<{ name: string } & ItemExtras>,
+  locale: Locale,
+  lastSortKey: string | null,
+  userId: string | null,
+): ListItem[] {
+  const rows: ListItem[] = [];
+  let cursor = lastSortKey;
+
+  for (const { name, ...extra } of entries) {
+    const row = buildItem(listId, name, locale, cursor, userId, extra);
+    rows.push(row);
+    cursor = row.sort_key;
+  }
+
+  return rows;
+}
+
+/**
+ * Añade un producto. Se encola en el outbox (IndexedDB): funciona sin red y
+ * se sincroniza sola al recuperar conexión (ver src/lib/sync).
+ */
+export async function addItem(
+  listId: string,
+  name: string,
+  locale: Locale,
+  lastSortKey: string | null,
+  extra?: ItemExtras,
+): Promise<ListItem> {
+  const row = buildItem(listId, name, locale, lastSortKey, await getCurrentUserId(), extra);
   await queueRowMutation("list_items", row);
   return row;
 }
@@ -79,23 +115,48 @@ export async function addParsedItems(
   locale: Locale,
   lastSortKey: string | null,
 ): Promise<ListItem[]> {
-  const created: ListItem[] = [];
-  let cursor = lastSortKey;
-
-  for (const item of items) {
-    const row = await addItem(listId, item.name, locale, cursor, {
-      qty: item.qty,
-      unit: item.unit,
-    });
-    created.push(row);
-    cursor = row.sort_key;
-  }
+  const created = buildItems(listId, items, locale, lastSortKey, await getCurrentUserId());
+  for (const row of created) await queueRowMutation("list_items", row);
 
   // Único punto donde se aprende del usuario al añadir a mano o por voz: todo
   // lo que crea productos pasa por aquí. En segundo plano y sin esperar.
   recordProductsAdded(created.map((row) => ({ name: row.name, categoryId: row.category_id })));
 
   return created;
+}
+
+/**
+ * Guarda de una vez los productos de una lista recién creada.
+ *
+ * Crear la lista ya exige red, así que aquí se aprovecha: una sola petición
+ * en vez de una por producto, y **antes** de abrir la lista. Encolarlos y
+ * navegar enseguida abría una lista a medio llenar, que se iba completando a
+ * trompicones delante de quien acababa de escribirla.
+ *
+ * Si la red se cae justo entre crear la lista y esto, no se pierde nada: van
+ * a la cola y llegan al volver la conexión, con los mismos ids — repetirlos
+ * no duplica.
+ */
+async function saveInitialItems(rows: ListItem[]): Promise<void> {
+  if (rows.length === 0) return;
+
+  const { error } = await getSupabaseBrowserClient().from("list_items").upsert(rows);
+  if (!error) return;
+
+  for (const row of rows) await queueRowMutation("list_items", row);
+}
+
+/** Crea la lista con sus productos ya dentro, que es lo que hay que tener
+ *  antes de enseñarla. */
+async function createListWithItems(
+  title: string,
+  entries: Array<{ name: string } & ItemExtras>,
+  locale: Locale,
+): Promise<ListWithItems> {
+  const list = await createList(title);
+  const items = buildItems(list.id, entries, locale, null, list.owner_id);
+  await saveInitialItems(items);
+  return { list, items };
 }
 
 /**
@@ -109,14 +170,16 @@ export async function createListFromInput(
   input: string,
   locale: Locale,
   title: string,
-): Promise<List> {
+): Promise<ListWithItems> {
   const parsed = parseVoiceTranscript(input, locale);
   const items: ParsedVoiceItem[] =
     parsed.length > 0 ? parsed : [{ name: input.trim(), qty: null, unit: null }];
 
-  const list = await createList(title);
-  await addParsedItems(list.id, items, locale, null);
-  return list;
+  const created = await createListWithItems(title, items, locale);
+  recordProductsAdded(
+    created.items.map((row) => ({ name: row.name, categoryId: row.category_id })),
+  );
+  return created;
 }
 
 export interface TemplateListItem {
@@ -136,22 +199,10 @@ export async function createListFromTemplate(
   title: string,
   items: TemplateListItem[],
   locale: Locale,
-): Promise<List> {
-  const list = await createList(title);
-  let cursor: string | null = null;
-
-  for (const item of items) {
-    const row = await addItem(list.id, item.name, locale, cursor, {
-      qty: item.qty ?? null,
-      unit: item.unit ?? null,
-      categoryId: item.categoryId,
-    });
-    cursor = row.sort_key;
-  }
-
+): Promise<ListWithItems> {
+  const created = await createListWithItems(title, items, locale);
   recordProductsAdded(items.map((item) => ({ name: item.name, categoryId: item.categoryId })));
-
-  return list;
+  return created;
 }
 
 export async function toggleItem(item: ListItem, isChecked: boolean): Promise<ListItem> {
@@ -307,21 +358,23 @@ export async function reopenList(listId: string): Promise<void> {
  * mismos productos de siempre, contarlos otra vez sólo desvirtuaría el «lo
  * que sueles comprar».
  */
-export async function duplicateList(listId: string, title: string, locale: Locale): Promise<List> {
+export async function duplicateList(
+  listId: string,
+  title: string,
+  locale: Locale,
+): Promise<ListWithItems> {
   const { items } = await fetchListWithItems(listId);
-  const copy = await createList(title);
 
-  let cursor: string | null = null;
-  for (const item of items) {
-    const row = await addItem(copy.id, item.name, locale, cursor, {
+  return createListWithItems(
+    title,
+    items.map((item) => ({
+      name: item.name,
       qty: item.qty,
       unit: item.unit,
       categoryId: item.category_id,
-    });
-    cursor = row.sort_key;
-  }
-
-  return copy;
+    })),
+    locale,
+  );
 }
 
 export async function fetchListWithItems(
