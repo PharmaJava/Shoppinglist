@@ -19,6 +19,8 @@ interface Servidor {
   productos: Map<string, Record<string, unknown>>;
   /** Cada envío de productos, con cuántos llevaba. */
   enviosDeProductos: number[];
+  /** Cada `PATCH` a una lista: qué lista y qué columnas se mandaron. */
+  actualizacionesDeLista: Array<{ id: string | undefined; cambios: Record<string, unknown> }>;
   lecturasDeProductos: number;
 }
 
@@ -40,6 +42,7 @@ async function conSupabaseDeMentira(page: Page): Promise<Servidor> {
     listas: new Map(),
     productos: new Map(),
     enviosDeProductos: [],
+    actualizacionesDeLista: [],
     lecturasDeProductos: 0,
   };
 
@@ -84,6 +87,15 @@ async function conSupabaseDeMentira(page: Page): Promise<Servidor> {
       servidor.enviosDeProductos.push(filas.length);
       for (const fila of filas) servidor.productos.set(fila.id as string, fila);
       return route.fulfill({ status: 201, body: "" });
+    }
+
+    if (url.pathname === "/rest/v1/lists" && metodo === "PATCH") {
+      const id = url.searchParams.get("id")?.replace(/^eq\./, "");
+      const cambios = peticion.postDataJSON();
+      servidor.actualizacionesDeLista.push({ id, cambios });
+      const fila = id ? servidor.listas.get(id) : undefined;
+      if (id && fila) servidor.listas.set(id, { ...fila, ...cambios });
+      return route.fulfill({ status: 204, body: "" });
     }
 
     if (url.pathname === "/rest/v1/lists" && metodo === "GET") {
@@ -170,5 +182,35 @@ test.describe("Crear una lista desde la portada", () => {
       await expect(page.getByText(producto, { exact: true })).toBeVisible();
     }
     expect(servidor.lecturasDeProductos).toBeGreaterThan(0);
+  });
+
+  /**
+   * El nombre de la lista se guardaba en pantalla pero no en el servidor: al
+   * volver atrás volvía a ser «Mi lista». Aquí se comprueba lo que viaja
+   * (un `PATCH` con las columnas editables, nunca el dueño ni la caducidad) y
+   * que, tras recargar, el nombre es el nuevo.
+   */
+  test("renombrar la lista la guarda y el nombre sobrevive a recargar", async ({ page }) => {
+    const servidor = await conSupabaseDeMentira(page);
+
+    await page.goto("/es");
+    await page.getByPlaceholder(/Ej\. leche/).fill("leche");
+    await page.getByRole("button", { name: "Crear mi lista" }).click();
+    await page.waitForURL(/\/l\/[0-9a-f-]{36}$/);
+
+    const titulo = page.getByLabel("Renombrar lista");
+    await expect(titulo).toHaveValue("Mi lista");
+    await titulo.fill("Compra del sábado");
+    await titulo.blur();
+
+    await expect.poll(() => servidor.actualizacionesDeLista.length).toBe(1);
+    const [envio] = servidor.actualizacionesDeLista;
+    expect(envio?.id).toBe(page.url().split("/l/")[1]);
+    expect(envio?.cambios.title).toBe("Compra del sábado");
+    expect(Object.keys(envio?.cambios ?? {})).not.toContain("owner_id");
+    expect(Object.keys(envio?.cambios ?? {})).not.toContain("auto_finish_at");
+
+    await page.reload();
+    await expect(page.getByLabel("Renombrar lista")).toHaveValue("Compra del sábado");
   });
 });
