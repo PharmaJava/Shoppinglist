@@ -28,7 +28,14 @@ export async function GET(request: Request) {
   // Supabase informa de enlaces caducados o ya usados por querystring.
   const errorDescription = url.searchParams.get("error_description");
   if (errorDescription) {
-    return redirectTo(url, next, { authError: errorDescription });
+    // El texto es para mostrarlo; el código, para decidir qué hacer. Sin él, un
+    // Google que ya es de otra cuenta (`identity_already_exists`) era
+    // indistinguible de un enlace caducado.
+    const errorCode = url.searchParams.get("error_code");
+    return redirectTo(url, next, {
+      authError: errorDescription,
+      ...(errorCode ? { authErrorCode: errorCode } : {}),
+    });
   }
 
   const code = url.searchParams.get("code");
