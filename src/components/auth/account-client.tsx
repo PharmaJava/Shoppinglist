@@ -707,7 +707,8 @@ function PasswordForm({ isGuest, callbackNext }: AuthPanelProps) {
       // Los dos que la ruta y la base de datos devuelven en clave, no en
       // castellano: aquí es donde se traducen a algo legible.
       if (mensaje === "username_taken") fallar(t("usernameTaken"));
-      else if (mensaje === "credenciales_invalidas") fallar(t("badCredentials"));
+      else if (mensaje === "credenciales_invalidas" || mensaje === "Invalid login credentials")
+        fallar(t("badCredentials"));
       else setErrorMessage(mensaje);
     } finally {
       setPending(false);

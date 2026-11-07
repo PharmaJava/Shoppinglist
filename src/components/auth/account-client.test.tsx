@@ -288,6 +288,22 @@ describe("AccountClient — invitado que ya tiene cuenta", () => {
     expect(linkPasswordToGuestSession).not.toHaveBeenCalled();
   });
 
+  /** Supabase contesta en inglés y sin distinguir si falla el correo o la
+   *  contraseña. Se dice en castellano, igual que cuando se entra por usuario. */
+  it("una contraseña incorrecta se dice en castellano, no con el texto de Supabase", async () => {
+    signInWithPassword.mockRejectedValueOnce(new Error("Invalid login credentials"));
+    montarInvitado();
+    await userEvent.click(screen.getByRole("button", { name: "¿Ya tienes cuenta? Entra en ella" }));
+    await userEvent.click(screen.getByRole("button", { name: "Contraseña" }));
+
+    await userEvent.type(screen.getByLabelText("Correo o nombre de usuario"), "ana@ejemplo.com");
+    await userEvent.type(screen.getByLabelText("Contraseña"), "incorrecta-123");
+    await userEvent.click(screen.getByRole("button", { name: "Entrar" }));
+
+    expect(await screen.findByText("El usuario o la contraseña no son correctos.")).toBeVisible();
+    expect(screen.queryByText(/Invalid login credentials/)).not.toBeInTheDocument();
+  });
+
   it("se puede volver a guardar las listas del navegador", async () => {
     montarInvitado();
     await userEvent.click(screen.getByRole("button", { name: "¿Ya tienes cuenta? Entra en ella" }));
