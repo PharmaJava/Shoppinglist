@@ -63,6 +63,9 @@ export function AccountClient({ callbackNext }: AccountClientProps) {
   const searchParams = useSearchParams();
 
   const linkError = searchParams.get("authError");
+  // Un Google que ya es de otra cuenta no es un enlace caducado: la persona ya
+  // tiene dónde entrar, y lo que falta es ofrecérselo.
+  const googleYaVinculado = searchParams.get("authErrorCode") === "identity_already_exists";
   const justConfirmed = searchParams.get("authOk") === "1";
   const isRecovery = searchParams.get("recovery") === "1";
 
@@ -82,18 +85,27 @@ export function AccountClient({ callbackNext }: AccountClientProps) {
         </p>
       )}
 
-      {linkError && (
-        <p role="alert" className="rounded-card bg-red-50 p-4 text-sm text-red-700">
-          <span className="font-semibold">{t("linkError")}</span> {t("linkExpired")}
-        </p>
-      )}
+      {linkError &&
+        (googleYaVinculado ? (
+          <p role="alert" className="rounded-card bg-brand/10 p-4 text-sm text-on-surface">
+            {t("googleAlreadyLinked")}
+          </p>
+        ) : (
+          <p role="alert" className="rounded-card bg-red-50 p-4 text-sm text-red-700">
+            <span className="font-semibold">{t("linkError")}</span> {t("linkExpired")}
+          </p>
+        ))}
 
       {showRecovery ? (
         <RecoveryPanel />
       ) : session.status === "registered" ? (
         <RegisteredPanel email={session.user.email ?? ""} />
       ) : (
-        <AuthPanel isGuest={session.status === "guest"} callbackNext={callbackNext} />
+        <AuthPanel
+          isGuest={session.status === "guest"}
+          callbackNext={callbackNext}
+          startsWithAccount={googleYaVinculado}
+        />
       )}
     </div>
   );
@@ -411,18 +423,30 @@ interface AuthPanelProps {
   callbackNext: string;
 }
 
-function AuthPanel({ isGuest, callbackNext }: AuthPanelProps) {
+function AuthPanel({
+  isGuest,
+  callbackNext,
+  startsWithAccount,
+}: AuthPanelProps & { startsWithAccount: boolean }) {
   const t = useTranslations("account");
   const [method, setMethod] = useState<Method>("magic");
+  const [alreadyHasAccount, setAlreadyHasAccount] = useState(startsWithAccount);
+
+  // Un invitado puede querer dos cosas distintas: guardar lo que tiene en una
+  // cuenta nueva —vincular Google, un correo o una contraseña a su identidad—
+  // o entrar en una que ya existe. Lo primero falla siempre si lo que se
+  // vincula ya es de otra cuenta, y antes era lo único que se le ofrecía. Los
+  // formularios no se enteran: reciben `saving` en lugar de `isGuest`.
+  const saving = isGuest && !alreadyHasAccount;
 
   return (
     <div className="flex flex-col items-center gap-5 text-center">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight text-on-surface">
-          {isGuest ? t("guestTitle") : t("signedOutTitle")}
+          {saving ? t("guestTitle") : t("signedOutTitle")}
         </h1>
         <p className="text-on-surface-muted">
-          {isGuest
+          {saving
             ? t("guestBody")
             : method === "magic"
               ? t("signedOutBody")
@@ -430,15 +454,31 @@ function AuthPanel({ isGuest, callbackNext }: AuthPanelProps) {
         </p>
       </div>
 
-      {isGuest && (
+      {saving && (
         <p className="rounded-card bg-brand/10 p-4 text-sm text-on-surface">
           {t("guestKeepsEverything")}
         </p>
       )}
 
+      {isGuest && alreadyHasAccount && (
+        <p className="rounded-card bg-surface-muted p-4 text-sm text-on-surface">
+          {t("guestSignInWarning")}
+        </p>
+      )}
+
+      {isGuest && (
+        <button
+          type="button"
+          onClick={() => setAlreadyHasAccount((current) => !current)}
+          className="text-sm font-medium text-brand underline"
+        >
+          {alreadyHasAccount ? t("guestBackToSave") : t("guestHasAccount")}
+        </button>
+      )}
+
       {/* Arriba y separado: es el camino de un clic, y quien lo quiere no
           tiene que leer nada de lo de abajo. */}
-      <GoogleButton isGuest={isGuest} callbackNext={callbackNext} />
+      <GoogleButton isGuest={saving} callbackNext={callbackNext} />
 
       <div className="flex w-full max-w-sm items-center gap-3" aria-hidden="true">
         <span className="h-px flex-1 bg-border" />
@@ -469,9 +509,9 @@ function AuthPanel({ isGuest, callbackNext }: AuthPanelProps) {
       </fieldset>
 
       {method === "magic" ? (
-        <MagicLinkForm isGuest={isGuest} callbackNext={callbackNext} />
+        <MagicLinkForm isGuest={saving} callbackNext={callbackNext} />
       ) : (
-        <PasswordForm isGuest={isGuest} callbackNext={callbackNext} />
+        <PasswordForm isGuest={saving} callbackNext={callbackNext} />
       )}
 
       {/* Un invitado tiene perfil desde su primera lista y puede comprar en

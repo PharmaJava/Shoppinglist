@@ -82,6 +82,24 @@ correo, así que no hubo que tocarlo.
 El invitado sigue siendo anónimo hasta que confirma el correo. Si abandona a
 medias no pierde nada: conserva su sesión de invitado y sus listas.
 
+### Un invitado que ya tiene cuenta
+
+**Esto es lo que más facilmente se pasa por alto, y estuvo roto.** La web hace
+invitado a cualquiera en cuanto crea su primera lista, así que quien ya se
+había registrado y vuelve desde un navegador nuevo, o con las cookies borradas,
+es un invitado. Todo lo que se le ofrecía era *guardar*: `linkIdentity`,
+`updateUser({ email })`, `updateUser({ email, password })`. Los tres fallan
+siempre que el Google o el correo ya pertenezcan a otra cuenta, y el aviso
+decía «el enlace ha caducado». No había ningún camino para entrar.
+
+Ahora, bajo el texto de «Guarda tus listas» hay **«¿Ya tienes cuenta? Entra en
+ella»**. Cambia el panel a modo entrada: Google pasa a `signInWithOAuth`, el
+correo a `signInWithOtp` y la contraseña a `signInWithPassword`, que no
+vinculan nada. Avisa de lo que cuesta: **las listas creadas sin cuenta en ese
+navegador no pasan a la cuenta**, porque no hay forma de fundir dos
+identidades. Si el error llega con `identity_already_exists`, el callback lo
+pasa en `authErrorCode` y el panel abre ya en modo entrada.
+
 ### Recuperación de contraseña
 
 `resetPasswordForEmail` con destino `…/cuenta?recovery=1`. Ese `?recovery=1`
@@ -98,20 +116,29 @@ Sin esto los enlaces del correo no funcionan.
 **Site URL**
 
 ```
-https://listasupermercado.com
+https://www.listasupermercado.com
 ```
 
 **Redirect URLs** — una por línea:
 
 ```
+https://www.listasupermercado.com/auth/callback
 https://listasupermercado.com/auth/callback
 http://localhost:3000/auth/callback
 https://*-pharmajava.vercel.app/auth/callback
 ```
 
-La última cubre las *preview* de Vercel. El cliente construye la URL de retorno
-con `window.location.origin`, así que cada despliegue vuelve a sí mismo sin
-tocar configuración.
+**Ojo con el `www`.** El dominio de producción es `www.listasupermercado.com`;
+el que no lleva `www` redirige a él con un 308 (se ve en Vercel → Domains).
+Como el cliente construye la URL de retorno con `window.location.origin`, lo
+que la web envía a Supabase es la dirección **con `www`**. Si en la lista
+permitida sólo está la otra, Supabase no la reconoce, ignora el `redirect_to`
+y devuelve a la persona a la *Site URL*, a la raíz y sin `next`: el inicio de
+sesión acaba funcionando a medias, por un camino que nadie ha diseñado.
+Hasta esta revisión la guía decía el dominio sin `www`.
+
+Las dos van en la lista —la del dominio sin `www` por si algún día cambia la
+redirección—, y la última cubre las *preview* de Vercel.
 
 ### 3.2 Authentication → Sign In / Providers
 
