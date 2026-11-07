@@ -51,9 +51,19 @@ La columna es `lists.auto_finish_at`, y **la escribe sólo la base de datos**:
 | Al entrar un miembro con cuenta | Se pone a nula |
 | Al volver a abrir la lista | `reopen_list()` da otras 24 horas |
 
-Desde el navegador **no se puede tocar**: la política de actualización exige que el valor no cambie,
-igual que se hizo con `profiles.plan` en la migración 0010. Sin eso, cualquiera se saltaba la regla
-entera con una línea en la consola. Por eso reabrir va por una función y no por un `update`.
+Desde el navegador **no se puede tocar**: un disparador (`lists_protect_columns`, migración 0017)
+devuelve a su valor `auto_finish_at`, `owner_id` y `created_at` cuando escribe `authenticated` o
+`anon`. Sin eso, cualquiera se saltaba la regla entera con una línea en la consola. Por eso reabrir va
+por una función y no por un `update`.
+
+Ignora en vez de rechazar a propósito: el navegador puede mandar la fila entera y no pasa nada.
+
+**Por qué no es una política.** La 0015 lo intentó con un `with check` que comparaba con una
+subconsulta, y estaba mal de dos maneras: `where l.id = id` se resuelve a la columna de la propia
+subconsulta (siempre cierta), así que con dos o más listas toda actualización fallaba; y el disparador
+de creación reescribía el valor en el `upsert` de un invitado, que entonces tampoco podía guardar.
+Resultado visible: **renombrar, archivar o poner presupuesto no se guardaba**, y la lista volvía a ser
+«Mi lista» al recargar. Una política no puede ver el valor antiguo; un disparador, sí.
 
 Quién es un invitado lo dice `auth.users.is_anonymous`, que sólo se puede leer desde una función
 `SECURITY DEFINER` —ni la clave de servicio puede leer `auth.users`, la misma lección de la

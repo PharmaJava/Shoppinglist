@@ -4,6 +4,7 @@ import {
   listPendingMutations,
   markMutationFailed,
   type OutboxTable,
+  type QueuedMutation,
   removeMutationIfUnchanged,
 } from "./outbox";
 import { setPendingCount } from "./pending-store";
@@ -21,6 +22,55 @@ let runAgain = false;
  */
 export function isPermanentRejection(status: number): boolean {
   return status >= 400 && status < 500 && status !== 401 && status !== 408 && status !== 429;
+}
+
+/**
+ * Lo único de una lista que se guarda desde el navegador. El dueño, la
+ * caducidad y la fecha de creación no viajan: la base de datos los ignoraría
+ * (migración 0017), y no mandarlos hace que el contrato sea el mismo en los
+ * dos lados.
+ */
+const EDITABLE_LIST_COLUMNS = [
+  "title",
+  "emoji",
+  "currency",
+  "budget_cents",
+  "archived_at",
+  "updated_at",
+] as const;
+
+/**
+ * Manda una operación al servidor.
+ *
+ * Las listas van con `update` y no con `upsert`: nunca se crean sin red
+ * (`createList` exige conexión), así que lo encolado es siempre un cambio de
+ * una lista que ya existe. Y el `upsert` de Postgres pasa también por la
+ * política de crear, que exige ser el dueño — quien editaba una lista
+ * compartida sin serlo no podía ni renombrarla.
+ *
+ * Los productos sí van con `upsert`: se crean offline, con su id ya puesto.
+ */
+async function sendOperation(operation: QueuedMutation) {
+  const supabase = getSupabaseBrowserClient();
+
+  // Las filas se construyen completas y correctamente tipadas en features/list/api.ts;
+  // aquí el outbox las trata como datos opacos, de ahí las afirmaciones de tipo.
+  if (operation.table === "lists") {
+    const changes = Object.fromEntries(
+      EDITABLE_LIST_COLUMNS.filter((column) => column in operation.row).map((column) => [
+        column,
+        operation.row[column],
+      ]),
+    );
+    const { error, status } = await supabase
+      .from("lists")
+      .update(changes as never)
+      .eq("id", operation.row.id as string);
+    return { error, status };
+  }
+
+  const { error, status } = await supabase.from(operation.table).upsert(operation.row as never);
+  return { error, status };
 }
 
 async function refreshPendingCount(): Promise<void> {
@@ -76,16 +126,13 @@ export function flushOutbox(): Promise<void> {
 async function flushOnce(): Promise<void> {
   if (typeof navigator !== "undefined" && !navigator.onLine) return;
 
-  const supabase = getSupabaseBrowserClient();
   const pending = await listPendingMutations();
   const now = Date.now();
 
   for (const operation of pending) {
     if (operation.nextAttemptAt > now) continue;
 
-    // Las filas se construyen completas y correctamente tipadas en features/list/api.ts;
-    // aquí el outbox las trata como datos opacos, de ahí la afirmación de tipo.
-    const { error, status } = await supabase.from(operation.table).upsert(operation.row as never);
+    const { error, status } = await sendOperation(operation);
 
     if (error && isPermanentRejection(status)) {
       // Reintentarlo no lo arregla, y dejarlo encendía para siempre el aviso

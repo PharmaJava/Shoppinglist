@@ -247,6 +247,8 @@ create policy lists_insert on public.lists for insert
   with check (owner_id = auth.uid());
 create policy lists_update on public.lists for update
   using (public.can_edit_list(id)) with check (public.can_edit_list(id));
+-- `owner_id`, `auto_finish_at` y `created_at` no se pueden cambiar desde el
+-- navegador: lo garantiza el disparador `lists_protect_columns` (0017).
 create policy lists_delete on public.lists for delete
   using (owner_id = auth.uid());          -- sólo el propietario borra la lista
 

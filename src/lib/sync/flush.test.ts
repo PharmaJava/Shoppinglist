@@ -7,6 +7,7 @@ import { listPendingMutations, removeMutation } from "./outbox";
  */
 const servidor = vi.hoisted(() => ({
   filas: new Map<string, Record<string, unknown>>(),
+  actualizaciones: [] as Array<{ tabla: string; id: unknown; cambios: Record<string, unknown> }>,
   latenciaMs: 0,
   responder: (_fila: Record<string, unknown>): { error: unknown; status: number } => ({
     error: null,
@@ -16,7 +17,13 @@ const servidor = vi.hoisted(() => ({
 
 vi.mock("@/lib/supabase/client", () => ({
   getSupabaseBrowserClient: () => ({
-    from: () => ({
+    from: (tabla: string) => ({
+      update: (cambios: Record<string, unknown>) => ({
+        eq: async (_columna: string, id: unknown) => {
+          servidor.actualizaciones.push({ tabla, id, cambios });
+          return { error: null, status: 204 };
+        },
+      }),
       upsert: async (fila: Record<string, unknown>) => {
         await new Promise((resolve) => setTimeout(resolve, servidor.latenciaMs));
         const respuesta = servidor.responder(fila);
@@ -47,6 +54,7 @@ async function hastaQueSeVacie(maxMs = 2000) {
 beforeEach(async () => {
   await vaciarCola();
   servidor.filas.clear();
+  servidor.actualizaciones.length = 0;
   servidor.latenciaMs = 0;
   servidor.responder = () => ({ error: null, status: 201 });
 });
@@ -141,5 +149,50 @@ describe("flushOutbox", () => {
     await flushOutbox();
 
     expect(await listPendingMutations()).toHaveLength(1);
+  });
+
+  /**
+   * Las listas se guardan con `update` y no con `upsert`. El `upsert` pasa por
+   * la política de crear —`owner_id = auth.uid()`—, así que quien edita una
+   * lista compartida sin ser su dueño no podía ni renombrarla. Y manda solo
+   * lo que es de quien edita: el dueño, la caducidad y la fecha de creación
+   * no viajan, aunque estén en la fila que se encoló.
+   */
+  it("una lista se actualiza con UPDATE y solo con sus columnas editables", async () => {
+    await queueRowMutation("lists", {
+      id: "lista-1",
+      owner_id: "dueno",
+      title: "Compra del sábado",
+      emoji: null,
+      currency: "EUR",
+      budget_cents: 5000,
+      archived_at: null,
+      auto_finish_at: "2026-11-07T10:00:00Z",
+      created_at: "2026-11-06T10:00:00Z",
+      updated_at: "2026-11-06T11:00:00Z",
+    });
+    await hastaQueSeVacie();
+
+    expect(servidor.actualizaciones).toHaveLength(1);
+    const [envio] = servidor.actualizaciones;
+    expect(envio?.tabla).toBe("lists");
+    expect(envio?.id).toBe("lista-1");
+    expect(envio?.cambios).toEqual({
+      title: "Compra del sábado",
+      emoji: null,
+      currency: "EUR",
+      budget_cents: 5000,
+      archived_at: null,
+      updated_at: "2026-11-06T11:00:00Z",
+    });
+    expect(servidor.filas.has("lista-1")).toBe(false);
+  });
+
+  it("los productos siguen yendo por upsert: se pueden crear sin red", async () => {
+    await queueRowMutation("list_items", { id: "leche", name: "leche" });
+    await hastaQueSeVacie();
+
+    expect(servidor.filas.has("leche")).toBe(true);
+    expect(servidor.actualizaciones).toHaveLength(0);
   });
 });
