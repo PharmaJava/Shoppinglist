@@ -8,10 +8,17 @@ import { useVoiceInput } from "@/features/list/use-voice-input";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/supabase/types";
 
-export function VoiceAddButton({ listId }: { listId: string }) {
+export function VoiceAddButton({
+  listId,
+  sectionId = null,
+}: {
+  listId: string;
+  /** En una lista de equipaje, la sección a la que va lo dictado. */
+  sectionId?: string | null;
+}) {
   const t = useTranslations("list");
   const locale = useLocale() as Locale;
-  const addParsedItems = useAddParsedItems(listId);
+  const addParsedItems = useAddParsedItems(listId, sectionId);
 
   const handleTranscript = useCallback(
     (transcript: string) => {

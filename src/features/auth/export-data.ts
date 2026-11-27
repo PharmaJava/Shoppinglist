@@ -36,11 +36,18 @@ export async function exportMyData(): Promise<ExportedData> {
   if (lists.error) throw new Error(lists.error.message);
 
   const listIds = (lists.data ?? []).map((list) => list.id);
-  const items = listIds.length
-    ? await supabase.from("list_items").select().in("list_id", listIds)
-    : { data: [], error: null };
+  const [items, sections] = listIds.length
+    ? await Promise.all([
+        supabase.from("list_items").select().in("list_id", listIds),
+        supabase.from("list_sections").select().in("list_id", listIds),
+      ])
+    : [
+        { data: [], error: null },
+        { data: [], error: null },
+      ];
 
   if (items.error) throw new Error(items.error.message);
+  if (sections.error) throw new Error(sections.error.message);
 
   return buildExport({
     userId,
@@ -48,6 +55,7 @@ export async function exportMyData(): Promise<ExportedData> {
     profile: profile.data ?? null,
     lists: lists.data ?? [],
     items: items.data ?? [],
+    sections: sections.data ?? [],
     history: history.data ?? [],
     templates: toExportedTemplates(templates.data ?? []),
   });

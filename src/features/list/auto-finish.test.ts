@@ -14,6 +14,7 @@ function lista(parcial: Partial<List> = {}): List {
     budget_cents: null,
     archived_at: null,
     auto_finish_at: null,
+    kind: "shopping",
     created_at: "2026-08-15T00:00:00Z",
     updated_at: "2026-08-15T00:00:00Z",
     ...parcial,
@@ -66,6 +67,7 @@ describe("hayQueDarlaPorTerminada", () => {
   it("una que ya está archivada se deja en paz", () => {
     const yaEsta = lista({
       auto_finish_at: "2026-08-15T10:00:00Z",
+      kind: "shopping",
       archived_at: "2026-08-15T10:00:01Z",
     });
 

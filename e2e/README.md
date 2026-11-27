@@ -22,7 +22,8 @@ sitemap, `robots.txt`, `noindex` en las listas compartidas y la hoja de
 impresión.
 
 **Crear una lista desde la portada sí está cubierto** (`crear-lista.spec.ts`),
-con un Supabase de mentira **dentro del navegador**: `page.route` intercepta
+igual que las listas de equipaje (`listas-equipaje.spec.ts`), con un Supabase
+de mentira **dentro del navegador** (`support/supabase-falso.ts`): `page.route` intercepta
 las peticiones a `example.supabase.co` y las contesta como PostgREST,
 guardando lo que llega. No prueba la base de datos; prueba lo que la base no
 ve: qué se manda, en qué orden y qué aparece en pantalla. Contra el código

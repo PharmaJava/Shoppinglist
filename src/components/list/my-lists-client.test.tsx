@@ -27,6 +27,7 @@ function list(id: string, title: string, archivedAt: string | null = null): List
       budget_cents: null,
       archived_at: archivedAt,
       auto_finish_at: null,
+      kind: "shopping",
       created_at: "2026-08-01T00:00:00.000Z",
       updated_at: "2026-08-10T00:00:00.000Z",
     },

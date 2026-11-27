@@ -1,4 +1,11 @@
-import type { ListItemRow, ListRow, ProductHistoryRow, ProfileRow } from "@/lib/supabase/types";
+import type {
+  ListItemRow,
+  ListKind,
+  ListRow,
+  ListSectionRow,
+  ProductHistoryRow,
+  ProfileRow,
+} from "@/lib/supabase/types";
 
 export interface ExportedList {
   id: string;
@@ -7,6 +14,7 @@ export interface ExportedList {
   updatedAt: string;
   archivedAt: string | null;
   isOwner: boolean;
+  kind: ListKind;
   items: Array<{
     name: string;
     qty: number | null;
@@ -15,6 +23,8 @@ export interface ExportedList {
     category: string | null;
     isChecked: boolean;
     createdAt: string;
+    /** El nombre de su sección, en las listas de equipaje. */
+    section: string | null;
   }>;
 }
 
@@ -27,10 +37,11 @@ export interface ExportedTemplate {
 export interface ExportedData {
   exportedAt: string;
   /**
-   * Sube a 2 al añadir plantillas y moneda. El número está para que quien
-   * lea un archivo antiguo —o un importador futuro— sepa qué esperar.
+   * Sube a 2 al añadir plantillas y moneda, y a 3 al añadir el tipo de lista
+   * y la sección de cada cosa. El número está para que quien lea un archivo
+   * antiguo —o un importador futuro— sepa qué esperar.
    */
-  format: 2;
+  format: 3;
   account: {
     id: string;
     email: string | null;
@@ -50,6 +61,7 @@ interface BuildInput {
   profile: ProfileRow | null;
   lists: ListRow[];
   items: ListItemRow[];
+  sections: ListSectionRow[];
   history: ProductHistoryRow[];
   templates: ExportedTemplate[];
 }
@@ -71,9 +83,13 @@ export function buildExport({
   profile,
   lists,
   items,
+  sections,
   history,
   templates,
 }: BuildInput): ExportedData {
+  const sectionName = new Map(
+    sections.filter((section) => !section.deleted_at).map((section) => [section.id, section.name]),
+  );
   const byList = new Map<string, ListItemRow[]>();
   for (const item of items) {
     byList.set(item.list_id, [...(byList.get(item.list_id) ?? []), item]);
@@ -81,7 +97,7 @@ export function buildExport({
 
   return {
     exportedAt: new Date().toISOString(),
-    format: 2,
+    format: 3,
     account: {
       id: userId,
       email,
@@ -97,6 +113,7 @@ export function buildExport({
       updatedAt: list.updated_at,
       archivedAt: list.archived_at,
       isOwner: list.owner_id === userId,
+      kind: list.kind,
       items: (byList.get(list.id) ?? [])
         .filter((item) => !item.deleted_at)
         .sort((a, b) => (a.sort_key < b.sort_key ? -1 : 1))
@@ -108,6 +125,7 @@ export function buildExport({
           category: item.category_id,
           isChecked: item.is_checked,
           createdAt: item.created_at,
+          section: item.section_id ? (sectionName.get(item.section_id) ?? null) : null,
         })),
     })),
     templates,

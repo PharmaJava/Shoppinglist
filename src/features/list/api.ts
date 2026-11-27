@@ -2,26 +2,26 @@ import { nanoid } from "nanoid";
 import { ensureGuestSession } from "@/features/auth/ensure-guest-session";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getCurrentUserId } from "@/lib/supabase/get-current-user-id";
-import type { ListRole, Locale } from "@/lib/supabase/types";
+import type { ListKind, ListRole, Locale } from "@/lib/supabase/types";
 import { queueRowMutation } from "@/lib/sync/flush";
 import { categorize } from "./categorize";
 import { recordProductPrice, recordProductsAdded } from "./history";
 import { type ParsedVoiceItem, parseVoiceTranscript } from "./parse-voice";
 import { keyAtEnd } from "./sort-key";
-import type { Category, List, ListItem, ListWithItems } from "./types";
+import type { Category, List, ListItem, ListSection, ListWithItems } from "./types";
 
 /**
  * Crea una lista vacía (el propietario se añade solo, vía trigger). Requiere
  * red: es el único punto de entrada que garantiza que la lista existe en el
  * servidor antes de navegar a `/l/[listId]`, que lee por red la primera vez.
  */
-export async function createList(title: string): Promise<List> {
+export async function createList(title: string, kind: ListKind = "shopping"): Promise<List> {
   const ownerId = await ensureGuestSession();
   const supabase = getSupabaseBrowserClient();
 
   const { data, error } = await supabase
     .from("lists")
-    .insert({ id: crypto.randomUUID(), title, owner_id: ownerId })
+    .insert({ id: crypto.randomUUID(), title, owner_id: ownerId, kind })
     .select()
     .single();
 
@@ -33,6 +33,8 @@ interface ItemExtras {
   qty?: number | null;
   unit?: string | null;
   categoryId?: string | null;
+  /** En las listas de equipaje, la sección en la que va. */
+  sectionId?: string | null;
 }
 
 function buildItem(
@@ -65,6 +67,7 @@ function buildItem(
     created_at: now,
     updated_at: now,
     deleted_at: null,
+    section_id: extra?.sectionId ?? null,
   };
 }
 
@@ -114,8 +117,15 @@ export async function addParsedItems(
   items: ParsedVoiceItem[],
   locale: Locale,
   lastSortKey: string | null,
+  sectionId: string | null = null,
 ): Promise<ListItem[]> {
-  const created = buildItems(listId, items, locale, lastSortKey, await getCurrentUserId());
+  const created = buildItems(
+    listId,
+    items.map((item) => ({ ...item, sectionId })),
+    locale,
+    lastSortKey,
+    await getCurrentUserId(),
+  );
   for (const row of created) await queueRowMutation("list_items", row);
 
   // Único punto donde se aprende del usuario al añadir a mano o por voz: todo
@@ -137,13 +147,26 @@ export async function addParsedItems(
  * a la cola y llegan al volver la conexión, con los mismos ids — repetirlos
  * no duplica.
  */
-async function saveInitialItems(rows: ListItem[]): Promise<void> {
-  if (rows.length === 0) return;
+async function saveInitialRows(sections: ListSection[], items: ListItem[]): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
 
-  const { error } = await getSupabaseBrowserClient().from("list_items").upsert(rows);
+  // Las secciones primero: los productos las referencian, y la base rechaza
+  // un producto cuya sección aún no existe. Si ellas no llegan, los productos
+  // tampoco se intentan: van detrás a la cola, que respeta el orden.
+  if (sections.length > 0) {
+    const { error } = await supabase.from("list_sections").upsert(sections);
+    if (error) {
+      for (const row of sections) await queueRowMutation("list_sections", row);
+      for (const row of items) await queueRowMutation("list_items", row);
+      return;
+    }
+  }
+
+  if (items.length === 0) return;
+  const { error } = await supabase.from("list_items").upsert(items);
   if (!error) return;
 
-  for (const row of rows) await queueRowMutation("list_items", row);
+  for (const row of items) await queueRowMutation("list_items", row);
 }
 
 /** Crea la lista con sus productos ya dentro, que es lo que hay que tener
@@ -155,8 +178,8 @@ async function createListWithItems(
 ): Promise<ListWithItems> {
   const list = await createList(title);
   const items = buildItems(list.id, entries, locale, null, list.owner_id);
-  await saveInitialItems(items);
-  return { list, items };
+  await saveInitialRows([], items);
+  return { list, items, sections: [] };
 }
 
 /**
@@ -278,6 +301,50 @@ export async function deleteItem(item: ListItem): Promise<void> {
   await queueRowMutation("list_items", row);
 }
 
+/**
+ * Una sección nueva en una lista de equipaje. Por el outbox, como los
+ * productos: se puede montar la maleta sin cobertura.
+ */
+export async function addSection(
+  listId: string,
+  name: string,
+  lastSortKey: string | null,
+): Promise<ListSection> {
+  const now = new Date().toISOString();
+  const row: ListSection = {
+    id: crypto.randomUUID(),
+    list_id: listId,
+    name: name.trim(),
+    sort_key: keyAtEnd(lastSortKey),
+    created_by: await getCurrentUserId(),
+    created_at: now,
+    updated_at: now,
+    deleted_at: null,
+  };
+
+  await queueRowMutation("list_sections", row);
+  return row;
+}
+
+export async function renameSection(section: ListSection, name: string): Promise<ListSection> {
+  const row: ListSection = { ...section, name: name.trim(), updated_at: new Date().toISOString() };
+  await queueRowMutation("list_sections", row);
+  return row;
+}
+
+/**
+ * Borra una sección **con lo que lleva dentro**. Si los productos se
+ * quedaran sueltos, borrar «Maleta Dani» dejaría su cargador y su cartera
+ * flotando en la lista sin que nadie lo hubiera pedido.
+ */
+export async function deleteSection(section: ListSection, items: ListItem[]): Promise<void> {
+  const now = new Date().toISOString();
+  for (const item of items) {
+    await queueRowMutation("list_items", { ...item, deleted_at: now, updated_at: now });
+  }
+  await queueRowMutation("list_sections", { ...section, deleted_at: now, updated_at: now });
+}
+
 export async function renameList(list: List, title: string): Promise<List> {
   const row: List = { ...list, title, updated_at: new Date().toISOString() };
   await queueRowMutation("lists", row);
@@ -363,29 +430,64 @@ export async function duplicateList(
   title: string,
   locale: Locale,
 ): Promise<ListWithItems> {
-  const { items } = await fetchListWithItems(listId);
+  const original = await fetchListWithItems(listId);
+  const list = await createList(title, original.list.kind);
 
-  return createListWithItems(
-    title,
-    items.map((item) => ({
+  // Cada sección con un id nuevo —es de otra lista— y cada producto
+  // apuntando a la copia de la suya. Sin esto, duplicar «Maleta Dani» para
+  // hacer la de Ana dejaba todo suelto, sin secciones.
+  const now = new Date().toISOString();
+  const newSectionId = new Map<string, string>();
+  const sections: ListSection[] = original.sections.map((section) => {
+    const id = crypto.randomUUID();
+    newSectionId.set(section.id, id);
+    return {
+      ...section,
+      id,
+      list_id: list.id,
+      created_by: list.owner_id,
+      created_at: now,
+      updated_at: now,
+    };
+  });
+
+  const items = buildItems(
+    list.id,
+    original.items.map((item) => ({
       name: item.name,
       qty: item.qty,
       unit: item.unit,
       categoryId: item.category_id,
+      sectionId: item.section_id ? (newSectionId.get(item.section_id) ?? null) : null,
     })),
     locale,
+    null,
+    list.owner_id,
   );
+
+  await saveInitialRows(sections, items);
+  return { list, items, sections };
 }
 
-export async function fetchListWithItems(
-  listId: string,
-): Promise<{ list: List; items: ListItem[] }> {
+export async function fetchListWithItems(listId: string): Promise<ListWithItems> {
   const supabase = getSupabaseBrowserClient();
 
-  const [{ data: list, error: listError }, { data: items, error: itemsError }] = await Promise.all([
+  const [
+    { data: list, error: listError },
+    { data: items, error: itemsError },
+    { data: sections, error: sectionsError },
+  ] = await Promise.all([
     supabase.from("lists").select().eq("id", listId).single(),
     supabase
       .from("list_items")
+      .select()
+      .eq("list_id", listId)
+      .is("deleted_at", null)
+      .order("sort_key", { ascending: true }),
+    // En una lista de la compra vuelve vacía. Se pide igual, en paralelo, para
+    // no tener que saber el tipo antes de pedir nada.
+    supabase
+      .from("list_sections")
       .select()
       .eq("list_id", listId)
       .is("deleted_at", null)
@@ -394,8 +496,9 @@ export async function fetchListWithItems(
 
   if (listError || !list) throw new Error(listError?.message ?? "Lista no encontrada.");
   if (itemsError) throw new Error(itemsError.message);
+  if (sectionsError) throw new Error(sectionsError.message);
 
-  return { list, items: items ?? [] };
+  return { list, items: items ?? [], sections: sections ?? [] };
 }
 
 export interface ListSummary {

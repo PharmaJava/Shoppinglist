@@ -2,21 +2,21 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import type { ListItemRow } from "@/lib/supabase/types";
+import type { ListItemRow, ListSectionRow } from "@/lib/supabase/types";
 import { fetchListWithItems } from "./api";
 import { subscribeToList } from "./realtime";
 import type { ListWithItems } from "./types";
 
-function sortItems(items: ListItemRow[]): ListItemRow[] {
-  return [...items].sort((a, b) => (a.sort_key < b.sort_key ? -1 : 1));
-}
-
-function upsertItem(items: ListItemRow[], incoming: ListItemRow): ListItemRow[] {
-  if (incoming.deleted_at) {
-    return items.filter((item) => item.id !== incoming.id);
-  }
-  const withoutIncoming = items.filter((item) => item.id !== incoming.id);
-  return sortItems([...withoutIncoming, incoming]);
+/** Aplica una fila que llega por tiempo real: la quita si está borrada, la
+ *  pone o la sustituye si no, y deja el conjunto ordenado. Vale para
+ *  productos y para secciones. */
+export function upsertRow<Row extends { id: string; sort_key: string; deleted_at: string | null }>(
+  rows: Row[],
+  incoming: Row,
+): Row[] {
+  const withoutIncoming = rows.filter((row) => row.id !== incoming.id);
+  if (incoming.deleted_at) return withoutIncoming;
+  return [...withoutIncoming, incoming].sort((a, b) => (a.sort_key < b.sort_key ? -1 : 1));
 }
 
 export function useList(listId: string) {
@@ -39,12 +39,21 @@ export function useList(listId: string) {
     const unsubscribe = subscribeToList(listId, {
       onItem: (incoming) => {
         queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
-          current ? { ...current, items: upsertItem(current.items, incoming) } : current,
+          current
+            ? { ...current, items: upsertRow<ListItemRow>(current.items, incoming) }
+            : current,
         );
       },
       onList: (list) => {
         queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
           current ? { ...current, list } : current,
+        );
+      },
+      onSection: (incoming) => {
+        queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
+          current
+            ? { ...current, sections: upsertRow<ListSectionRow>(current.sections, incoming) }
+            : current,
         );
       },
     });

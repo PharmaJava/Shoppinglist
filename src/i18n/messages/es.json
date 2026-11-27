@@ -653,5 +653,33 @@
     "reopen": "Volver a abrirla",
     "reopening": "Abriendo…",
     "cardSoon": "{hours, plural, one {Se termina en 1 h} other {Se termina en # h}}"
+  },
+  "packing": {
+    "kindLabel": "Tipo de lista",
+    "kindShopping": "🛒 Compra",
+    "kindPacking": "🧳 Equipaje",
+    "newPackingPlaceholder": "Ej. vacaciones en la playa",
+    "badge": "Equipaje",
+    "duplicate": "Duplicar",
+    "noSection": "Sin sección",
+    "sectionsLabel": "Añadir a",
+    "newSection": "+ Sección",
+    "newSectionPlaceholder": "Nombre de la sección, p. ej. Mochila niños",
+    "createSection": "Crear sección",
+    "cancelSection": "Cancelar",
+    "addTo": "Añadir a {name}…",
+    "addHere": "Añadir a {name}",
+    "renameSection": "Renombrar la sección {name}",
+    "deleteSection": "Borrar la sección {name}",
+    "deleteSectionConfirm": "¿Borrar «{name}» y lo que lleva dentro?",
+    "deleteSectionYes": "Borrar",
+    "sectionEmpty": "Vacía. Pulsa + para añadir cosas.",
+    "emptyIntro": "Empieza creando una sección: «Mochila niños», «Maleta de Dani»…",
+    "progress": "{checked} de {total} listo",
+    "allPacked": "¡Todo listo!",
+    "restart": "Empezar de nuevo",
+    "restartConfirm": "¿Desmarcar todo para la próxima vez?",
+    "restartYes": "Desmarcar todo",
+    "restartNo": "Cancelar"
   }
 }

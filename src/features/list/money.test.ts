@@ -21,6 +21,7 @@ function item(price: number | null, isChecked = false): ListItem {
     created_at: "2026-08-10T00:00:00.000Z",
     updated_at: "2026-08-10T00:00:00.000Z",
     deleted_at: null,
+    section_id: null,
   };
 }
 

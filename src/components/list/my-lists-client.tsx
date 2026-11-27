@@ -15,7 +15,7 @@ import { estadoFinal, horasRestantes } from "@/features/list/auto-finish";
 import { normalizeProductName } from "@/features/list/categorize";
 import { useOpenNewList } from "@/features/list/use-open-new-list";
 import { Link } from "@/i18n/navigation";
-import type { Locale } from "@/lib/supabase/types";
+import type { ListKind, Locale } from "@/lib/supabase/types";
 
 export function MyListsClient() {
   const t = useTranslations("myLists");
@@ -142,12 +142,14 @@ export function MyListsClient() {
 
 function ListCard({ summary }: { summary: ListSummary }) {
   const t = useTranslations("myLists");
+  const tPacking = useTranslations("packing");
   const tFin = useTranslations("autoFinish");
   const format = useFormatter();
   const locale = useLocale() as Locale;
   const openNewList = useOpenNewList();
   const queryClient = useQueryClient();
   const { list, totalItems, checkedItems } = summary;
+  const isPacking = list.kind === "packing";
   const percent = totalItems === 0 ? 0 : Math.round((checkedItems / totalItems) * 100);
   const isArchived = Boolean(list.archived_at);
 
@@ -167,7 +169,14 @@ function ListCard({ summary }: { summary: ListSummary }) {
     <li className="flex flex-col rounded-card border border-border bg-surface">
       <a href={`/l/${list.id}`} className="flex flex-col gap-3 p-4 hover:bg-surface-muted">
         <div className="flex items-baseline justify-between gap-3">
-          <span className="font-semibold text-on-surface">{list.title}</span>
+          <span className="font-semibold text-on-surface">
+            {isPacking && (
+              <span className="mr-1.5" role="img" aria-label={tPacking("badge")}>
+                🧳
+              </span>
+            )}
+            {list.title}
+          </span>
           <span className="shrink-0 text-sm text-on-surface-muted">
             {totalItems === 0
               ? t("emptyList")
@@ -205,7 +214,11 @@ function ListCard({ summary }: { summary: ListSummary }) {
           onClick={() => duplicate.mutate()}
           className="text-sm font-semibold text-brand underline disabled:opacity-50"
         >
-          {duplicate.isPending ? t("duplicating") : t("duplicate")}
+          {duplicate.isPending
+            ? t("duplicating")
+            : isPacking
+              ? tPacking("duplicate")
+              : t("duplicate")}
         </button>
         <button
           type="button"
@@ -227,10 +240,12 @@ function ListCard({ summary }: { summary: ListSummary }) {
 
 function NewListForm() {
   const t = useTranslations("myLists");
+  const tPacking = useTranslations("packing");
   const locale = useLocale() as Locale;
   const openNewList = useOpenNewList();
 
   const [title, setTitle] = useState("");
+  const [kind, setKind] = useState<ListKind>("shopping");
   const [pending, setPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -242,7 +257,7 @@ function NewListForm() {
     setPending(true);
     setErrorMessage(null);
     try {
-      openNewList({ list: await createList(value), items: [] });
+      openNewList({ list: await createList(value, kind), items: [], sections: [] });
     } catch (err) {
       console.error("No se pudo crear la lista:", err);
       setErrorMessage(err instanceof Error ? err.message : String(err));
@@ -252,6 +267,27 @@ function NewListForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      {/* Se elige al crear y no se cambia después: una lista de equipaje se
+          organiza por secciones propias y no caduca, y convertir una en otra
+          a medias dejaría sus productos sin sitio (migración 0018). */}
+      <fieldset className="flex w-full rounded-full bg-surface-muted p-1 sm:max-w-xs">
+        <legend className="sr-only">{tPacking("kindLabel")}</legend>
+        {(["shopping", "packing"] as const).map((option) => (
+          <button
+            key={option}
+            type="button"
+            aria-pressed={kind === option}
+            onClick={() => setKind(option)}
+            className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+              kind === option
+                ? "bg-surface text-on-surface shadow-sm"
+                : "text-on-surface-muted hover:text-on-surface"
+            }`}
+          >
+            {option === "shopping" ? tPacking("kindShopping") : tPacking("kindPacking")}
+          </button>
+        ))}
+      </fieldset>
       <div className="flex flex-col gap-2 sm:flex-row">
         <label htmlFor="new-list-title" className="sr-only">
           {t("newList")}
@@ -260,7 +296,9 @@ function NewListForm() {
           id="new-list-title"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          placeholder={t("newListPlaceholder")}
+          placeholder={
+            kind === "packing" ? tPacking("newPackingPlaceholder") : t("newListPlaceholder")
+          }
           autoComplete="off"
           lang={locale}
           className="h-tap w-full rounded-full border border-border bg-surface px-5 sm:flex-1 text-base text-on-surface outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
