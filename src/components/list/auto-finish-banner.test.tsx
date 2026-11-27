@@ -24,6 +24,7 @@ function lista(parcial: Partial<List> = {}): List {
     budget_cents: null,
     archived_at: null,
     auto_finish_at: null,
+    kind: "shopping",
     created_at: "2026-08-15T00:00:00Z",
     updated_at: "2026-08-15T00:00:00Z",
     ...parcial,

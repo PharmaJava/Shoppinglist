@@ -15,6 +15,7 @@ function list(id: string, ownerId: string): ListRow {
     budget_cents: null,
     archived_at: null,
     auto_finish_at: null,
+    kind: "shopping",
     created_at: "2026-08-01T00:00:00.000Z",
     updated_at: "2026-08-10T00:00:00.000Z",
   };
@@ -39,6 +40,7 @@ function item(partial: Partial<ListItemRow> & { name: string; list_id: string })
     created_at: "2026-08-02T00:00:00.000Z",
     updated_at: "2026-08-02T00:00:00.000Z",
     deleted_at: partial.deleted_at ?? null,
+    section_id: partial.section_id ?? null,
   };
 }
 
@@ -53,7 +55,14 @@ const profile: ProfileRow = {
   created_at: "2026-07-01T00:00:00.000Z",
 };
 
-const base = { userId: yo, email: "ana@example.com", profile, history: [], templates: [] };
+const base = {
+  userId: yo,
+  email: "ana@example.com",
+  profile,
+  history: [],
+  templates: [],
+  sections: [],
+};
 
 describe("buildExport", () => {
   it("mete cada producto bajo su lista, en el orden de la lista", () => {
@@ -143,13 +152,46 @@ describe("buildExport · plantillas y moneda", () => {
 
   // El número de formato es lo único que le dice a quien lea un archivo viejo
   // —o a un importador futuro— qué campos puede esperar.
-  it("el formato sube a 2 al cambiar la forma", () => {
-    expect(buildExport({ ...base, lists: [], items: [] }).format).toBe(2);
+  // 2: plantillas y moneda. 3: tipo de lista y sección de cada cosa.
+  it("el formato sube cada vez que cambia la forma", () => {
+    expect(buildExport({ ...base, lists: [], items: [] }).format).toBe(3);
   });
 
   it("sin perfil, la moneda es null y no revienta", () => {
     const data = buildExport({ ...base, profile: null, lists: [], items: [] });
 
     expect(data.account.currency).toBeNull();
+  });
+
+  /** Una maleta exportada sin sus secciones sería un montón de cosas sueltas. */
+  it("en una lista de equipaje lleva su tipo y la sección de cada cosa", () => {
+    const maleta = { ...list("maleta", yo), kind: "packing" as const };
+    const data = buildExport({
+      ...base,
+      lists: [maleta],
+      items: [
+        item({ name: "cargador", list_id: "maleta", sort_key: "a0", section_id: "s1" }),
+        item({ name: "gafas", list_id: "maleta", sort_key: "a1" }),
+      ],
+      sections: [
+        {
+          id: "s1",
+          list_id: "maleta",
+          name: "Maleta Dani",
+          sort_key: "a0",
+          created_by: yo,
+          created_at: "2026-11-01T00:00:00Z",
+          updated_at: "2026-11-01T00:00:00Z",
+          deleted_at: null,
+        },
+      ],
+    });
+
+    expect(data.format).toBe(3);
+    expect(data.lists[0]?.kind).toBe("packing");
+    expect(data.lists[0]?.items.map((i) => [i.name, i.section])).toEqual([
+      ["cargador", "Maleta Dani"],
+      ["gafas", null],
+    ]);
   });
 });

@@ -653,5 +653,33 @@
     "reopen": "Open it again",
     "reopening": "Opening…",
     "cardSoon": "{hours, plural, one {Wraps up in 1 h} other {Wraps up in # h}}"
+  },
+  "packing": {
+    "kindLabel": "List type",
+    "kindShopping": "🛒 Shopping",
+    "kindPacking": "🧳 Packing",
+    "newPackingPlaceholder": "E.g. beach holiday",
+    "badge": "Packing",
+    "duplicate": "Duplicate",
+    "noSection": "No section",
+    "sectionsLabel": "Add to",
+    "newSection": "+ Section",
+    "newSectionPlaceholder": "Section name, e.g. Kids' backpack",
+    "createSection": "Create section",
+    "cancelSection": "Cancel",
+    "addTo": "Add to {name}…",
+    "addHere": "Add to {name}",
+    "renameSection": "Rename section {name}",
+    "deleteSection": "Delete section {name}",
+    "deleteSectionConfirm": "Delete “{name}” and everything in it?",
+    "deleteSectionYes": "Delete",
+    "sectionEmpty": "Empty. Tap + to add things.",
+    "emptyIntro": "Start by creating a section: “Kids' backpack”, “Dani's suitcase”…",
+    "progress": "{checked} of {total} packed",
+    "allPacked": "All packed!",
+    "restart": "Start over",
+    "restartConfirm": "Untick everything for next time?",
+    "restartYes": "Untick all",
+    "restartNo": "Cancel"
   }
 }

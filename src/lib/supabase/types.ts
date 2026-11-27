@@ -12,6 +12,8 @@ export type Locale = "es" | "en";
 export type Plan = "free" | "premium";
 /** Cada cuánto se crea sola una lista recurrente (migración 0012). */
 export type Cadence = "weekly" | "biweekly" | "monthly";
+/** De la compra, o de equipaje: la mochila, la maleta (migración 0018). */
+export type ListKind = "shopping" | "packing";
 
 export interface Database {
   public: {
@@ -59,6 +61,8 @@ export interface Database {
            * cliente no puede tocarla (migración 0015).
            */
           auto_finish_at: string | null;
+          /** No se puede cambiar una vez creada (migración 0018). */
+          kind: ListKind;
           created_at: string;
           updated_at: string;
         };
@@ -119,6 +123,8 @@ export interface Database {
           created_at: string;
           updated_at: string;
           deleted_at: string | null;
+          /** Sólo en las listas de equipaje: en qué sección va. */
+          section_id: string | null;
         };
         Relationships: [];
         Insert: Partial<Database["public"]["Tables"]["list_items"]["Row"]> & {
@@ -128,6 +134,26 @@ export interface Database {
           sort_key: string;
         };
         Update: Partial<Database["public"]["Tables"]["list_items"]["Row"]>;
+      };
+      list_sections: {
+        Row: {
+          id: string;
+          list_id: string;
+          name: string;
+          sort_key: string;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+        };
+        Relationships: [];
+        Insert: Partial<Database["public"]["Tables"]["list_sections"]["Row"]> & {
+          id: string;
+          list_id: string;
+          name: string;
+          sort_key: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["list_sections"]["Row"]>;
       };
       products: {
         Row: {
@@ -449,6 +475,7 @@ export interface Database {
 
 export type ListRow = Database["public"]["Tables"]["lists"]["Row"];
 export type ListItemRow = Database["public"]["Tables"]["list_items"]["Row"];
+export type ListSectionRow = Database["public"]["Tables"]["list_sections"]["Row"];
 export type ListMemberRow = Database["public"]["Tables"]["list_members"]["Row"];
 export type CategoryRow = Database["public"]["Tables"]["categories"]["Row"];
 export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];

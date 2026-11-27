@@ -1,5 +1,5 @@
 import type { Locale } from "@/lib/supabase/types";
-import type { Category, ListItem } from "./types";
+import type { Category, ListItem, ListSection } from "./types";
 
 interface ToTextOptions {
   title: string;
@@ -57,6 +57,42 @@ export function listToText({
   if (checked.length > 0) {
     blocks.push([checkedLabel, ...checked.map((item) => `- ${line(item)}`)].join("\n"));
   }
+
+  return [title, "", ...interleave(blocks)].join("\n").trimEnd();
+}
+
+/**
+ * Lo mismo para una lista de equipaje: por secciones, en su orden, y lo ya
+ * metido dentro de su sección con `[x]` en vez de mandarlo al final. En una
+ * maleta lo que se quiere saber al leerla es qué falta *de cada sitio*.
+ */
+export function packingToText({
+  title,
+  items,
+  sections,
+  looseLabel,
+}: {
+  title: string;
+  items: ListItem[];
+  sections: ListSection[];
+  looseLabel: string;
+}): string {
+  const known = new Set(sections.map((section) => section.id));
+  const groups: Array<[string, ListItem[]]> = [
+    [looseLabel, items.filter((item) => !item.section_id || !known.has(item.section_id))],
+    ...sections.map((section): [string, ListItem[]] => [
+      section.name,
+      items.filter((item) => item.section_id === section.id),
+    ]),
+  ];
+
+  const blocks = groups
+    .filter(([, group]) => group.length > 0)
+    .map(([heading, group]) =>
+      [heading, ...group.map((item) => `- [${item.is_checked ? "x" : " "}] ${line(item)}`)].join(
+        "\n",
+      ),
+    );
 
   return [title, "", ...interleave(blocks)].join("\n").trimEnd();
 }

@@ -5,14 +5,17 @@ import { useLocale } from "next-intl";
 import type { Locale } from "@/lib/supabase/types";
 import {
   addParsedItems,
+  addSection,
   deleteItem,
+  deleteSection,
   type ItemEdits,
+  renameSection,
   restoreItem,
   toggleItem,
   updateItem,
 } from "./api";
 import type { ParsedVoiceItem } from "./parse-voice";
-import type { ListItem, ListWithItems } from "./types";
+import type { ListItem, ListSection, ListWithItems } from "./types";
 
 function findItem(current: ListWithItems | undefined, itemId: string): ListItem | undefined {
   return current?.items.find((item) => item.id === itemId);
@@ -23,7 +26,7 @@ function findItem(current: ListWithItems | undefined, itemId: string): ListItem 
  * teclado, voz y sugerencias pasan por aquí— y por eso es también el punto
  * donde `addParsedItems` alimenta el historial personal.
  */
-export function useAddParsedItems(listId: string) {
+export function useAddParsedItems(listId: string, sectionId: string | null = null) {
   const queryClient = useQueryClient();
   const locale = useLocale() as Locale;
   const queryKey = ["list", listId] as const;
@@ -32,7 +35,7 @@ export function useAddParsedItems(listId: string) {
     mutationFn: (items: ParsedVoiceItem[]) => {
       const current = queryClient.getQueryData<ListWithItems>(queryKey);
       const lastItem = current?.items.at(-1);
-      return addParsedItems(listId, items, locale, lastItem?.sort_key ?? null);
+      return addParsedItems(listId, items, locale, lastItem?.sort_key ?? null, sectionId);
     },
     onSuccess: (created) => {
       queryClient.setQueryData<ListWithItems>(queryKey, (current) => {
@@ -149,6 +152,101 @@ export function useRestoreItem(listId: string) {
         if (current.items.some((item) => item.id === restored.id)) return current;
         return { ...current, items: [...current.items, restored] };
       });
+    },
+  });
+}
+
+/** Una sección nueva al final. Devuelve la sección para que quien la pidió
+ *  pueda dejarla elegida y empezar a llenarla. */
+export function useAddSection(listId: string) {
+  const queryClient = useQueryClient();
+  const queryKey = ["list", listId] as const;
+
+  return useMutation({
+    mutationFn: (name: string) => {
+      const current = queryClient.getQueryData<ListWithItems>(queryKey);
+      return addSection(listId, name, current?.sections.at(-1)?.sort_key ?? null);
+    },
+    onSuccess: (created) => {
+      queryClient.setQueryData<ListWithItems>(queryKey, (current) => {
+        if (!current || current.sections.some((section) => section.id === created.id)) {
+          return current;
+        }
+        return { ...current, sections: [...current.sections, created] };
+      });
+    },
+  });
+}
+
+export function useRenameSection(listId: string) {
+  const queryClient = useQueryClient();
+  const queryKey = ["list", listId] as const;
+
+  return useMutation({
+    mutationFn: ({ section, name }: { section: ListSection; name: string }) =>
+      renameSection(section, name),
+    onSuccess: (renamed) => {
+      queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
+        current
+          ? {
+              ...current,
+              sections: current.sections.map((section) =>
+                section.id === renamed.id ? renamed : section,
+              ),
+            }
+          : current,
+      );
+    },
+  });
+}
+
+/** Quita la sección y lo que lleva dentro, de la pantalla y del servidor. */
+export function useDeleteSection(listId: string) {
+  const queryClient = useQueryClient();
+  const queryKey = ["list", listId] as const;
+
+  return useMutation({
+    mutationFn: async (section: ListSection) => {
+      const current = queryClient.getQueryData<ListWithItems>(queryKey);
+      const inside = (current?.items ?? []).filter((item) => item.section_id === section.id);
+      await deleteSection(section, inside);
+    },
+    onSuccess: (_result, section) => {
+      queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
+        current
+          ? {
+              ...current,
+              sections: current.sections.filter((entry) => entry.id !== section.id),
+              items: current.items.filter((item) => item.section_id !== section.id),
+            }
+          : current,
+      );
+    },
+  });
+}
+
+/**
+ * «Empezar de nuevo»: desmarca todo lo marcado. Es lo que se hace con una
+ * lista de equipaje en vez de borrarla — la mochila del lunes es la misma que
+ * la del viernes.
+ */
+export function useResetPacking(listId: string) {
+  const queryClient = useQueryClient();
+  const queryKey = ["list", listId] as const;
+
+  return useMutation({
+    mutationFn: async () => {
+      const current = queryClient.getQueryData<ListWithItems>(queryKey);
+      const checked = (current?.items ?? []).filter((item) => item.is_checked);
+      return Promise.all(checked.map((item) => toggleItem(item, false)));
+    },
+    onSuccess: (unchecked) => {
+      const byId = new Map(unchecked.map((item) => [item.id, item]));
+      queryClient.setQueryData<ListWithItems>(queryKey, (current) =>
+        current
+          ? { ...current, items: current.items.map((item) => byId.get(item.id) ?? item) }
+          : current,
+      );
     },
   });
 }

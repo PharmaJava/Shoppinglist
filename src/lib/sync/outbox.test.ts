@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   enqueueMutation,
   listPendingMutations,
@@ -99,5 +99,30 @@ describe("outbox (IndexedDB)", () => {
     const [op] = await listPendingMutations();
     expect(op?.retries).toBe(0);
     expect(op?.nextAttemptAt).toBe(0);
+  });
+
+  /**
+   * El orden de la cola es el orden en que se encola, aunque dos cambios caigan
+   * en el mismo milisegundo. Antes se desempataba por la clave y
+   * `list_items:…` va antes que `list_sections:…`: un producto salía antes
+   * que la sección en la que va, el servidor lo rechazaba y se perdía.
+   */
+  it("respeta el orden de encolado aunque coincida el milisegundo", async () => {
+    const ahora = Date.now();
+    const reloj = vi.spyOn(Date, "now").mockReturnValue(ahora);
+    try {
+      await enqueueMutation("list_sections", { id: "z-seccion", name: "Mochila" });
+      await enqueueMutation("list_items", { id: "a-producto", section_id: "z-seccion" });
+      await enqueueMutation("list_items", { id: "b-producto", section_id: "z-seccion" });
+    } finally {
+      reloj.mockRestore();
+    }
+
+    const pendientes = await listPendingMutations();
+    expect(pendientes.map((op) => op.key)).toEqual([
+      "list_sections:z-seccion",
+      "list_items:a-producto",
+      "list_items:b-producto",
+    ]);
   });
 });

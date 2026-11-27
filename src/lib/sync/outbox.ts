@@ -1,6 +1,6 @@
 import { OPERATIONS_STORE, openOutboxDb } from "./db";
 
-export type OutboxTable = "lists" | "list_items";
+export type OutboxTable = "lists" | "list_items" | "list_sections";
 
 export interface QueuedMutation {
   /** `${table}:${row.id}` — misma clave compacta escrituras repetidas sobre la misma fila. */
@@ -23,6 +23,21 @@ export function operationKey(table: OutboxTable, rowId: string): string {
 
 const MAX_BACKOFF_MS = 30_000;
 
+let lastCreatedAt = 0;
+
+/**
+ * Una marca de orden que nunca se repite dentro de la pestaña.
+ *
+ * La cola se recorre por `createdAt`, y dos encolados seguidos caen a menudo
+ * en el mismo milisegundo; entonces IndexedDB desempata por la clave, y
+ * `list_items:…` va antes que `list_sections:…`. Un producto salía antes que
+ * la sección en la que va, el servidor lo rechazaba y el cambio se perdía.
+ */
+function nextCreatedAt(): number {
+  lastCreatedAt = Math.max(Date.now(), lastCreatedAt + 1);
+  return lastCreatedAt;
+}
+
 /** Backoff exponencial (1s, 2s, 4s, …) con techo de 30s. */
 export function nextAttemptDelay(retries: number): number {
   return Math.min(1000 * 2 ** retries, MAX_BACKOFF_MS);
@@ -41,7 +56,7 @@ export async function enqueueMutation(table: OutboxTable, row: Record<string, un
     key: operationKey(table, id),
     table,
     row,
-    createdAt: existing?.createdAt ?? Date.now(),
+    createdAt: existing?.createdAt ?? nextCreatedAt(),
     retries: 0,
     nextAttemptAt: 0,
     stamp: crypto.randomUUID(),

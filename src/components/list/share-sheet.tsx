@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 import type { ListMember } from "@/features/list/api";
 import { fetchListMembers, getOrCreateActiveInvite } from "@/features/list/api";
-import { listToText } from "@/features/list/to-text";
+import { listToText, packingToText } from "@/features/list/to-text";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
 import { SITE_URL } from "@/lib/seo/site";
@@ -31,6 +31,7 @@ function inviteUrl(token: string): string {
 export function ShareSheet({ listId, onClose }: { listId: string; onClose: () => void }) {
   const t = useTranslations("list");
   const tPlantillas = useTranslations("templatesMine");
+  const tPacking = useTranslations("packing");
   const locale = useLocale() as Locale;
   const [url, setUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -111,6 +112,14 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
   }
 
   function buildText(): string | null {
+    if (data?.list.kind === "packing") {
+      return packingToText({
+        title: data.list.title,
+        items: data.items,
+        sections: data.sections,
+        looseLabel: tPacking("noSection"),
+      });
+    }
     if (!data || !categories) return null;
     return listToText({
       title: data.list.title,
@@ -239,14 +248,18 @@ export function ShareSheet({ listId, onClose }: { listId: string; onClose: () =>
               a 390 px ya va justa con el título, el modo supermercado y
               «Compartir», y esto es lo mismo que copiar o imprimir —llevarse la
               lista a otro sitio—, no una acción del día a día. */}
-          <button
-            type="button"
-            onClick={() => setSaveTemplateOpen(true)}
-            disabled={!data || data.items.length === 0}
-            className="flex h-tap items-center justify-center rounded-xl border border-border px-2 text-center text-sm font-medium text-on-surface disabled:opacity-50"
-          >
-            {tPlantillas("saveShort")}
-          </button>
+          {/* Las plantillas no guardan secciones: una maleta guardada así se
+              copiaría desordenada. Para repetirla está «Duplicar». */}
+          {data?.list.kind !== "packing" && (
+            <button
+              type="button"
+              onClick={() => setSaveTemplateOpen(true)}
+              disabled={!data || data.items.length === 0}
+              className="flex h-tap items-center justify-center rounded-xl border border-border px-2 text-center text-sm font-medium text-on-surface disabled:opacity-50"
+            >
+              {tPlantillas("saveShort")}
+            </button>
+          )}
         </div>
 
         {saveTemplateOpen && data && (

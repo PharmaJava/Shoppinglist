@@ -9,7 +9,7 @@ import { normalizeProductName } from "@/features/list/categorize";
 import type { ListItem } from "@/features/list/types";
 import { useCategories } from "@/features/list/use-categories";
 import { useList } from "@/features/list/use-list";
-import { useDeleteItem, useRestoreItem } from "@/features/list/use-list-mutations";
+import { useDeleteItem, useResetPacking, useRestoreItem } from "@/features/list/use-list-mutations";
 import { useWakeLock } from "@/features/list/use-wake-lock";
 import { stockUpFromList } from "@/features/pantry/api";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -20,6 +20,7 @@ import { BudgetBar } from "./budget-bar";
 import { type AccionFinal, FinishSheet } from "./finish-sheet";
 import { ItemRow } from "./item-row";
 import { ListHeader } from "./list-header";
+import { PackingBar, PackingSections } from "./packing-sections";
 import { ShoppingBar } from "./shopping-bar";
 import { SyncStatusBanner } from "./sync-status-banner";
 
@@ -42,6 +43,16 @@ export function ListView({ listId }: { listId: string }) {
   const [justDeleted, setJustDeleted] = useState<ListItem | null>(null);
   const restore = useRestoreItem(listId);
   const borrar = useDeleteItem(listId);
+  const reiniciar = useResetPacking(listId);
+  const isPacking = data?.list.kind === "packing";
+
+  // A qué sección va lo que se escribe abajo. Si nadie ha elegido —o la
+  // elegida ya no existe—, la última: es la que se acaba de crear.
+  const [seccionElegida, setSeccionElegida] = useState<string | null>(null);
+  const secciones = data?.sections ?? [];
+  const seccionDestino = secciones.some((section) => section.id === seccionElegida)
+    ? seccionElegida
+    : (secciones.at(-1)?.id ?? null);
 
   /**
    * La pantalla se mantiene encendida mientras la lista esté abierta.
@@ -52,7 +63,7 @@ export function ListView({ listId }: { listId: string }) {
    * cada treinta segundos. El navegador retira el permiso solo al pasar la
    * pestaña a segundo plano, así que esto no se queda encendido de fondo.
    */
-  const pantalla = useWakeLock(true);
+  const pantalla = useWakeLock(!isPacking);
 
   const cerrarCompra = useCallback(() => setFinishOpen(false), []);
 
@@ -145,32 +156,48 @@ export function ListView({ listId }: { listId: string }) {
       <ListHeader listId={listId} list={data.list} checked={checked.length} total={total} />
       <SyncStatusBanner />
       <AutoFinishBanner listId={listId} list={data.list} />
-      <BudgetBar listId={listId} list={data.list} items={data.items} />
+      {!isPacking && <BudgetBar listId={listId} list={data.list} items={data.items} />}
 
       <div className="flex-1 overflow-y-auto pb-4 print:h-auto print:overflow-visible">
-        {total === 0 && <p className="p-6 text-center text-on-surface-muted">{t("empty")}</p>}
+        {isPacking && (
+          <PackingSections
+            listId={listId}
+            sections={data.sections}
+            items={data.items}
+            onDeleted={setJustDeleted}
+            onAddHere={(sectionId) => {
+              setSeccionElegida(sectionId);
+              document.querySelector<HTMLInputElement>("[data-add-input]")?.focus();
+            }}
+          />
+        )}
 
-        {groups.map((group) => (
-          <section key={group.categoryId}>
-            <h2 className="sticky top-0 flex items-center gap-2 bg-surface-muted px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-on-surface-muted">
-              {group.icon} {group.label}
-              <span className="ml-auto tabular-nums">{group.items.length}</span>
-            </h2>
-            <ul>
-              {group.items.map((item) => (
-                <ItemRow
-                  key={item.id}
-                  listId={listId}
-                  item={item}
-                  currency={data.list.currency}
-                  onDeleted={setJustDeleted}
-                />
-              ))}
-            </ul>
-          </section>
-        ))}
+        {!isPacking && total === 0 && (
+          <p className="p-6 text-center text-on-surface-muted">{t("empty")}</p>
+        )}
 
-        {checked.length > 0 && (
+        {!isPacking &&
+          groups.map((group) => (
+            <section key={group.categoryId}>
+              <h2 className="sticky top-0 flex items-center gap-2 bg-surface-muted px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-on-surface-muted">
+                {group.icon} {group.label}
+                <span className="ml-auto tabular-nums">{group.items.length}</span>
+              </h2>
+              <ul>
+                {group.items.map((item) => (
+                  <ItemRow
+                    key={item.id}
+                    listId={listId}
+                    item={item}
+                    currency={data.list.currency}
+                    onDeleted={setJustDeleted}
+                  />
+                ))}
+              </ul>
+            </section>
+          ))}
+
+        {!isPacking && checked.length > 0 && (
           <section>
             <h2 className="sticky top-0 bg-surface-muted px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-on-surface-muted">
               {t("checkedSection")}
@@ -210,16 +237,28 @@ export function ListView({ listId }: { listId: string }) {
         </div>
       )}
 
-      <ShoppingBar
-        pendientes={pending.length}
-        marcados={checked.length}
-        pantalla={pantalla}
-        onFinalizar={() => setFinishOpen(true)}
+      {isPacking ? (
+        <PackingBar checked={checked.length} total={total} onRestart={() => reiniciar.mutate()} />
+      ) : (
+        <ShoppingBar
+          pendientes={pending.length}
+          marcados={checked.length}
+          pantalla={pantalla}
+          onFinalizar={() => setFinishOpen(true)}
+        />
+      )}
+
+      <AddItemBar
+        listId={listId}
+        existingNormalized={existingNormalized}
+        packing={
+          isPacking
+            ? { sections: data.sections, targetId: seccionDestino, onTarget: setSeccionElegida }
+            : undefined
+        }
       />
 
-      <AddItemBar listId={listId} existingNormalized={existingNormalized} />
-
-      {finishOpen && (
+      {finishOpen && !isPacking && (
         <FinishSheet
           list={data.list}
           pendientes={pending}

@@ -31,11 +31,14 @@ export function ItemRow({
   item,
   currency = "EUR",
   onDeleted,
+  showPrice = true,
 }: {
   listId: string;
   item: ListItem;
   currency?: string;
   onDeleted?: (item: ListItem) => void;
+  /** En una lista de equipaje no se compra nada: el precio sobra. */
+  showPrice?: boolean;
 }) {
   const t = useTranslations("list");
   const locale = useLocale();
@@ -80,6 +83,7 @@ export function ItemRow({
           listId={listId}
           item={item}
           currency={currency}
+          showPrice={showPrice}
           onDone={() => setEditing(false)}
         />
       </li>
@@ -109,11 +113,13 @@ export function ItemRow({
           >
             {item.name}
           </span>
-          {(item.qty !== null || item.price_cents !== null) && (
+          {(item.qty !== null || (showPrice && item.price_cents !== null)) && (
             <span className="text-sm text-on-surface-muted">
               {item.qty !== null && formatAmount(item)}
-              {item.qty !== null && item.price_cents !== null && " · "}
-              {item.price_cents !== null && formatMoney(item.price_cents, currency, locale)}
+              {showPrice && item.qty !== null && item.price_cents !== null && " · "}
+              {showPrice &&
+                item.price_cents !== null &&
+                formatMoney(item.price_cents, currency, locale)}
             </span>
           )}
         </span>
@@ -170,11 +176,13 @@ function ItemEditor({
   listId,
   item,
   currency,
+  showPrice,
   onDone,
 }: {
   listId: string;
   item: ListItem;
   currency: string;
+  showPrice: boolean;
   onDone: () => void;
 }) {
   const t = useTranslations("list");
@@ -207,7 +215,9 @@ function ItemEditor({
         qty: parsedQty !== null && Number.isNaN(parsedQty) ? item.qty : parsedQty,
         // Sin cantidad, la unidad no significa nada: "kg" de nada no es nada.
         unit: parsedQty === null ? null : unit || null,
-        priceCents: parsePriceToCents(price),
+        // Sin campo de precio no se toca el precio: mandarlo como vacío
+        // borraría uno que ya tuviera.
+        ...(showPrice ? { priceCents: parsePriceToCents(price) } : {}),
       },
     });
     onDone();
@@ -258,32 +268,34 @@ function ItemEditor({
         </select>
       </div>
 
-      <div className="flex items-center gap-2">
-        <label className="sr-only" htmlFor={`price-${item.id}`}>
-          {t("editPrice")}
-        </label>
-        <input
-          id={`price-${item.id}`}
-          value={price}
-          onChange={(event) => setPrice(event.target.value)}
-          inputMode="decimal"
-          placeholder={t("editPrice")}
-          className="h-tap w-28 rounded-xl border border-border bg-surface px-3 text-base text-on-surface outline-none focus:border-brand"
-        />
-        {remembered != null && price.trim() === "" ? (
-          <button
-            type="button"
-            onClick={() => setPrice(centsToInput(remembered, locale))}
-            className="text-left font-medium text-brand text-xs underline"
-          >
-            {t("editPriceRemembered", { amount: formatMoney(remembered, currency, locale) })}
-          </button>
-        ) : (
-          /* El precio es de la línea entera, no por unidad: con "500 g" un
+      {showPrice && (
+        <div className="flex items-center gap-2">
+          <label className="sr-only" htmlFor={`price-${item.id}`}>
+            {t("editPrice")}
+          </label>
+          <input
+            id={`price-${item.id}`}
+            value={price}
+            onChange={(event) => setPrice(event.target.value)}
+            inputMode="decimal"
+            placeholder={t("editPrice")}
+            className="h-tap w-28 rounded-xl border border-border bg-surface px-3 text-base text-on-surface outline-none focus:border-brand"
+          />
+          {remembered != null && price.trim() === "" ? (
+            <button
+              type="button"
+              onClick={() => setPrice(centsToInput(remembered, locale))}
+              className="text-left font-medium text-brand text-xs underline"
+            >
+              {t("editPriceRemembered", { amount: formatMoney(remembered, currency, locale) })}
+            </button>
+          ) : (
+            /* El precio es de la línea entera, no por unidad: con "500 g" un
              precio por unidad no significaría nada. */
-          <p className="text-on-surface-muted text-xs">{t("editPriceHint", { currency })}</p>
-        )}
-      </div>
+            <p className="text-on-surface-muted text-xs">{t("editPriceHint", { currency })}</p>
+          )}
+        </div>
+      )}
 
       <div className="flex gap-2">
         <button

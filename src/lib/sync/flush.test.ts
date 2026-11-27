@@ -195,4 +195,13 @@ describe("flushOutbox", () => {
     expect(servidor.filas.has("leche")).toBe(true);
     expect(servidor.actualizaciones).toHaveLength(0);
   });
+
+  /** Las secciones se crean sin red, con su id, igual que los productos. */
+  it("las secciones van por upsert, como los productos", async () => {
+    await queueRowMutation("list_sections", { id: "mochila", list_id: "l1", name: "Mochila" });
+    await hastaQueSeVacie();
+
+    expect(servidor.filas.get("mochila")).toMatchObject({ name: "Mochila" });
+    expect(servidor.actualizaciones).toHaveLength(0);
+  });
 });

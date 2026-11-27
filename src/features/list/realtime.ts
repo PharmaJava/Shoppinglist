@@ -1,10 +1,12 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { ListItemRow, ListRow } from "@/lib/supabase/types";
+import type { ListItemRow, ListRow, ListSectionRow } from "@/lib/supabase/types";
 
 export interface ListRealtimeHandlers {
   onItem: (item: ListItemRow) => void;
   onList: (list: ListRow) => void;
+  /** Sólo llega en las listas de equipaje; quien no lo necesita no lo pone. */
+  onSection?: (section: ListSectionRow) => void;
 }
 
 interface Entry {
@@ -58,7 +60,7 @@ function open(listId: string): Entry {
       "postgres_changes",
       { event: "*", schema: "public", table: "list_items", filter: `list_id=eq.${listId}` },
       (payload) => {
-        const incoming = itemFromChange(payload.eventType, payload.new, payload.old);
+        const incoming = rowFromChange(payload.eventType, payload.new, payload.old);
         if (!incoming) return;
         for (const handler of handlers) handler.onItem(incoming);
       },
@@ -69,6 +71,15 @@ function open(listId: string): Entry {
       (payload) => {
         if (!payload.new) return;
         for (const handler of handlers) handler.onList(payload.new as ListRow);
+      },
+    )
+    .on<ListSectionRow>(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "list_sections", filter: `list_id=eq.${listId}` },
+      (payload) => {
+        const incoming = rowFromChange(payload.eventType, payload.new, payload.old);
+        if (!incoming) return;
+        for (const handler of handlers) handler.onSection?.(incoming);
       },
     )
     .subscribe();
@@ -86,17 +97,15 @@ function open(listId: string): Entry {
  * entiende quien escucha— en vez de como un producto: coger `new` porque «hay
  * algo» colaba en la lista una fila vacía.
  */
-function itemFromChange(
+function rowFromChange<Row extends { id: string; deleted_at: string | null }>(
   eventType: string,
-  next: Partial<ListItemRow>,
-  previous: Partial<ListItemRow>,
-): ListItemRow | null {
+  next: Partial<Row>,
+  previous: Partial<Row>,
+): Row | null {
   if (eventType === "DELETE") {
-    return previous.id
-      ? ({ ...previous, deleted_at: new Date().toISOString() } as ListItemRow)
-      : null;
+    return previous.id ? ({ ...previous, deleted_at: new Date().toISOString() } as Row) : null;
   }
-  return next.id ? (next as ListItemRow) : null;
+  return next.id ? (next as Row) : null;
 }
 
 /** Sólo para los tests: deja el módulo como recién cargado. */
